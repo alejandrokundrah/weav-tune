@@ -202,8 +202,8 @@
 
 /*
  * A type token from tokens.css (`type-body`), or a one-off `weight size/leading`
- * in DM Sans (`type-[700_19px/24px]`). Either way the `font` shorthand, as the
- * tokens are written.
+ * in the app's Kyonira stack (`type-[700_19px/24px]`). Either way the `font`
+ * shorthand, as the tokens are written.
  */
 @utility type-* {
   --tw-sort: font-family;
