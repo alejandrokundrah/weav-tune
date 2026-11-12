@@ -2,8 +2,8 @@
    generous rounded artwork, solid full-player controls and a glass mini-player. */
 @layer base {
   :root {
-    --ot-seed: #e53935;
-    --ot-accent-choice: #e53935;
+    --ot-seed: #25a0d4;
+    --ot-accent-choice: #25a0d4;
     --radius-artwork-small: 12px;
     --radius-artwork-medium: 20px;
     --radius-artwork-large: 28px;
@@ -14,46 +14,47 @@
     --body-reduced: 400 15px / 22px var(--font-family);
     --player-pill-height: 68px;
     /* The full player and audio details stand on dark in either mode: a pale key color, as dark mode's. */
-    --ot-key-on-dark: color-mix(in srgb, var(--ot-seed) 32%, #ffe0d5);
+    --ot-key-on-dark: color-mix(in srgb, var(--ot-seed) 40%, #e0f6fc);
   }
   :root[data-appearance='light'] {
     color-scheme: light;
-    --pageBG: color-mix(in srgb, var(--ot-seed) 3%, #fffaf6);
-    --pageBG-rgb: 255, 250, 246;
-    --systemPrimary: #201a19;
-    --systemSecondary: #655854;
-    --systemTertiary: #776764;
-    --systemQuaternary: #38241d24;
-    --systemQuinary: #38241d0b;
-    --keyColor: color-mix(in srgb, var(--ot-seed) 65%, #44211b);
-    --keyColor-rgb: 120, 57, 50;
-    --glassMaterialBackground: #fffaf6bf;
-    --glassMaterialShadowColor: #44211b20;
+    --pageBG: color-mix(in srgb, var(--ot-seed) 3%, #f8fbfd);
+    --pageBG-rgb: 248, 251, 253;
+    --systemPrimary: #111a1f;
+    --systemSecondary: #4e5e66;
+    --systemTertiary: #61737d;
+    --systemQuaternary: #14283324;
+    --systemQuinary: #1428330b;
+    --keyColor: color-mix(in srgb, var(--ot-seed) 85%, #0d465c);
+    --keyColor-rgb: 37, 160, 212;
+    --glassMaterialBackground: rgba(248, 251, 253, 0.70);
+    --glassMaterialShadowColor: rgba(20, 40, 51, 0.12);
     --glassMaterialInnerStroke: #fff;
-    --glassMaterialInnerStrokeAlpha: .5;
-    --systemStandardThinMaterialSover: #fffaf6bc;
-    --systemStandardThickMaterialSover: #fffaf6ed;
-    --systemHeaderMaterialSover: #fffaf6eb;
+    --glassMaterialInnerStrokeAlpha: .75;
+    --glassMaterialBackdropFilter: blur(28px) saturate(200%) brightness(1.03);
+    --systemStandardThinMaterialSover: rgba(248, 251, 253, 0.55);
+    --systemStandardThickMaterialSover: rgba(248, 251, 253, 0.76);
+    --systemHeaderMaterialSover: rgba(248, 251, 253, 0.72);
     --navSidebarSelectedState: color-mix(in srgb, var(--ot-seed) 14%, transparent);
-    --tracklistHoverColor: #38241d0c;
-    --shelfBG: #38241d08;
-    --opaqueShelfBG: #f0e8e3;
-    --footerBg: #f0e8e3;
-    --genericJoeColor: #e8ded8;
-    --labelDivider: #38241d1f;
-    --vibrantDivider: #38241d30;
-    --searchBarBorderColor: #38241d28;
-    --segmentedControlBG: #38241d12;
-    --segmentedControlSelectedBG: #fffaf6;
-    --button-pill-color: #fffaf6;
-    --button-pill-background-color: #30201c;
-    --containerInnerStroke: #38241d;
+    --tracklistHoverColor: #1428330c;
+    --shelfBG: #14283308;
+    --opaqueShelfBG: #e4eef2;
+    --footerBg: #e4eef2;
+    --genericJoeColor: #dce7ed;
+    --labelDivider: #1428331f;
+    --vibrantDivider: #14283330;
+    --searchBarBorderColor: #14283328;
+    --segmentedControlBG: #14283312;
+    --segmentedControlSelectedBG: #f8fbfd;
+    --button-pill-color: #f8fbfd;
+    --button-pill-background-color: #111a1f;
+    --containerInnerStroke: #142833;
     --containerInnerStrokeAlpha: .12;
-    --skeleton-fill: #38241d10;
+    --skeleton-fill: #14283310;
     --skeleton-shimmer: #ffffff88;
     --systemRed: #ff3b30;
     --systemGreen: #28cd41;
-    --systemBlue: #007aff;
+    --systemBlue: #25a0d4;
     --systemGray: #8e8e93;
     --systemGray2: #aeaeb2;
     --systemGray3: #c7c7cc;
@@ -65,42 +66,43 @@
   }
   :root[data-appearance='dark'] {
     color-scheme: dark;
-    --pageBG: color-mix(in srgb, var(--ot-seed) 4%, #11100f);
-    --pageBG-rgb: 17, 16, 15;
-    --systemPrimary: #f6ede9;
-    --systemSecondary: #c9bdb7;
-    --systemTertiary: #a99891;
+    --pageBG: color-mix(in srgb, var(--ot-seed) 4%, #0f1215);
+    --pageBG-rgb: 15, 18, 21;
+    --systemPrimary: #eaf3f7;
+    --systemSecondary: #b0c2cb;
+    --systemTertiary: #8c9fa8;
     --systemQuaternary: #ffffff24;
     --systemQuinary: #ffffff0d;
-    --keyColor: color-mix(in srgb, var(--ot-seed) 32%, #ffe0d5);
-    --keyColor-rgb: 255, 183, 165;
-    --glassMaterialBackground: #272322ae;
-    --glassMaterialShadowColor: #00000060;
+    --keyColor: color-mix(in srgb, var(--ot-seed) 50%, #49c4e2);
+    --keyColor-rgb: 73, 196, 226;
+    --glassMaterialBackground: rgba(16, 22, 28, 0.65);
+    --glassMaterialShadowColor: rgba(0, 0, 0, 0.50);
     --glassMaterialInnerStroke: #fff;
-    --glassMaterialInnerStrokeAlpha: .22;
-    --systemStandardThinMaterialSover: #201c1aaf;
-    --systemStandardThickMaterialSover: #201c1aed;
-    --systemHeaderMaterialSover: #171412eb;
+    --glassMaterialInnerStrokeAlpha: .30;
+    --glassMaterialBackdropFilter: blur(32px) saturate(200%) brightness(1.06);
+    --systemStandardThinMaterialSover: rgba(22, 30, 38, 0.55);
+    --systemStandardThickMaterialSover: rgba(18, 25, 32, 0.74);
+    --systemHeaderMaterialSover: rgba(14, 20, 26, 0.72);
     --navSidebarSelectedState: color-mix(in srgb, var(--keyColor) 17%, transparent);
     --tracklistHoverColor: #ffffff0f;
     --shelfBG: #ffffff08;
-    --opaqueShelfBG: #211d1b;
-    --footerBg: #211d1b;
-    --genericJoeColor: #302927;
+    --opaqueShelfBG: #161d22;
+    --footerBg: #161d22;
+    --genericJoeColor: #202a31;
     --labelDivider: #ffffff1c;
     --vibrantDivider: #ffffff30;
     --searchBarBorderColor: #ffffff28;
     --segmentedControlBG: #ffffff16;
-    --segmentedControlSelectedBG: #51433d;
-    --button-pill-color: #211511;
-    --button-pill-background-color: #f6ede9;
+    --segmentedControlSelectedBG: #2a3740;
+    --button-pill-color: #0b171c;
+    --button-pill-background-color: #eaf3f7;
     --containerInnerStroke: #fff;
     --containerInnerStrokeAlpha: .2;
     --skeleton-fill: #ffffff12;
     --skeleton-shimmer: #ffffff14;
     --systemRed: #ff453a;
     --systemGreen: #32d74b;
-    --systemBlue: #0a84ff;
+    --systemBlue: #49c4e2;
     --systemGray: #98989d;
     --systemGray2: #636366;
     --systemGray3: #48484a;
@@ -113,7 +115,7 @@
   :root[data-appearance='dark'][data-black='true'] { --pageBG: #000; --pageBG-rgb: 0,0,0; }
   /* Fills under white text: dark mode's key color is too pale for that, so they use a deeper seed. */
   :root[data-appearance='light'] { --keyColorBG: var(--keyColor); }
-  :root[data-appearance='dark'] { --keyColorBG: color-mix(in srgb, var(--ot-seed) 82%, #000); }
+  :root[data-appearance='dark'] { --keyColorBG: color-mix(in srgb, var(--ot-seed) 75%, #0d465c); }
   :root[data-appearance] {
     --selectionColor: var(--keyColor);
     --keyColor-rollover: color-mix(in srgb, var(--keyColor) 85%, white);
@@ -382,14 +384,26 @@
 .group\/shelf .ot-arrow:not(:disabled):active { scale: .92; transition-duration: .08s; }
 
 /* Sidebar rows ease between states; the selected one carries a faint ring of the accent. */
-.ot-nav-item { transition: background-color .2s ease, box-shadow .2s ease; }
+.ot-nav-item {
+  border: 1px solid transparent;
+  transition: background-color .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
 .ot-nav-item svg { transition: scale .35s var(--ot-ease-settle); }
 .ot-nav-item:hover svg { scale: 1.08; }
-.ot-nav-item[aria-current='page'] { box-shadow: inset 0 0 0 .5px color-mix(in srgb, var(--keyColor) 30%, transparent); }
+.ot-nav-item:hover {
+  background: color-mix(in srgb, var(--keyColor) 8%, rgba(255, 255, 255, 0.05));
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.2);
+}
+.ot-nav-item[aria-current='page'] {
+  background: color-mix(in srgb, var(--keyColor) 18%, rgba(255, 255, 255, 0.04));
+  border-color: color-mix(in srgb, var(--keyColor) 40%, transparent);
+  box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--keyColor) 45%, white), 0 4px 16px -2px color-mix(in srgb, var(--keyColor) 25%, transparent);
+}
 
 /* Frosted glass along the top of the page once it has scrolled: what slides under the edge blurs
    away instead of being cut off. The phone keeps its own glass top bar. */
-.ot-scroll-edge { position: absolute; top: 0; left: var(--web-navigation-width); right: 0; height: 64px; z-index: calc(var(--z-web-chrome) - 3); pointer-events: none; opacity: 0; transition: opacity .35s ease; -webkit-backdrop-filter: blur(20px) saturate(1.6); backdrop-filter: blur(20px) saturate(1.6); -webkit-mask-image: linear-gradient(#000 30%, transparent); mask-image: linear-gradient(#000 30%, transparent); }
+.ot-scroll-edge { position: absolute; top: 0; left: var(--web-navigation-width); right: 0; height: 64px; z-index: calc(var(--z-web-chrome) - 3); pointer-events: none; opacity: 0; transition: opacity .35s ease; -webkit-backdrop-filter: blur(28px) saturate(2.0); backdrop-filter: blur(28px) saturate(2.0); -webkit-mask-image: linear-gradient(#000 30%, transparent); mask-image: linear-gradient(#000 30%, transparent); }
 .ot-scroll-edge[data-shown='true'] { opacity: 1; }
 @media (max-width: 483.98px) { .ot-scroll-edge { display: none; } }
 
@@ -402,21 +416,228 @@
    blur smooths it, and a thin tint leaves the bent colours showing. A bright rim catches the light at
    the top left and a softer one at the bottom right. Elsewhere the frosted glass above stays. */
 .glass-pill[data-liquid]::before, .ot-arrow[data-liquid] {
-  -webkit-backdrop-filter: var(--liquid-filter) blur(5px) saturate(1.8) brightness(1.04);
-  backdrop-filter: var(--liquid-filter) blur(5px) saturate(1.8) brightness(1.04);
+  -webkit-backdrop-filter: var(--liquid-filter) blur(6px) saturate(1.9) brightness(1.05);
+  backdrop-filter: var(--liquid-filter) blur(6px) saturate(1.9) brightness(1.05);
 }
 .glass-pill[data-liquid]::before {
   background-color: color-mix(in srgb, var(--glassMaterialBackground) 52%, transparent);
-  background-image: linear-gradient(180deg, rgb(255 255 255 / .1), transparent 45%);
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.03) 45%, transparent 100%);
 }
 .ot-arrow[data-liquid] { background: color-mix(in srgb, var(--glassMaterialBackground) 45%, transparent); }
 .glass-pill[data-liquid]::after, .ot-arrow[data-liquid]::after {
   content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 1;
-  box-shadow: inset 1.5px 1.5px 0 -.5px rgb(255 255 255 / .6), inset -1.5px -1.5px 0 -.5px rgb(255 255 255 / .3), inset 0 0 14px rgb(255 255 255 / .07);
+  box-shadow: inset 1.5px 1.5px 0 -.5px rgb(255 255 255 / .65), inset -1.5px -1.5px 0 -.5px rgb(255 255 255 / .3), inset 0 0 16px rgb(255 255 255 / .08);
 }
 :root[data-appearance='light'] .glass-pill[data-liquid]::after, :root[data-appearance='light'] .ot-arrow[data-liquid]::after {
   box-shadow: inset 1.5px 1.5px 0 -.5px rgb(255 255 255 / .95), inset -1.5px -1.5px 0 -.5px rgb(255 255 255 / .6), inset 0 0 0 .5px rgb(0 0 0 / .08), inset 0 0 14px rgb(255 255 255 / .2);
 }
 @media (prefers-reduced-transparency: reduce) {
   .glass-pill[data-liquid]::before, .ot-arrow[data-liquid] { -webkit-backdrop-filter: none; backdrop-filter: none; background-color: var(--opaqueShelfBG); }
+}
+
+/* ==========================================================================
+   Full App Liquid Glass UI System (Weav Theme)
+   ========================================================================== */
+
+/* 1. Atmospheric Ambient Fluid Canvas */
+.ot-liquid-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+  opacity: 0.60;
+  transition: opacity 0.5s ease;
+}
+
+:root[data-appearance='light'] .ot-liquid-canvas {
+  opacity: 0.40;
+}
+
+.ot-liquid-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+}
+
+@media (min-width: 768px) {
+  .ot-liquid-orb {
+    filter: blur(115px);
+  }
+}
+
+.ot-orb-1 {
+  top: -12%;
+  left: 8%;
+  width: 55vw;
+  height: 55vw;
+  max-width: 650px;
+  max-height: 650px;
+  background: radial-gradient(circle, rgba(37, 160, 212, 0.42) 0%, rgba(37, 160, 212, 0.10) 55%, transparent 72%);
+  animation: ot-liquid-float-1 26s ease-in-out infinite alternate;
+}
+
+.ot-orb-2 {
+  bottom: -15%;
+  right: 6%;
+  width: 60vw;
+  height: 60vw;
+  max-width: 700px;
+  max-height: 700px;
+  background: radial-gradient(circle, rgba(73, 196, 226, 0.38) 0%, rgba(73, 196, 226, 0.10) 55%, transparent 75%);
+  animation: ot-liquid-float-2 34s ease-in-out infinite alternate;
+}
+
+.ot-orb-3 {
+  top: 36%;
+  left: -8%;
+  width: 45vw;
+  height: 45vw;
+  max-width: 550px;
+  max-height: 550px;
+  background: radial-gradient(circle, rgba(27, 130, 174, 0.35) 0%, rgba(37, 160, 212, 0.08) 60%, transparent 75%);
+  animation: ot-liquid-float-3 29s ease-in-out infinite alternate;
+}
+
+.ot-orb-4 {
+  top: 16%;
+  right: 18%;
+  width: 40vw;
+  height: 40vw;
+  max-width: 480px;
+  max-height: 480px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.22) 0%, rgba(73, 196, 226, 0.12) 50%, transparent 70%);
+  animation: ot-liquid-float-4 22s ease-in-out infinite alternate;
+}
+
+@keyframes ot-liquid-float-1 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(8vw, 12vh, 0) scale(1.12); }
+  100% { transform: translate3d(-5vw, 6vh, 0) scale(0.95); }
+}
+
+@keyframes ot-liquid-float-2 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-10vw, -10vh, 0) scale(1.15); }
+  100% { transform: translate3d(6vw, -6vh, 0) scale(0.9); }
+}
+
+@keyframes ot-liquid-float-3 {
+  0% { transform: translate3d(0, 0, 0) scale(0.95); }
+  50% { transform: translate3d(6vw, -8vh, 0) scale(1.08); }
+  100% { transform: translate3d(2vw, 10vh, 0) scale(1); }
+}
+
+@keyframes ot-liquid-float-4 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-8vw, 8vh, 0) scale(1.18); }
+  100% { transform: translate3d(4vw, -4vh, 0) scale(0.92); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ot-liquid-orb { animation: none !important; }
+}
+:root[data-motion='false'] .ot-liquid-orb {
+  animation: none !important;
+}
+
+/* 2. Sidebar Liquid Glass Panel */
+.ot-side {
+  background-color: var(--glassMaterialBackground) !important;
+  backdrop-filter: var(--glassMaterialBackdropFilter) !important;
+  -webkit-backdrop-filter: var(--glassMaterialBackdropFilter) !important;
+  border-right: 1px solid var(--vibrantDivider);
+  box-shadow:
+    inset -1px 0 0 rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    4px 0 24px -4px var(--glassMaterialShadowColor);
+}
+
+/* 3. Side Panel (Lyrics, Up Next) Liquid Glass */
+aside.glass-material {
+  background-color: var(--glassMaterialBackground) !important;
+  backdrop-filter: var(--glassMaterialBackdropFilter) !important;
+  -webkit-backdrop-filter: var(--glassMaterialBackdropFilter) !important;
+  border-left: 1px solid var(--vibrantDivider);
+  box-shadow:
+    inset 1px 0 0 rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    -4px 0 24px -4px var(--glassMaterialShadowColor);
+}
+
+/* 4. Mobile Top Bar & Dock Liquid Glass */
+header.glass-material {
+  background-color: var(--glassMaterialBackground) !important;
+  backdrop-filter: var(--glassMaterialBackdropFilter) !important;
+  -webkit-backdrop-filter: var(--glassMaterialBackdropFilter) !important;
+  border-bottom: 1px solid var(--vibrantDivider);
+  box-shadow: 0 4px 20px var(--glassMaterialShadowColor), inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* 5. Liquid Glass Cards & Settings Surfaces */
+.ot-set-hero,
+.ot-settings .bg-quinary,
+.ot-set-layout .bg-quinary,
+.ot-room-card {
+  background-color: var(--glassMaterialBackground) !important;
+  backdrop-filter: var(--glassMaterialBackdropFilter) !important;
+  -webkit-backdrop-filter: var(--glassMaterialBackdropFilter) !important;
+  border: 1px solid var(--vibrantDivider) !important;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.20),
+    0 8px 28px -4px var(--glassMaterialShadowColor);
+}
+
+/* 6. Liquid Glass Interactive Controls */
+.ot-circle-button,
+.ot-home-links a {
+  background: var(--glassMaterialBackground);
+  backdrop-filter: var(--glassMaterialBackdropFilter);
+  -webkit-backdrop-filter: var(--glassMaterialBackdropFilter);
+  border: 1px solid var(--vibrantDivider);
+  box-shadow:
+    inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.25),
+    0 4px 12px var(--glassMaterialShadowColor);
+}
+.ot-circle-button:hover:not(:disabled),
+.ot-home-links a:hover {
+  background: color-mix(in srgb, var(--keyColor) 15%, var(--glassMaterialBackground));
+  border-color: color-mix(in srgb, var(--keyColor) 45%, var(--vibrantDivider));
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.35),
+    0 6px 18px color-mix(in srgb, var(--keyColor) 25%, transparent);
+}
+
+.ot-segmented {
+  background: var(--glassMaterialBackground);
+  backdrop-filter: var(--glassMaterialBackdropFilter);
+  -webkit-backdrop-filter: var(--glassMaterialBackdropFilter);
+  border: 1px solid var(--vibrantDivider);
+  box-shadow: inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.15);
+}
+.ot-segmented button[aria-checked='true'] {
+  background: color-mix(in srgb, var(--keyColor) 20%, var(--glassMaterialBackground));
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.35), 0 2px 8px var(--glassMaterialShadowColor);
+  color: var(--systemPrimary);
+}
+
+/* 7. Liquid Glass Modals & Details */
+.ot-audio-details {
+  background: var(--glassMaterialBackground) !important;
+  backdrop-filter: blur(40px) saturate(220%) brightness(1.08) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(220%) brightness(1.08) !important;
+  border: 1px solid var(--vibrantDivider) !important;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.3),
+    0 24px 60px var(--dialogShadowColor) !important;
+}
+
+/* 8. Track list rows subtle glass refraction */
+.ot-track-lockup:hover {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.15);
 }

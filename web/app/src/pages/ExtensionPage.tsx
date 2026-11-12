@@ -30,7 +30,7 @@ interface Download {
  * has loaded, the configured URLs and the unversioned names stand in.
  */
 function downloadsFor(published: PublishedExtension | null): Download[] {
-  const folder = (browser: Browser) => `opentune-extension-${browser}${published ? ` (${published.version})` : ''}`;
+  const folder = (browser: Browser) => `weav-tune-extension-${browser}${published ? ` (${published.version})` : ''}`;
   return [
     {
       browser: 'chrome',
@@ -121,7 +121,7 @@ export default function ExtensionPage() {
 
   return (
     <div className={settingsUi.centered}>
-      <PageHeader title="OpenTune Extension" back={{ to: '/settings', label: 'Settings' }} />
+      <PageHeader title="Weav-Tune Extension" back={{ to: '/settings', label: 'Settings' }} />
       <div className={settingsUi.body}>
         <section className={settingsUi.group} aria-live="polite">
           <div className={settingsUi.row}>

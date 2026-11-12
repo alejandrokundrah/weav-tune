@@ -30,9 +30,9 @@ export default defineConfig({
     },
   }),
   manifest: ({ browser }) => ({
-    name: 'OpenTune',
-    description: 'Connects the OpenTune web player to YouTube Music, Spotify and Discord.',
-    homepage_url: 'https://justshivv.github.io/Opentune/player/',
+    name: 'Weav-Tune',
+    description: 'Connects the Weav-Tune web player to YouTube Music, Spotify and Discord.',
+    homepage_url: 'http://localhost:5173/',
     // `cookies` reads the YouTube session for signed-in requests (phase 5);
     // the cookies themselves never leave the extension (lib/ytAuth.ts).
     // `scripting` reads the Discord token from a discord.com tab, and only on

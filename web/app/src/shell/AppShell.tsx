@@ -151,8 +151,8 @@ export function AppShell() {
   if (mobile) {
     banner = (
       <Banner
-        title="OpenTune is better in the app."
-        detail="Phone browsers can’t run the OpenTune extension. The Android app has everything."
+        title="Weav-Tune is better in the app."
+        detail="Phone browsers can’t run the Weav-Tune extension. The Android app has everything."
         action={
           <a className={bannerButtonClass} href={config.androidAppUrl} target="_blank" rel="noreferrer">
             Get the App
@@ -163,7 +163,7 @@ export function AppShell() {
   } else if (extension.state === 'missing' && !bannerDismissed) {
     banner = (
       <Banner
-        title="Play YouTube Music with the OpenTune extension."
+        title="Play YouTube Music with the Weav-Tune extension."
         detail="Playback, YouTube Music sign-in, Spotify and Discord need the extension. Addons and lyrics work without it."
         action={
           <PrefetchLink className={bannerButtonClass} to="/extension">
@@ -184,7 +184,7 @@ export function AppShell() {
         detail={
           discord
             ? 'Talk to other listeners, swap add-ons, report bugs and hear about new features first.'
-            : 'OpenTune is free and open source. A star on GitHub helps more listeners find it.'
+            : 'Weav-Tune is free and open source. A star on GitHub helps more listeners find it.'
         }
         action={
           <span className="flex items-center gap-3">
@@ -206,6 +206,13 @@ export function AppShell() {
       {/* The side panel slides in from beyond the right edge; never let it scroll the page. */}
       <div className="relative min-h-0 overflow-hidden">
         <Appearance />
+        {/* Ambient Liquid Glass Backdrop Canvas */}
+        <div className="ot-liquid-canvas pointer-events-none absolute inset-0 -z-0 overflow-hidden" aria-hidden="true">
+          <div className="ot-liquid-orb ot-orb-1" />
+          <div className="ot-liquid-orb ot-orb-2" />
+          <div className="ot-liquid-orb ot-orb-3" />
+          <div className="ot-liquid-orb ot-orb-4" />
+        </div>
         <Sidebar />
         <MobileTopBar />
         {/* The page scrolls under the fixed sidebar and the floating player. */}

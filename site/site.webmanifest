@@ -1,6 +1,6 @@
 {
-  "name": "OpenTune",
-  "short_name": "OpenTune",
+  "name": "Weav-Tune",
+  "short_name": "Weav-Tune",
   "description": "A free, open-source music player for Android.",
   "start_url": "./",
   "scope": "./",

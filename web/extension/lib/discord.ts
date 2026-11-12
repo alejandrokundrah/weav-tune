@@ -37,8 +37,8 @@ const GATEWAY = 'wss://gateway.discord.gg/?v=9&encoding=json';
 const API = 'https://discord.com/api/v9';
 const PROJECT_URL = 'https://github.com/justshivv/Opentune';
 const DEFAULT_BUTTON_1 = 'Listen on YouTube Music';
-const DEFAULT_BUTTON_2 = 'Visit OpenTune';
-const APP_NAME = 'OpenTune';
+const DEFAULT_BUTTON_2 = 'Visit Weav-Tune';
+const APP_NAME = 'Weav-Tune';
 
 const INITIAL_RECONNECT_MS = 1_000;
 const MAX_RECONNECT_MS = 60_000;

@@ -1,8 +1,8 @@
-# OpenTune web preview
+# Weav-Tune web preview
 
 This extends the existing GPL-3.0 BitChord React player and WXT browser extension at commit `edc1e6f36febf71a118e649411d2fc21b70ead45`. It reuses that implementation rather than rebuilding the web app. Upstream design/research notes are preserved under `docs/` with their original attribution.
 
-OpenTune changes include branding, GitHub/Discord community links, URL audio add-ons, measured direct-FLAC validation, background quality upgrades, a separate extension identity, and GitHub Pages routing under `/Opentune/player/`. Chrome and Firefox extensions use the same protocol. Google/Spotify session cookies remain inside the extension; the player receives metadata and request results.
+Weav-Tune changes include branding, GitHub/Discord community links, URL audio add-ons, measured direct-FLAC validation, background quality upgrades, and extension identity. Chrome and Firefox extensions use the same protocol. Google/Spotify session cookies remain inside the extension; the player receives metadata and request results.
 
 ## Build
 
@@ -17,9 +17,9 @@ pnpm --filter @opentune/extension icons
 pnpm build:site
 ```
 
-The test command downloads checksum-verified JSON fixtures from the pinned upstream commit if absent. There are no production API calls during those tests. `app/dist/` contains the site and packaged extensions under `downloads/`. The preview workflow uploads it as an artifact. GitHub Pages builds and publishes it at https://justshivv.github.io/Opentune/player/ on updates to main.
+The test command downloads checksum-verified JSON fixtures from the pinned upstream commit if absent. There are no production API calls during those tests. `app/dist/` contains the site and packaged extensions under `downloads/`.
 
-For development run `pnpm dev` and `pnpm dev:ext`. The app uses a hash router so refreshing a nested route works on GitHub Pages. The production base is `/Opentune/player/`; set `OPENTUNE_WEB_BASE=/` for another root deployment and adjust extension allowed origins/paths deliberately.
+For development run `pnpm dev` and `pnpm dev:ext`. The app uses a hash router so refreshing a nested route works reliably.
 
 ## Audio add-ons
 
@@ -29,7 +29,7 @@ This browser preview supports **direct FLAC with CORS-enabled media**. Android a
 
 ## Known platform limits
 
-- Browser playback requires the OpenTune extension. It is not yet published to browser stores; install a preview package in developer mode. Firefox release installation requires Mozilla signing; temporary loading is suitable for testing.
+- Browser playback requires the Weav-Tune extension. It is not yet published to browser stores; install a preview package in developer mode. Firefox release installation requires Mozilla signing; temporary loading is suitable for testing.
 - Native phone-to-TV QR sign-in is implemented in the Android app, using encrypted local-network pairing. It is not a web OAuth substitute and is not available in the JavaFX desktop or Wear UI.
 - Android uses Nostr rooms; the inherited browser room protocol is different. Browser rooms require a separately configured compatible server. No upstream public server is silently selected, and cross-platform room interoperability is not claimed.
 - Discord community links work normally. Upstream optional Discord account automation is disabled by default at build time.

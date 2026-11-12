@@ -81,12 +81,12 @@
   --systemSecondary-onDark: #ffffffa3;
   --systemTertiary-onDark: #ffffff66;
 
-  --keyColor: #d60017;
-  --keyColor-rgb: 214, 0, 23;
-  --keyColor-rollover: #a20000;
-  --keyColor-pressed: #bb0000;
-  --keyColorBG: #d60017;
-  --selectionColor: #d60017;
+  --keyColor: #25a0d4;
+  --keyColor-rgb: 37, 160, 212;
+  --keyColor-rollover: #1b82ae;
+  --keyColor-pressed: #146e94;
+  --keyColorBG: #25a0d4;
+  --selectionColor: #25a0d4;
   --keyColor-focus-color: rgba(var(--keyColor-rgb), 0.6);
 
   --systemRed: #ff3b30;
@@ -102,15 +102,15 @@
   --labelDivider: #00000026;
   --vibrantDivider: #3c3c434a;
 
-  --glassMaterialBackground: #f5f5f78c;
-  --glassMaterialShadowColor: #0000001a;
-  --glassMaterialInnerStroke: #000000;
-  --glassMaterialInnerStrokeAlpha: 0.05;
-  --glassMaterialBackdropFilter: saturate(190%) blur(36px);
+  --glassMaterialBackground: rgba(248, 251, 253, 0.70);
+  --glassMaterialShadowColor: rgba(20, 40, 51, 0.12);
+  --glassMaterialInnerStroke: #ffffff;
+  --glassMaterialInnerStrokeAlpha: 0.75;
+  --glassMaterialBackdropFilter: blur(28px) saturate(200%) brightness(1.03);
 
-  --systemStandardThinMaterialSover: #f6f6f67a;
-  --systemStandardThickMaterialSover: #f6f6f6b8;
-  --systemHeaderMaterialSover: #ffffffcc;
+  --systemStandardThinMaterialSover: rgba(248, 251, 253, 0.55);
+  --systemStandardThickMaterialSover: rgba(248, 251, 253, 0.76);
+  --systemHeaderMaterialSover: rgba(248, 251, 253, 0.72);
 
   --navSidebarSelectedState: #3c3c431a;
   --tracklistHoverColor: #0000000f;
@@ -181,12 +181,12 @@
     --systemQuaternary: #ffffff1a;
     --systemQuinary: #ffffff0d;
 
-    --keyColor: #fa586a;
-    --keyColor-rgb: 250, 88, 106;
-    --keyColor-rollover: #ff5f7a;
-    --keyColor-pressed: #ff4661;
-    --keyColorBG: #fa233b;
-    --selectionColor: #c11b2e;
+    --keyColor: #49c4e2;
+    --keyColor-rgb: 73, 196, 226;
+    --keyColor-rollover: #62cde7;
+    --keyColor-pressed: #25a0d4;
+    --keyColorBG: #25a0d4;
+    --selectionColor: #186b8f;
 
     --systemRed: #ff453a;
     --systemGreen: #32d74b;
@@ -201,14 +201,15 @@
     --labelDivider: #ffffff1a;
     --vibrantDivider: #ebebf530;
 
-    --glassMaterialBackground: #26262899;
-    --glassMaterialShadowColor: #00000033;
+    --glassMaterialBackground: rgba(16, 22, 28, 0.65);
+    --glassMaterialShadowColor: rgba(0, 0, 0, 0.50);
     --glassMaterialInnerStroke: #ffffff;
-    --glassMaterialInnerStrokeAlpha: 0.25;
+    --glassMaterialInnerStrokeAlpha: 0.30;
+    --glassMaterialBackdropFilter: blur(32px) saturate(200%) brightness(1.06);
 
-    --systemStandardThinMaterialSover: #28282880;
-    --systemStandardThickMaterialSover: #282828b3;
-    --systemHeaderMaterialSover: #1e1e1ecc;
+    --systemStandardThinMaterialSover: rgba(22, 30, 38, 0.55);
+    --systemStandardThickMaterialSover: rgba(18, 25, 32, 0.74);
+    --systemHeaderMaterialSover: rgba(14, 20, 26, 0.72);
 
     --navSidebarSelectedState: #ffffff0d;
     --tracklistHoverColor: #ffffff0f;
