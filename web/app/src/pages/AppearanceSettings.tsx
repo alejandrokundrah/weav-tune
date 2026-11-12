@@ -33,6 +33,12 @@ export function AppearanceSettings() {
           checked={a.liquidGlass && liquidGlassSupported()}
           onChange={(liquidGlass) => a.update({ liquidGlass })}
         />
+        <Toggle
+          label="Replica Liquid Glass shell"
+          detail="Applies the extracted Group 45 glass to the sidebar, panels and page chrome. The original Apple Music player pill is unchanged."
+          checked={a.replicaGlass}
+          onChange={(replicaGlass) => a.update({ replicaGlass })}
+        />
         <Toggle label="Colors from artwork" detail="Let the playing song color OpenTune." checked={a.artworkColors} onChange={(artworkColors) => a.update({ artworkColors })} />
         <fieldset className="ot-accent-picker hairline-[16px]">
           <legend>

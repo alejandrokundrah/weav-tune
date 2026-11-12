@@ -641,3 +641,329 @@ header.glass-material {
   -webkit-backdrop-filter: blur(8px);
   box-shadow: inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.15);
 }
+
+/* ==========================================================================
+   Replica Liquid Glass shell — extracted from Group 45.svg
+   --------------------------------------------------------------------------
+   Only app chrome is restyled here. `.glass-pill`, `.ot-mini`, `.ot-bottom-nav`,
+   `.ot-room-notice`, PlayerBar, FullScreenPlayer and their supporting files are
+   intentionally excluded: the original Apple Music liquid glass player stays
+   exactly as it was measured in web/docs/apple-music-dom.md.
+   ========================================================================== */
+
+:root[data-replica-glass='true'] {
+  --ot-replica-blur: 38px;
+  --ot-replica-sat: 200%;
+  --ot-replica-panel: rgba(30, 42, 53, 0.42);
+  --ot-replica-bar: rgba(14, 22, 30, 0.55);
+  --ot-replica-sheen: 1;
+  --ot-replica-rim: 1;
+  --ot-replica-aura: 1;
+  --ot-replica-tint: 0.74;
+  --ot-replica-tint-bg: #121212;
+  --ot-replica-muted: #b9cbd5;
+  --ot-replica-hair: #a7bac6;
+}
+
+:root[data-replica-glass='true'][data-appearance='light'] {
+  --ot-replica-blur: 26px;
+  --ot-replica-sat: 165%;
+  --ot-replica-panel: rgba(248, 251, 253, 0.68);
+  --ot-replica-bar: rgba(248, 251, 253, 0.72);
+  --ot-replica-sheen: 0.62;
+  --ot-replica-rim: 0.6;
+  --ot-replica-aura: 0.45;
+  --ot-replica-tint: 0.28;
+  --ot-replica-tint-bg: #f8fbfd;
+  --ot-replica-muted: #5b6c78;
+  --ot-replica-hair: #7d919d;
+}
+
+/* The replica's deep canvas, while still honouring the Pure black setting. */
+:root[data-replica-glass='true'][data-appearance='dark'] {
+  --pageBG: #0a0d11;
+  --pageBG-rgb: 10, 13, 17;
+}
+:root[data-replica-glass='true'][data-appearance='dark'][data-black='true'] {
+  --pageBG: #000;
+  --pageBG-rgb: 0, 0, 0;
+}
+
+.ot-replica-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Ambient aura: four drifting lights behind the glass, as in the replica. */
+:root[data-replica-glass='true'] .ot-liquid-canvas {
+  opacity: var(--ot-replica-aura);
+}
+:root[data-replica-glass='true'] .ot-liquid-canvas::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--ot-replica-tint-bg);
+  opacity: var(--ot-replica-tint);
+  pointer-events: none;
+}
+:root[data-replica-glass='true'] .ot-liquid-orb {
+  z-index: 0;
+  filter: blur(90px);
+  animation: ot-replica-drift 20s ease-in-out infinite alternate !important;
+}
+:root[data-replica-glass='true'] .ot-orb-1 { background: #0d6ea6; animation-delay: 0s !important; }
+:root[data-replica-glass='true'] .ot-orb-2 { background: #12829f; animation-delay: -6s !important; }
+:root[data-replica-glass='true'] .ot-orb-3 { background: #6a3aa8; animation-delay: -11s !important; }
+:root[data-replica-glass='true'] .ot-orb-4 { background: #0e5ba8; animation-delay: -3s !important; }
+
+@keyframes ot-replica-drift {
+  from { transform: translate3d(-40px, -30px, 0) scale(1); }
+  to { transform: translate3d(70px, 55px, 0) scale(1.14); }
+}
+
+/* Shared glass material for sidebar, side panel, mobile top bar, cards and controls. */
+:root[data-replica-glass='true'] :is(
+  .ot-side,
+  aside.glass-material,
+  header.glass-material,
+  .ot-set-hero,
+  .ot-settings .bg-quinary,
+  .ot-set-layout .bg-quinary,
+  .ot-room-card,
+  .ot-circle-button,
+  .ot-home-links a,
+  .ot-segmented,
+  .ot-audio-details
+) {
+  background-color: var(--ot-replica-panel) !important;
+  -webkit-backdrop-filter: blur(var(--ot-replica-blur)) saturate(var(--ot-replica-sat)) contrast(1.04) brightness(1.04) !important;
+  backdrop-filter: blur(var(--ot-replica-blur)) saturate(var(--ot-replica-sat)) contrast(1.04) brightness(1.04) !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.085),
+    0 20px 55px rgba(0, 0, 0, 0.42) !important;
+  isolation: isolate;
+}
+
+/* Surfaces that are not already positioned need a containing block for the sheen/rim. */
+:root[data-replica-glass='true'] :is(
+  .ot-set-hero,
+  .ot-settings .bg-quinary,
+  .ot-set-layout .bg-quinary,
+  .ot-room-card,
+  .ot-circle-button,
+  .ot-home-links a,
+  .ot-segmented,
+  .ot-audio-details
+) {
+  position: relative;
+}
+
+:root[data-replica-glass='true'] :is(
+  .ot-side,
+  aside.glass-material,
+  header.glass-material,
+  .ot-set-hero,
+  .ot-settings .bg-quinary,
+  .ot-set-layout .bg-quinary,
+  .ot-room-card,
+  .ot-circle-button,
+  .ot-home-links a,
+  .ot-segmented,
+  .ot-audio-details
+)::before,
+:root[data-replica-glass='true'] :is(
+  .ot-side,
+  aside.glass-material,
+  header.glass-material,
+  .ot-set-hero,
+  .ot-settings .bg-quinary,
+  .ot-set-layout .bg-quinary,
+  .ot-room-card,
+  .ot-circle-button,
+  .ot-home-links a,
+  .ot-segmented,
+  .ot-audio-details
+)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+}
+
+:root[data-replica-glass='true'] :is(
+  .ot-side,
+  aside.glass-material,
+  header.glass-material,
+  .ot-set-hero,
+  .ot-settings .bg-quinary,
+  .ot-set-layout .bg-quinary,
+  .ot-room-card,
+  .ot-circle-button,
+  .ot-home-links a,
+  .ot-segmented,
+  .ot-audio-details
+)::before {
+  opacity: var(--ot-replica-sheen);
+  background: linear-gradient(
+    118deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.07) 16%,
+    rgba(255, 255, 255, 0) 38%,
+    rgba(255, 255, 255, 0) 68%,
+    rgba(73, 196, 226, 0.10) 88%,
+    rgba(255, 255, 255, 0.10) 100%
+  );
+  filter: url(#otReplicaRefract);
+}
+
+:root[data-replica-glass='true'] :is(
+  .ot-side,
+  aside.glass-material,
+  header.glass-material,
+  .ot-set-hero,
+  .ot-settings .bg-quinary,
+  .ot-set-layout .bg-quinary,
+  .ot-room-card,
+  .ot-circle-button,
+  .ot-home-links a,
+  .ot-segmented,
+  .ot-audio-details
+)::after {
+  opacity: var(--ot-replica-rim);
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.62),
+    rgba(73, 196, 226, 0.35) 28%,
+    rgba(255, 255, 255, 0) 52%,
+    rgba(73, 196, 226, 0.22) 78%,
+    rgba(255, 255, 255, 0.30)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* Small chrome labels stay crisp over the moving aura. */
+:root[data-replica-glass='true'] .ot-side-header {
+  color: var(--ot-replica-hair);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+:root[data-replica-glass='true'] .ot-side-foot,
+:root[data-replica-glass='true'] .ot-side-android {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+:root[data-replica-glass='true'] .ot-circle-button:hover:not(:disabled),
+:root[data-replica-glass='true'] .ot-home-links a:hover {
+  background-color: color-mix(in srgb, var(--keyColor) 15%, var(--ot-replica-panel)) !important;
+  border-color: color-mix(in srgb, var(--keyColor) 45%, rgba(255, 255, 255, 0.10)) !important;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.35),
+    0 6px 18px color-mix(in srgb, var(--keyColor) 25%, transparent) !important;
+}
+
+:root[data-replica-glass='true'] .ot-segmented button[aria-checked='true'] {
+  background: color-mix(in srgb, var(--keyColor) 20%, var(--ot-replica-panel));
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.35), 0 2px 8px rgba(0, 0, 0, 0.35);
+  color: var(--systemPrimary);
+}
+
+:root[data-replica-glass='true'] .ot-scroll-edge {
+  -webkit-backdrop-filter: blur(var(--ot-replica-blur)) saturate(var(--ot-replica-sat)) !important;
+  backdrop-filter: blur(var(--ot-replica-blur)) saturate(var(--ot-replica-sat)) !important;
+}
+
+:root[data-replica-glass='true'] .ot-track-lockup:hover {
+  color: var(--ot-replica-muted);
+  box-shadow: inset 0.5px 0.5px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* Accessibility: opaque fallback, no refraction, no drifting lights. */
+@media (prefers-reduced-transparency: reduce) {
+  :root[data-replica-glass='true'] .ot-liquid-canvas { opacity: 0 !important; }
+  :root[data-replica-glass='true'] .ot-liquid-canvas::after { display: none !important; }
+  :root[data-replica-glass='true'] :is(
+    .ot-side,
+    aside.glass-material,
+    header.glass-material,
+    .ot-set-hero,
+    .ot-settings .bg-quinary,
+    .ot-set-layout .bg-quinary,
+    .ot-room-card,
+    .ot-circle-button,
+    .ot-home-links a,
+    .ot-segmented,
+    .ot-audio-details
+  ) {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background-color: var(--opaqueShelfBG) !important;
+  }
+  :root[data-replica-glass='true'] :is(
+    .ot-side,
+    aside.glass-material,
+    header.glass-material,
+    .ot-set-hero,
+    .ot-settings .bg-quinary,
+    .ot-set-layout .bg-quinary,
+    .ot-room-card,
+    .ot-circle-button,
+    .ot-home-links a,
+    .ot-segmented,
+    .ot-audio-details
+  )::before,
+  :root[data-replica-glass='true'] :is(
+    .ot-side,
+    aside.glass-material,
+    header.glass-material,
+    .ot-set-hero,
+    .ot-settings .bg-quinary,
+    .ot-set-layout .bg-quinary,
+    .ot-room-card,
+    .ot-circle-button,
+    .ot-home-links a,
+    .ot-segmented,
+    .ot-audio-details
+  )::after {
+    display: none !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root[data-replica-glass='true'] .ot-liquid-canvas { opacity: 0 !important; }
+  :root[data-replica-glass='true'] :is(
+    .ot-side,
+    aside.glass-material,
+    header.glass-material,
+    .ot-set-hero,
+    .ot-settings .bg-quinary,
+    .ot-set-layout .bg-quinary,
+    .ot-room-card,
+    .ot-circle-button,
+    .ot-home-links a,
+    .ot-segmented,
+    .ot-audio-details
+  ) {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background-color: var(--opaqueShelfBG) !important;
+    box-shadow: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-replica-glass='true'] .ot-liquid-orb { animation: none !important; }
+}
+:root[data-motion='false'][data-replica-glass='true'] .ot-liquid-orb {
+  animation: none !important;
+}

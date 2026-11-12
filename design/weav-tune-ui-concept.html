@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weav-Tune · UI Concept — Familiar by design</title>
+<style>
+/* ============================================================
+   Weav-Tune / UI Concept 03 — "Familiar by design"
+   A habit-first interface specification + interactive prototype
+   ============================================================ */
+
+/* ---------- Tokens ---------- */
+:root, [data-theme="light"] {
+  --page:        #e9f1f6;
+  --page-2:      #f7fbfd;
+  --surface:     #ffffff;
+  --surface-2:   #f3f8fb;
+  --surface-3:   #e7f1f7;
+  --line:        #dce8ef;
+  --line-2:      #c8dbe6;
+  --text:        #0d2331;
+  --text-2:      #4d6a7d;
+  --text-3:      #7791a2;
+  --accent:      #0b84bd;
+  --accent-2:    #49c4e2;
+  --accent-soft: #e1f2fb;
+  --on-accent:   #ffffff;
+  --glass:       rgba(255,255,255,.74);
+  --rim:         rgba(255,255,255,.92);
+  --shadow:      0 24px 60px rgba(15, 55, 80, .16), 0 2px 8px rgba(15,55,80,.06);
+  --shadow-sm:   0 2px 10px rgba(15,55,80,.09);
+  --danger:      #d0463b;
+}
+[data-theme="dark"] {
+  --page:        #070d13;
+  --page-2:      #0c151d;
+  --surface:     #111d26;
+  --surface-2:   #0d1821;
+  --surface-3:   #172834;
+  --line:        #223341;
+  --line-2:      #33495b;
+  --text:        #edf6fb;
+  --text-2:      #a6bdcc;
+  --text-3:      #7d97a9;
+  --accent:      #4dc1e8;
+  --accent-2:    #25a0d4;
+  --accent-soft: #123546;
+  --on-accent:   #06212f;
+  --glass:       rgba(16,27,36,.80);
+  --rim:         rgba(255,255,255,.10);
+  --shadow:      0 24px 60px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.3);
+  --shadow-sm:   0 2px 10px rgba(0,0,0,.32);
+  --danger:      #ef7367;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: "Outfit", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(900px 520px at 12% -8%, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 70%),
+    radial-gradient(760px 520px at 92% 4%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%),
+    var(--page);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .25s ease, color .25s ease;
+}
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+.ico { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ico.sm { width: 15px; height: 15px; }
+.ico.lg { width: 22px; height: 22px; }
+button, input { font: inherit; color: inherit; }
+button { border: 0; background: none; cursor: pointer; }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
+a { color: var(--accent); text-decoration: none; cursor: pointer; }
+a:hover { text-decoration: underline; }
+.page { max-width: 1500px; margin: 0 auto; padding: 38px 34px 80px; }
+
+/* ---------- Masthead ---------- */
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+.masthead h1 { font-size: clamp(32px, 4vw, 46px); line-height: 1.06; letter-spacing: -.035em; margin: 0 0 14px; font-weight: 700; }
+.masthead h1 em { font-style: normal; color: var(--accent); }
+.masthead .deck { max-width: 780px; font-size: 15px; line-height: 1.65; color: var(--text-2); margin: 0; }
+.principles { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; padding: 0; list-style: none; }
+.principles li { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm); color: var(--text-2); }
+.principles li b { color: var(--accent); font-size: 10px; letter-spacing: .06em; }
+
+/* ---------- Toolbar ---------- */
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin: 30px 0 18px; padding: 10px 14px; border-radius: 14px; background: var(--glass); border: 1px solid var(--line); box-shadow: var(--shadow-sm); backdrop-filter: blur(16px) saturate(150%); }
+.toolbar .hint { font-size: 12px; color: var(--text-3); }
+.segwrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 10px; background: var(--surface-3); border: 1px solid var(--line); }
+.seg button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--text-2); min-height: 32px; transition: background .18s, color .18s, box-shadow .18s; }
+.seg button:hover { color: var(--text); }
+.seg button.on { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+.seg-label { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); }
+
+/* ---------- Stage ---------- */
+.stage { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 30px; }
+.frame-col { min-width: 0; }
+.desktop-col { flex: 1 1 760px; }
+.mobile-col { flex: 0 0 312px; display: flex; flex-direction: column; align-items: center; }
+#stage[data-view="desktop"] .mobile-col { display: none; }
+#stage[data-view="mobile"] .desktop-col { display: none; }
+#stage[data-view="mobile"] .mobile-col { flex: 1 1 auto; }
+.frame-label { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; width: 100%; margin: 0 0 12px; font-size: 11px; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; color: var(--text-3); }
+.frame-label span:last-child { text-transform: none; letter-spacing: 0; font-weight: 500; font-size: 11px; white-space: nowrap; }
+.mobile-col .frame-label { font-size: 10px; gap: 6px; }
+
+/* ============================================================
+   DESKTOP APP FRAME
+   ============================================================ */
+.desktop { width: 100%; height: 636px; min-width: 600px; border-radius: 16px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); container-type: inline-size; container-name: desk; }
+.app { height: 100%; display: flex; flex-direction: column; }
+.topbar { height: 62px; flex: none; display: grid; grid-template-columns: 196px minmax(0,1fr) auto; align-items: center; gap: 14px; padding: 0 16px 0 18px; border-bottom: 1px solid var(--line); background: var(--glass); backdrop-filter: blur(20px) saturate(170%); }
+.brand { display: flex; align-items: center; gap: 9px; font-size: 16px; font-weight: 700; letter-spacing: -.02em; }
+.logo { width: 26px; height: 26px; display: block; }
+.topsearch { display: flex; align-items: center; gap: 6px; justify-self: stretch; max-width: 560px; }
+.nav-arrow { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 8px; color: var(--text-3); }
+.nav-arrow:hover { background: var(--surface-3); color: var(--text); }
+.searchbox { flex: 1; min-width: 0; height: 36px; display: flex; align-items: center; gap: 9px; padding: 0 10px 0 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); color: var(--text-3); transition: border-color .18s, box-shadow .18s; }
+.searchbox:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+.searchbox input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 12.5px; color: var(--text); }
+.searchbox input::placeholder { color: var(--text-3); }
+kbd { font-family: inherit; font-size: 10px; font-weight: 700; color: var(--text-3); background: var(--surface); border: 1px solid var(--line-2); border-radius: 5px; padding: 2px 6px; white-space: nowrap; }
+.topactions { display: flex; align-items: center; gap: 8px; justify-self: end; }
+.chip-btn { display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 12px; border-radius: 9px; font-size: 12px; font-weight: 600; color: var(--text-2); background: var(--surface-2); border: 1px solid var(--line); }
+.chip-btn:hover { color: var(--text); border-color: var(--line-2); }
+.avatar { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: var(--on-accent); background: linear-gradient(140deg, var(--accent-2), var(--accent)); box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 35%, transparent); }
+.avatar.sm { width: 30px; height: 30px; font-size: 11px; }
+
+.body { flex: 1; min-height: 0; display: grid; grid-template-columns: 196px minmax(0,1fr) 252px; }
+.body.no-context { grid-template-columns: 196px minmax(0,1fr); }
+.body.no-context .context { display: none; }
+.rail { display: flex; flex-direction: column; min-height: 0; padding: 16px 10px 12px; border-right: 1px solid var(--line); background: var(--surface-2); overflow: auto; }
+.rail-group { margin-bottom: 18px; }
+.rail-label { display: flex; justify-content: space-between; align-items: center; margin: 0 8px 8px; font-size: 9.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--text-3); }
+.rail-add { width: 20px; height: 20px; display: grid; place-items: center; border-radius: 6px; color: var(--text-3); }
+.rail-add:hover { background: var(--surface-3); color: var(--accent); }
+.rail-item { width: 100%; min-height: 38px; display: flex; align-items: center; gap: 11px; padding: 0 11px; border-radius: 9px; font-size: 12.5px; font-weight: 500; color: var(--text-2); text-align: left; transition: background .16s, color .16s; }
+.rail-item:hover { background: var(--surface-3); color: var(--text); }
+.rail-item.active { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+.rail-item.active .ico { stroke-width: 2.1; }
+.rail-item .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-2); flex: none; }
+.rail-foot { margin-top: auto; padding: 10px 10px 2px; border-top: 1px solid var(--line); display: flex; gap: 8px; align-items: flex-start; font-size: 10.5px; line-height: 1.45; color: var(--text-3); }
+
+.content { min-width: 0; overflow-y: auto; padding: 24px 26px 28px; background: var(--surface); scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; }
+.content::-webkit-scrollbar, .rail::-webkit-scrollbar, .m-scroll::-webkit-scrollbar { width: 7px; height: 7px; }
+.content::-webkit-scrollbar-thumb, .rail::-webkit-scrollbar-thumb, .m-scroll::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 99px; }
+.view { display: none; }
+.view.is-active { display: block; animation: fade .22s ease both; }
+@keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.greet { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 26px; }
+.greet h2 { margin: 0 0 6px; font-size: 26px; line-height: 1.15; letter-spacing: -.03em; font-weight: 700; }
+.greet .sub { margin: 0; font-size: 12.5px; color: var(--text-2); }
+.btn-primary { display: inline-flex; align-items: center; gap: 8px; min-height: 38px; padding: 0 16px 0 13px; border-radius: 999px; font-size: 12.5px; font-weight: 700; color: var(--on-accent); background: linear-gradient(135deg, var(--accent-2), var(--accent)); box-shadow: 0 5px 16px color-mix(in srgb, var(--accent) 32%, transparent); white-space: nowrap; transition: transform .16s, box-shadow .16s; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 40%, transparent); }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; margin: 0 0 12px; }
+.section-head h3 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: -.015em; }
+.section-head a { font-size: 11px; font-weight: 600; }
+.section-head + * { margin-bottom: 26px; }
+.cards-4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+.card { text-align: left; min-width: 0; padding: 0; border-radius: 12px; transition: transform .18s; }
+.card:hover { transform: translateY(-3px); }
+.card:hover .art { box-shadow: 0 10px 22px rgba(10,40,60,.22); }
+.card .art { width: 100%; aspect-ratio: 1; border-radius: 10px; margin-bottom: 9px; box-shadow: var(--shadow-sm); transition: box-shadow .2s; }
+.card b { display: block; font-size: 12.5px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card small { display: block; margin-top: 2px; font-size: 10.5px; color: var(--text-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mixes-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+.mix { position: relative; min-height: 98px; padding: 14px; border-radius: 12px; overflow: hidden; text-align: left; color: #fff; display: flex; flex-direction: column; justify-content: space-between; transition: transform .18s; }
+.mix:hover { transform: translateY(-3px); }
+.m1 { background: linear-gradient(135deg, #5b3ad6, #8d63ea); }
+.m2 { background: linear-gradient(135deg, #89442c, #c2713f); }
+.m3 { background: linear-gradient(135deg, #0d6b86, #17a0ae); }
+.mix-kicker { font-size: 9px; font-weight: 700; letter-spacing: .14em; opacity: .8; }
+.mix-title { font-size: 17px; font-weight: 700; letter-spacing: -.02em; }
+.mix-play { position: absolute; right: 12px; bottom: 12px; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.94); color: #12222c; box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+.mix-play .ico { width: 14px; height: 14px; margin-left: 2px; }
+.song-rows { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.song-row { width: 100%; display: flex; align-items: center; gap: 12px; min-height: 54px; padding: 7px 12px; background: var(--surface); border-bottom: 1px solid var(--line); text-align: left; }
+.song-row:last-child { border-bottom: 0; }
+.song-row:hover { background: var(--surface-2); }
+.song-row .art { width: 38px; height: 38px; border-radius: 7px; }
+.song-meta { min-width: 0; flex: 1; }
+.song-meta b { display: block; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.song-meta small { display: block; font-size: 10.5px; color: var(--text-3); margin-top: 2px; }
+.song-time { font-size: 11px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.icon-btn { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; color: var(--text-3); }
+.icon-btn:hover { background: var(--surface-3); color: var(--text); }
+.liked { color: var(--danger) !important; }
+.liked .ico { fill: currentColor; }
+
+/* generic view helpers */
+.big-search { height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 14px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); margin-bottom: 24px; }
+.big-search input { flex: 1; border: 0; outline: 0; background: transparent; font-size: 13px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { padding: 8px 13px; border-radius: 999px; font-size: 11.5px; font-weight: 600; color: var(--text-2); background: var(--surface-2); border: 1px solid var(--line); }
+.chip:hover { color: var(--accent); border-color: var(--accent); }
+.tile-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+.tile { height: 86px; border-radius: 12px; padding: 14px; color: #fff; font-size: 14px; font-weight: 700; text-align: left; position: relative; overflow: hidden; }
+.tile::after { content: ""; position: absolute; width: 70px; height: 70px; border-radius: 12px; right: -14px; bottom: -22px; background: rgba(255,255,255,.18); transform: rotate(32deg); }
+.t1 { background: #b8455a; } .t2 { background: #2d6e8f; } .t3 { background: #6c53b6; }
+.t4 { background: #2f7d62; } .t5 { background: #b57432; } .t6 { background: #4a5b8c; }
+.subtabs { display: flex; gap: 6px; margin-bottom: 20px; }
+.subtab { padding: 8px 14px; border-radius: 999px; font-size: 11.5px; font-weight: 600; color: var(--text-2); background: var(--surface-2); border: 1px solid var(--line); }
+.subtab.on { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+.live { font-size: 9px; font-weight: 800; letter-spacing: .1em; color: var(--danger); border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent); padding: 2px 6px; border-radius: 5px; }
+
+/* ---------- Context panel (queue / lyrics) ---------- */
+.context { min-width: 0; display: flex; flex-direction: column; border-left: 1px solid var(--line); background: var(--surface-2); }
+.ctx-tabs { height: 50px; flex: none; display: flex; align-items: center; gap: 5px; padding: 0 12px; border-bottom: 1px solid var(--line); }
+.ctx-tab { padding: 7px 11px; border-radius: 8px; font-size: 11.5px; font-weight: 600; color: var(--text-3); }
+.ctx-tab.on { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+.ctx-close { margin-left: auto; width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: var(--text-3); }
+.ctx-close:hover { background: var(--surface-3); color: var(--text); }
+.ctx-body { flex: 1; min-height: 0; overflow-y: auto; padding: 14px 12px; scrollbar-width: thin; }
+.ctx-kicker { font-size: 9.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); margin: 0 0 12px 2px; }
+.q-row { display: flex; align-items: center; gap: 9px; padding: 6px 4px; border-radius: 8px; }
+.q-row:hover { background: var(--surface-3); }
+.q-row .art { width: 34px; height: 34px; border-radius: 6px; }
+.q-meta { flex: 1; min-width: 0; }
+.q-meta b { display: block; font-size: 11.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.q-meta small { display: block; font-size: 10px; color: var(--text-3); margin-top: 1px; }
+.q-remove { width: 28px; height: 28px; border-radius: 6px; display: grid; place-items: center; color: var(--text-3); opacity: .55; }
+.q-row:hover .q-remove, .q-remove:focus-visible { opacity: 1; }
+.q-remove:hover { background: var(--surface); color: var(--danger); }
+.ctx-foot { padding: 10px 12px 14px; border-top: 1px solid var(--line); }
+.ctx-foot button { width: 100%; min-height: 34px; border-radius: 9px; font-size: 11.5px; font-weight: 600; color: var(--text-2); border: 1px solid var(--line); background: var(--surface); }
+.ctx-foot button:hover { color: var(--accent); border-color: var(--accent); }
+.lyric { font-size: 13px; line-height: 1.5; font-weight: 600; color: var(--text-3); padding: 9px 4px; border-radius: 8px; }
+.lyric.on { color: var(--text); font-size: 15px; font-weight: 700; background: var(--accent-soft); padding-left: 10px; }
+.lyric.dim { opacity: .5; }
+
+/* ---------- Player bar ---------- */
+.playerbar { height: 72px; flex: none; display: grid; grid-template-columns: minmax(180px,1fr) minmax(280px,1.35fr) minmax(170px,1fr); align-items: center; gap: 14px; padding: 0 18px; border-top: 1px solid var(--line); background: var(--glass); backdrop-filter: blur(22px) saturate(180%); box-shadow: inset 0 1px 0 var(--rim); }
+.np { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.np .art { width: 44px; height: 44px; border-radius: 8px; }
+.np-meta { min-width: 0; }
+.np-meta b { display: block; font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.np-meta small { display: block; font-size: 10.5px; color: var(--text-3); margin-top: 2px; }
+.np .icon-btn { width: 30px; height: 30px; }
+.transport { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.controls { display: flex; align-items: center; gap: 4px; }
+.ctrl { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: var(--text-2); }
+.ctrl:hover { background: var(--surface-3); color: var(--text); }
+.ctrl.on { color: var(--accent); }
+.play-main { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; color: var(--on-accent); background: linear-gradient(135deg, var(--accent-2), var(--accent)); box-shadow: 0 3px 12px color-mix(in srgb, var(--accent) 35%, transparent); margin: 0 4px; }
+.play-main:hover { transform: scale(1.06); }
+.play-main .ico { width: 16px; height: 16px; }
+.progress { width: 100%; display: flex; align-items: center; gap: 9px; }
+.progress .t { font-size: 10px; color: var(--text-3); font-variant-numeric: tabular-nums; min-width: 30px; }
+.progress .t:last-child { text-align: right; }
+.track { flex: 1; height: 4px; border-radius: 99px; background: var(--line-2); position: relative; cursor: pointer; }
+.track .fill { position: absolute; inset: 0 auto 0 0; width: 32%; border-radius: 99px; background: var(--accent); }
+.track .fill::after { content: ""; position: absolute; right: -4px; top: -3px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--surface); opacity: 0; transition: opacity .15s; }
+.track:hover .fill::after { opacity: 1; }
+.p-actions { display: flex; align-items: center; justify-content: flex-end; gap: 2px; }
+.vol { width: 68px; height: 4px; border-radius: 99px; background: var(--line-2); position: relative; margin: 0 6px; }
+.vol i { position: absolute; inset: 0 auto 0 0; width: 62%; border-radius: 99px; background: var(--text-3); display: block; }
+
+/* ============================================================
+   MOBILE PHONE FRAME
+   ============================================================ */
+.phone { width: 300px; height: 636px; border-radius: 40px; padding: 9px; background: linear-gradient(160deg, #2b3945, #0c141b 60%); box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,255,255,.12); }
+.phone-screen { position: relative; width: 100%; height: 100%; border-radius: 32px; overflow: hidden; background: var(--surface); display: flex; flex-direction: column; }
+.statusbar { height: 34px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 10px; font-weight: 700; color: var(--text); }
+.notch { position: absolute; left: 50%; top: 9px; transform: translateX(-50%); width: 76px; height: 19px; border-radius: 99px; background: #0b1218; }
+.statusicons { letter-spacing: 1px; font-size: 9px; }
+.m-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 10px 18px 6px; }
+.m-header h2 { margin: 0 0 3px; font-size: 21px; letter-spacing: -.03em; font-weight: 700; }
+.m-header p { margin: 0; font-size: 10.5px; color: var(--text-2); }
+.m-actions { display: flex; align-items: center; gap: 2px; }
+.m-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 8px 0 12px; scrollbar-width: none; }
+.m-scroll::-webkit-scrollbar { display: none; }
+.m-scroll .section-head { padding: 0 18px; margin-bottom: 10px; }
+.m-scroll .section-head h3 { font-size: 14px; }
+.m-cards { display: flex; gap: 12px; overflow-x: auto; padding: 0 18px 6px; scrollbar-width: none; }
+.m-cards::-webkit-scrollbar { display: none; }
+.m-card { flex: 0 0 120px; text-align: left; }
+.m-card .art { width: 120px; height: 120px; border-radius: 10px; margin-bottom: 8px; box-shadow: var(--shadow-sm); }
+.m-card b { display: block; font-size: 11.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m-card small { display: block; font-size: 10px; color: var(--text-3); margin-top: 2px; }
+.moods { display: flex; gap: 8px; overflow-x: auto; padding: 0 18px 4px; scrollbar-width: none; }
+.moods::-webkit-scrollbar { display: none; }
+.mood { flex: 0 0 88px; height: 62px; border-radius: 11px; padding: 10px; color: #fff; font-size: 12px; font-weight: 700; text-align: left; }
+.mood.a { background: linear-gradient(135deg,#5b3ad6,#8d63ea); }
+.mood.b { background: linear-gradient(135deg,#9a432c,#cf7744); }
+.mood.c { background: linear-gradient(135deg,#0d6b86,#17a0ae); }
+.m-rows { padding: 0 12px; }
+.m-row { width: 100%; display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 7px 6px; border-bottom: 1px solid var(--line); text-align: left; }
+.m-row:last-child { border-bottom: 0; }
+.m-row .art { width: 40px; height: 40px; border-radius: 8px; }
+.m-row .song-meta b { font-size: 11.5px; }
+.m-row .song-meta small { font-size: 10px; }
+.mini { flex: none; margin: 0 10px 6px; height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 10px; border-radius: 13px; background: var(--glass); border: 1px solid var(--line); box-shadow: var(--shadow-sm); backdrop-filter: blur(18px); text-align: left; }
+.mini .art { width: 38px; height: 38px; border-radius: 8px; }
+.mini .song-meta b { font-size: 11.5px; }
+.mini .song-meta small { font-size: 10px; }
+.mini .icon-btn { width: 32px; height: 32px; }
+.mini .mini-play { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+.tabbar { flex: none; height: 62px; display: grid; grid-template-columns: repeat(4,1fr); padding-bottom: 8px; border-top: 1px solid var(--line); background: var(--surface-2); }
+.tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 9.5px; font-weight: 600; color: var(--text-3); }
+.tab .ico { width: 20px; height: 20px; }
+.tab.on { color: var(--accent); }
+.tab.on .ico { stroke-width: 2.2; }
+.sheet { position: absolute; inset: 0; z-index: 5; border-radius: 32px; background: var(--surface); transform: translateY(101%); transition: transform .34s cubic-bezier(.22,.8,.25,1); display: flex; flex-direction: column; padding: 0 22px 22px; box-shadow: 0 -14px 40px rgba(0,0,0,.18); }
+.phone-screen.sheet-open .sheet { transform: none; }
+.sheet-top { height: 58px; flex: none; display: flex; align-items: center; justify-content: space-between; }
+.sheet-top .icon-btn { color: var(--text-2); }
+.sheet-center { text-align: center; font-size: 9.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); }
+.sheet-cover { width: 100%; aspect-ratio: 1; max-height: 268px; border-radius: 18px; box-shadow: 0 18px 36px rgba(10,35,55,.25); margin: 6px auto 20px; }
+.sheet-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.sheet-meta h3 { margin: 0 0 3px; font-size: 19px; letter-spacing: -.025em; font-weight: 700; }
+.sheet-meta p { margin: 0; font-size: 11.5px; color: var(--text-2); }
+.sheet .progress { margin-bottom: 14px; }
+.sheet .controls { justify-content: space-between; margin-bottom: 20px; }
+.sheet .play-main { width: 56px; height: 56px; }
+.sheet .play-main .ico { width: 24px; height: 24px; }
+.sheet-utils { margin-top: auto; display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; padding-top: 14px; border-top: 1px solid var(--line); }
+.sheet-util { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 9.5px; font-weight: 600; color: var(--text-2); min-height: 48px; }
+.sheet-util .ico { width: 19px; height: 19px; }
+
+/* ---------- Album artwork (pure CSS, no assets) ---------- */
+.art { position: relative; overflow: hidden; flex: none; background: #123; }
+.art > span { position: absolute; display: block; }
+.a1 { background: linear-gradient(150deg,#4b1220,#a73032 58%,#d2692e); }
+.a1 > span { width: 58%; height: 58%; border-radius: 50%; background: #f0a44b; left: 21%; top: 18%; z-index: 2; }
+.a1::after { content:""; position:absolute; left:-12%; right:-12%; bottom:-24%; height:58%; background:#7c1b2a; transform:rotate(-13deg); z-index:1; }
+.a2 { background: #0d2b45; }
+.a2::before { content:""; position:absolute; inset:0; background: repeating-linear-gradient(118deg, rgba(96,186,224,.42) 0 7px, transparent 7px 17px); }
+.a2 > span { width: 48%; height: 48%; border-radius: 50%; right: 8%; bottom: 10%; background: #4fc0df; box-shadow: inset -12px -12px 0 rgba(5,40,65,.3); z-index:2; }
+.a3 { background: linear-gradient(160deg,#0b3b46,#0f5b62); }
+.a3 > span { width: 26%; height: 26%; border-radius: 50%; left: 37%; top: 37%; background: #f1e0b4; z-index:2; }
+.a4 { background: radial-gradient(circle at 50% 50%, #2b1a48 0 26%, #6b3d97 27% 34%, #2b1a48 35% 52%, #4a2c72 53% 60%, #1c1133 61%); }
+.a4 > span { display:none; }
+.a5 { background: linear-gradient(145deg,#80202a,#d15338); }
+.a5 > span { width: 52%; height: 52%; border-radius: 50%; left: 24%; top: 24%; background: #ffb15c; z-index:2; }
+.a6 { background: linear-gradient(145deg,#4b2a1c,#a9713a); }
+.a6 > span { width: 62%; height: 62%; border-radius: 50%; left: -14%; bottom: -18%; background: rgba(255,214,150,.55); z-index:2; }
+.a7 { background: linear-gradient(145deg,#3d3320,#8a7440); }
+.a7::before { content:""; position:absolute; inset:0; background: repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 2px, transparent 2px 8px); }
+.a7 > span { width: 44%; height: 44%; border-radius: 50%; right: 12%; top: 12%; background: #e2c58b; z-index:2; }
+.a8 { background: linear-gradient(145deg,#3a1038,#8a2e6c); }
+.a8 > span { width: 40%; height: 40%; border-radius: 50%; left: 30%; top: 30%; background: rgba(255,255,255,.82); z-index:2; }
+
+/* Container queries — the desktop shell degrades gracefully */
+@container desk (max-width: 880px) {
+  .body, .body.no-context { grid-template-columns: 172px minmax(0,1fr); }
+  .context { display: none; }
+  .topbar { grid-template-columns: 172px minmax(0,1fr) auto; }
+  .cards-4 { gap: 10px; }
+}
+@container desk (max-width: 700px) {
+  .body, .body.no-context { grid-template-columns: 60px minmax(0,1fr); }
+  .topbar { grid-template-columns: 60px minmax(0,1fr) auto; }
+  .brand span, .rail-label, .rail-item span, .rail-foot, .rail-item .dot { display: none; }
+  .rail { padding: 14px 8px; }
+  .rail-item { justify-content: center; padding: 0; }
+  .rail-add { display: none; }
+  .playerbar { grid-template-columns: 1fr 1.3fr; }
+  .p-actions { display: none; }
+  .mixes-3 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+
+/* ============================================================
+   SPEC / NOTES
+   ============================================================ */
+.notes { margin-top: 56px; padding-top: 34px; border-top: 1px solid var(--line-2); }
+.notes h2 { margin: 0 0 8px; font-size: 26px; letter-spacing: -.03em; font-weight: 700; }
+.notes > p.lead { margin: 0 0 26px; max-width: 760px; color: var(--text-2); font-size: 13.5px; line-height: 1.65; }
+.notes h3 { margin: 34px 0 14px; font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); }
+.before-after { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+.before-fig { margin: 0; }
+.before-fig img { display: block; width: 100%; border-radius: 12px; border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+.before-fig figcaption { margin-top: 9px; font-size: 11px; color: var(--text-3); }
+.issues { display: grid; gap: 8px; }
+.issue { display: flex; gap: 11px; align-items: flex-start; padding: 11px 13px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); }
+.issue i { width: 7px; height: 7px; border-radius: 50%; background: var(--danger); margin-top: 5px; flex: none; }
+.issue b { display: block; font-size: 12px; margin-bottom: 2px; }
+.issue span { font-size: 11.5px; line-height: 1.5; color: var(--text-2); }
+.spec-table { width: 100%; border-collapse: collapse; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); font-size: 12.5px; }
+.spec-table th { text-align: left; padding: 12px 14px; background: var(--surface-2); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); border-bottom: 1px solid var(--line); }
+.spec-table td { padding: 13px 14px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.5; }
+.spec-table tr:last-child td { border-bottom: 0; }
+.spec-table td:first-child { font-weight: 700; width: 22%; }
+.spec-table td:nth-child(2) { color: var(--text-2); width: 34%; }
+.spec-table .tick { color: var(--accent); font-weight: 700; }
+.token-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+.token-card { padding: 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.token-card h4 { margin: 0 0 12px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); }
+.swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.sw { width: 46px; }
+.sw i { display: block; height: 34px; border-radius: 8px; border: 1px solid var(--line); }
+.sw small { display: block; margin-top: 4px; font-size: 9px; color: var(--text-3); line-height: 1.3; }
+.type-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 5px 0; border-bottom: 1px dashed var(--line); }
+.type-row:last-child { border: 0; }
+.type-row small { font-size: 10px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.tk { font-size: 11.5px; line-height: 1.7; color: var(--text-2); }
+.tk b { color: var(--text); }
+.checks { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 8px 18px; }
+.check { display: flex; gap: 9px; align-items: flex-start; font-size: 12px; line-height: 1.5; color: var(--text-2); }
+.check span { color: var(--accent); font-weight: 800; }
+.handoff { margin-top: 30px; padding: 20px 22px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); font-size: 12.5px; line-height: 1.7; color: var(--text-2); }
+.handoff b { color: var(--text); }
+.foot { margin-top: 34px; font-size: 11px; color: var(--text-3); text-align: center; }
+@media (max-width: 900px) { .before-after { grid-template-columns: 1fr; } .page { padding: 26px 18px 60px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+<!-- ============ Icon sprite ============ -->
+<svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.7-3.7"/></symbol>
+<symbol id="i-library" viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="16" rx="1"/><path d="m18 5 3 15"/></symbol>
+<symbol id="i-radio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4M4.9 4.9a10 10 0 0 0 0 14.2M19.1 4.9a10 10 0 0 1 0 14.2"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5S3.8 15.6 2.8 10.7A5 5 0 0 1 12 6.6a5 5 0 0 1 9.2 4.1c-1 4.9-9.2 9.8-9.2 9.8Z"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.2 19 12 8 18.8Z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24"><rect x="7" y="5" width="3.6" height="14" rx="1" fill="currentColor" stroke="none"/><rect x="13.4" y="5" width="3.6" height="14" rx="1" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-prev" viewBox="0 0 24 24"><path d="M5 5v14"/><path d="M19 5 8 12l11 7Z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-next" viewBox="0 0 24 24"><path d="M19 5v14"/><path d="m5 5 11 7L5 19Z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M3 6h3.2c1.6 0 2.6.8 3.5 2l4.6 8c.9 1.2 1.9 2 3.5 2H21"/><path d="m18 3 3 3-3 3"/><path d="M3 18h3.2c1.5 0 2.5-.8 3.3-2l1-1.6"/><path d="m18 15 3 3-3 3"/><path d="M14.3 8.6l.9-1.4c.9-1.2 1.9-2 3.5-2H21"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></symbol>
+<symbol id="i-lyrics" viewBox="0 0 24 24"><path d="M4 5h16M4 10h12M4 15h16M4 20h9"/></symbol>
+<symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M17 9a4 4 0 0 1 0 6M19.5 6.5a8 8 0 0 1 0 11"/></symbol>
+<symbol id="i-device" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+<symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 3H3v6M15 3h6v6M21 15v6h-6M3 15v6h6"/></symbol>
+<symbol id="i-left" viewBox="0 0 24 24"><path d="m14 5-7 7 7 7"/></symbol>
+<symbol id="i-right" viewBox="0 0 24 24"><path d="m10 5 7 7-7 7"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="m5 9 7 7 7-7"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24"><path d="m5 15 7-7 7 7"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6 18 18M18 6 6 18"/></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17" r="2"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24"><path d="M12 16V3m0 0L8 7m4-4 4 4"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 19h16"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24"><path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3Z"/></symbol>
+</defs></svg>
+
+<div class="page">
+
+  <!-- ============ Masthead ============ -->
+  <header class="masthead">
+    <p class="eyebrow">Weav-Tune / UI Concept 03 · Interface specification</p>
+    <h1>Frame: <em>familiar by design</em></h1>
+    <p class="deck">A brand-new, habit-first interface for the Weav-Tune player. The Liquid Glass identity stays on the floating chrome; structure, contrast and reachability follow what listeners already do. Every decision below maps to a behaviour learned from years of Spotify, Apple Music and YouTube Music — so the app feels obvious on first open, without a tutorial.</p>
+    <ul class="principles">
+      <li><b>01</b> Persistent now-playing bar</li>
+      <li><b>02</b> Search in one place · ⌘K</li>
+      <li><b>03</b> Thumb-zone mobile controls</li>
+      <li><b>04</b> Opaque reading surfaces</li>
+      <li><b>05</b> 44px minimum targets</li>
+    </ul>
+  </header>
+
+  <!-- ============ Toolbar ============ -->
+  <div class="toolbar">
+    <div class="segwrap">
+      <span class="seg-label">Theme</span>
+      <div class="seg" data-seg="theme">
+        <button data-val="light" class="on"><svg class="ico sm"><use href="#i-sparkle"/></svg> Light</button>
+        <button data-val="dark"><svg class="ico sm"><use href="#i-heart"/></svg> Dark</button>
+      </div>
+      <span class="seg-label">Viewport</span>
+      <div class="seg" data-seg="view">
+        <button data-val="both" class="on">Both</button>
+        <button data-val="desktop">Desktop</button>
+        <button data-val="mobile">Mobile</button>
+      </div>
+    </div>
+    <div class="segwrap">
+      <span class="hint">Try it: click nav, search, play, queue, lyrics · ⌘K / Ctrl+K to search</span>
+      <a class="chip-btn" href="#notes">Design notes ↓</a>
+    </div>
+  </div>
+
+  <!-- ============ Stage ============ -->
+  <section class="stage" id="stage" data-view="both">
+
+    <!-- ---------- DESKTOP ---------- -->
+    <div class="frame-col desktop-col">
+      <div class="frame-label"><span>Desktop · web / desktop player</span><span>click around: nav, search, play, queue, lyrics</span></div>
+      <div class="desktop" id="desktop">
+        <div class="app">
+
+          <!-- top chrome -->
+          <div class="topbar">
+            <div class="brand">
+              <svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                <path d="M2 20c4.5 0 4.5-9 9-9s4.5 9 9 9 4.5-9 10-9" stroke="#0b84bd" stroke-width="3" stroke-linecap="round"/>
+                <path d="M2 26c4.5 0 4.5-9 9-9s4.5 9 9 9 4.5-9 10-9" stroke="#49c4e2" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+              </svg>
+              <span>Weav Tune</span>
+            </div>
+            <div class="topsearch">
+              <button class="nav-arrow" title="Back"><svg class="ico sm"><use href="#i-left"/></svg></button>
+              <button class="nav-arrow" title="Forward"><svg class="ico sm"><use href="#i-right"/></svg></button>
+              <label class="searchbox">
+                <svg class="ico sm"><use href="#i-search"/></svg>
+                <input id="globalSearch" type="text" placeholder="Search songs, artists, albums" aria-label="Search">
+                <kbd>⌘ K</kbd>
+              </label>
+            </div>
+            <div class="topactions">
+              <button class="chip-btn" title="Sound settings"><svg class="ico sm"><use href="#i-sliders"/></svg> Sound</button>
+              <button class="avatar" title="Account">A</button>
+            </div>
+          </div>
+
+          <!-- body -->
+          <div class="body" id="appBody">
+            <aside class="rail">
+              <div class="rail-group">
+                <p class="rail-label">Listen</p>
+                <button class="rail-item active" data-view="home"><svg class="ico"><use href="#i-home"/></svg><span>Home</span></button>
+                <button class="rail-item" data-view="search"><svg class="ico"><use href="#i-search"/></svg><span>Search</span></button>
+                <button class="rail-item" data-view="library"><svg class="ico"><use href="#i-library"/></svg><span>Your library</span></button>
+                <button class="rail-item" data-view="radio"><svg class="ico"><use href="#i-radio"/></svg><span>Live radio</span></button>
+              </div>
+              <div class="rail-group">
+                <p class="rail-label">Your playlists <button class="rail-add" title="New playlist"><svg class="ico sm"><use href="#i-plus"/></svg></button></p>
+                <button class="rail-item"><i class="dot"></i><span>Late night drive</span></button>
+                <button class="rail-item"><i class="dot"></i><span>Focus flow</span></button>
+                <button class="rail-item"><i class="dot"></i><span>Liked songs</span></button>
+                <button class="rail-item"><svg class="ico"><use href="#i-download"/></svg><span>Downloads</span></button>
+                <button class="rail-item"><i class="dot"></i><span>Sunday slow</span></button>
+                <button class="rail-item"><i class="dot"></i><span>Running tempo</span></button>
+              </div>
+              <div class="rail-foot"><svg class="ico sm" style="margin-top:1px"><use href="#i-check"/></svg><span>No account needed. Listening stays on this device.</span></div>
+            </aside>
+
+            <main class="content" id="content">
+              <!-- HOME -->
+              <section class="view view-home is-active" data-panel="home">
+                <div class="greet">
+                  <div>
+                    <h2>Good evening, Alex</h2>
+                    <p class="sub">Pick up where you left off, or start something new.</p>
+                  </div>
+                  <button class="btn-primary" data-play><svg class="ico sm"><use data-play-icon href="#i-play"/></svg> Play my mix</button>
+                </div>
+
+                <div class="section-head"><h3>Jump back in</h3><a>See all</a></div>
+                <div class="cards-4">
+                  <button class="card" data-play><div class="art a1"><span></span></div><b>After Hours</b><small>The Weeknd · Album</small></button>
+                  <button class="card" data-play><div class="art a2"><span></span></div><b>Midnight City</b><small>M83 · Single</small></button>
+                  <button class="card" data-play><div class="art a3"><span></span></div><b>SOS</b><small>SZA · Album</small></button>
+                  <button class="card" data-play><div class="art a4"><span></span></div><b>Midnights</b><small>Taylor Swift · Album</small></button>
+                </div>
+
+                <div class="section-head"><h3>Made for you</h3><a>See all</a></div>
+                <div class="mixes-3">
+                  <button class="mix m1" data-play><span class="mix-kicker">DAILY MIX 01</span><span class="mix-title">Night drive</span><span class="mix-play"><svg class="ico"><use href="#i-play"/></svg></span></button>
+                  <button class="mix m2" data-play><span class="mix-kicker">DAILY MIX 02</span><span class="mix-title">Soft focus</span><span class="mix-play"><svg class="ico"><use href="#i-play"/></svg></span></button>
+                  <button class="mix m3" data-play><span class="mix-kicker">DAILY MIX 03</span><span class="mix-title">Slow Sunday</span><span class="mix-play"><svg class="ico"><use href="#i-play"/></svg></span></button>
+                </div>
+
+                <div class="section-head"><h3>Recently played</h3><a>View history</a></div>
+                <div class="song-rows">
+                  <button class="song-row" data-play><div class="art a5"><span></span></div><div class="song-meta"><b>Blinding Lights</b><small>The Weeknd</small></div><span class="song-time">3:20</span><span class="icon-btn"><svg class="ico sm"><use href="#i-dots"/></svg></span></button>
+                  <button class="song-row" data-play><div class="art a2"><span></span></div><div class="song-meta"><b>Midnight City</b><small>M83</small></div><span class="song-time">4:03</span><span class="icon-btn"><svg class="ico sm"><use href="#i-dots"/></svg></span></button>
+                  <button class="song-row" data-play><div class="art a3"><span></span></div><div class="song-meta"><b>SOS</b><small>SZA</small></div><span class="song-time">3:44</span><span class="icon-btn"><svg class="ico sm"><use href="#i-dots"/></svg></span></button>
+                </div>
+              </section>
+
+              <!-- SEARCH -->
+              <section class="view" data-panel="search">
+                <div class="greet"><div><h2>Search</h2><p class="sub">One place for everything. Press ⌘K from anywhere.</p></div></div>
+                <label class="big-search"><svg class="ico"><use href="#i-search"/></svg><input type="text" placeholder="What do you want to listen to?" aria-label="Search"></label>
+                <div class="section-head"><h3>Recent searches</h3></div>
+                <div class="chips" style="margin-bottom:26px">
+                  <button class="chip">The Weeknd</button><button class="chip">Night drive</button><button class="chip">Synthwave 80s</button><button class="chip">LRCLIB</button><button class="chip">Lo-fi focus</button>
+                </div>
+                <div class="section-head"><h3>Browse all</h3></div>
+                <div class="tile-grid">
+                  <button class="tile t1">Pop</button><button class="tile t2">Chill</button><button class="tile t3">Indie</button>
+                  <button class="tile t4">Focus</button><button class="tile t5">Workout</button><button class="tile t6">Podcasts</button>
+                </div>
+              </section>
+
+              <!-- LIBRARY -->
+              <section class="view" data-panel="library">
+                <div class="greet"><div><h2>Your library</h2><p class="sub">Everything you saved, in one predictable place.</p></div><button class="btn-primary"><svg class="ico sm"><use href="#i-plus"/></svg> New playlist</button></div>
+                <div class="subtabs"><button class="subtab on">Playlists</button><button class="subtab">Albums</button><button class="subtab">Songs</button><button class="subtab">Downloads</button></div>
+                <div class="cards-4">
+                  <button class="card"><div class="art a1"><span></span></div><b>Late night drive</b><small>32 songs</small></button>
+                  <button class="card"><div class="art a6"><span></span></div><b>Focus flow</b><small>18 songs</small></button>
+                  <button class="card"><div class="art a8"><span></span></div><b>Liked songs</b><small>214 songs</small></button>
+                  <button class="card"><div class="art a7"><span></span></div><b>Sunday slow</b><small>26 songs</small></button>
+                </div>
+                <div class="section-head" style="margin-top:26px"><h3>Downloaded for offline</h3><a>See all</a></div>
+                <div class="song-rows">
+                  <button class="song-row"><div class="art a2"><span></span></div><div class="song-meta"><b>Midnight City</b><small>M83 · FLAC</small></div><span class="song-time">4:03</span><span class="icon-btn"><svg class="ico sm"><use href="#i-check"/></svg></span></button>
+                  <button class="song-row"><div class="art a5"><span></span></div><div class="song-meta"><b>Blinding Lights</b><small>The Weeknd · FLAC</small></div><span class="song-time">3:20</span><span class="icon-btn"><svg class="ico sm"><use href="#i-check"/></svg></span></button>
+                </div>
+              </section>
+
+              <!-- RADIO -->
+              <section class="view" data-panel="radio">
+                <div class="greet"><div><h2>Live radio</h2><p class="sub">50,000+ stations. Tap one and it starts — no setup.</p></div></div>
+                <div class="song-rows">
+                  <button class="song-row"><div class="art a8"><span></span></div><div class="song-meta"><b>KEXP 90.3</b><small>Seattle · Indie / Alternative</small></div><span class="live">LIVE</span><span class="icon-btn"><svg class="ico sm"><use href="#i-dots"/></svg></span></button>
+                  <button class="song-row"><div class="art a6"><span></span></div><div class="song-meta"><b>FIP</b><small>Paris · Eclectic</small></div><span class="live">LIVE</span><span class="icon-btn"><svg class="ico sm"><use href="#i-dots"/></svg></span></button>
+                  <button class="song-row"><div class="art a3"><span></span></div><div class="song-meta"><b>SomaFM Groove Salad</b><small>San Francisco · Downtempo</small></div><span class="live">LIVE</span><span class="icon-btn"><svg class="ico sm"><use href="#i-dots"/></svg></span></button>
+                  <button class="song-row"><div class="art a7"><span></span></div><div class="song-meta"><b>BBC Radio 6 Music</b><small>London · Music</small></div><span class="live">LIVE</span><span class="icon-btn"><svg class="ico sm"><use href="#i-dots"/></svg></span></button>
+                </div>
+              </section>
+            </main>
+
+            <!-- context panel -->
+            <aside class="context">
+              <div class="ctx-tabs">
+                <button class="ctx-tab on" data-tab="queue">Up next</button>
+                <button class="ctx-tab" data-tab="lyrics">Lyrics</button>
+                <button class="ctx-close" id="ctxClose" title="Close panel"><svg class="ico sm"><use href="#i-x"/></svg></button>
+              </div>
+              <div class="ctx-body" id="ctx-queue">
+                <p class="ctx-kicker">Playing from AFTER HOURS</p>
+                <div class="q-row"><div class="art a5"><span></span></div><div class="q-meta"><b>Blinding Lights</b><small>The Weeknd · Now</small></div><button class="q-remove"><svg class="ico sm"><use href="#i-x"/></svg></button></div>
+                <div class="q-row"><div class="art a2"><span></span></div><div class="q-meta"><b>Midnight City</b><small>M83 · 4:03</small></div><button class="q-remove"><svg class="ico sm"><use href="#i-x"/></svg></button></div>
+                <div class="q-row"><div class="art a3"><span></span></div><div class="q-meta"><b>SOS</b><small>SZA · 3:44</small></div><button class="q-remove"><svg class="ico sm"><use href="#i-x"/></svg></button></div>
+                <div class="q-row"><div class="art a7"><span></span></div><div class="q-meta"><b>Danny Boy</b><small>Jeremy Chu · 3:20</small></div><button class="q-remove"><svg class="ico sm"><use href="#i-x"/></svg></button></div>
+                <div class="q-row"><div class="art a8"><span></span></div><div class="q-meta"><b>Nightcall</b><small>Kavinsky · 4:18</small></div><button class="q-remove"><svg class="ico sm"><use href="#i-x"/></svg></button></div>
+              </div>
+              <div class="ctx-body" id="ctx-lyrics" hidden>
+                <p class="ctx-kicker">Synced lyrics · LRCLIB</p>
+                <div class="lyric dim">I said, ooh, I'm blinded by the lights</div>
+                <div class="lyric dim">No, I can't sleep until I feel your touch</div>
+                <div class="lyric on">I said, ooh, I'm drowning in the night</div>
+                <div class="lyric">But I'm running out of time</div>
+                <div class="lyric dim">And I don't need a sign</div>
+                <div class="lyric dim">I'm just looking for a feeling</div>
+              </div>
+              <div class="ctx-foot"><button id="clearQueue">Clear queue</button></div>
+            </aside>
+          </div>
+
+          <!-- persistent player -->
+          <div class="playerbar">
+            <div class="np">
+              <div class="art a5"><span></span></div>
+              <div class="np-meta"><b>Blinding Lights</b><small>The Weeknd</small></div>
+              <button class="icon-btn" data-like title="Like"><svg class="ico sm"><use href="#i-heart"/></svg></button>
+            </div>
+            <div class="transport">
+              <div class="controls">
+                <button class="ctrl" data-toggle title="Shuffle"><svg class="ico sm"><use href="#i-shuffle"/></svg></button>
+                <button class="ctrl" title="Previous"><svg class="ico sm"><use href="#i-prev"/></svg></button>
+                <button class="play-main" data-play-toggle title="Play / pause"><svg class="ico"><use data-play-icon href="#i-play"/></svg></button>
+                <button class="ctrl" title="Next"><svg class="ico sm"><use href="#i-next"/></svg></button>
+                <button class="ctrl" data-toggle title="Repeat"><svg class="ico sm"><use href="#i-repeat"/></svg></button>
+              </div>
+              <div class="progress">
+                <span class="t" id="curTime">1:04</span>
+                <div class="track" id="seek"><div class="fill" data-progress></div></div>
+                <span class="t" id="remTime">-2:16</span>
+              </div>
+            </div>
+            <div class="p-actions">
+              <button class="icon-btn" title="Lyrics" data-open-lyrics><svg class="ico sm"><use href="#i-lyrics"/></svg></button>
+              <button class="icon-btn" title="Queue" data-open-queue><svg class="ico sm"><use href="#i-list"/></svg></button>
+              <button class="icon-btn" title="Connect to a device"><svg class="ico sm"><use href="#i-device"/></svg></button>
+              <button class="icon-btn" title="Volume"><svg class="ico sm"><use href="#i-volume"/></svg></button>
+              <div class="vol"><i></i></div>
+              <button class="icon-btn" title="Full screen"><svg class="ico sm"><use href="#i-expand"/></svg></button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- MOBILE ---------- -->
+    <div class="frame-col mobile-col">
+      <div class="frame-label"><span>Mobile · iOS / Android</span><span>tap mini player</span></div>
+      <div class="phone">
+        <div class="phone-screen" id="phoneScreen">
+          <div class="statusbar"><span>9:41</span><div class="notch"></div><span class="statusicons">●●● ▮</span></div>
+          <div class="m-header">
+            <div><h2 id="mTitle">Good evening</h2><p>Pick up where you left off</p></div>
+            <div class="m-actions">
+              <button class="icon-btn" data-focus-search title="Search"><svg class="ico"><use href="#i-search"/></svg></button>
+              <button class="avatar sm">A</button>
+            </div>
+          </div>
+
+          <div class="m-scroll">
+            <div class="section-head"><h3>Jump back in</h3><a>See all</a></div>
+            <div class="m-cards">
+              <button class="m-card"><div class="art a1"><span></span></div><b>After Hours</b><small>The Weeknd · Album</small></button>
+              <button class="m-card"><div class="art a2"><span></span></div><b>Midnight City</b><small>M83 · Single</small></button>
+              <button class="m-card"><div class="art a3"><span></span></div><b>SOS</b><small>SZA · Album</small></button>
+              <button class="m-card"><div class="art a4"><span></span></div><b>Midnights</b><small>Taylor Swift</small></button>
+            </div>
+
+            <div class="section-head" style="margin-top:18px"><h3>Moods</h3><a>See all</a></div>
+            <div class="moods">
+              <button class="mood a">Chill</button><button class="mood b">Workout</button><button class="mood c">Focus</button><button class="mood a">Late night</button>
+            </div>
+
+            <div class="section-head" style="margin-top:20px"><h3>Recently played</h3></div>
+            <div class="m-rows">
+              <button class="m-row"><div class="art a5"><span></span></div><div class="song-meta"><b>Blinding Lights</b><small>The Weeknd</small></div><span class="icon-btn"><svg class="ico sm"><use href="#i-dots"/></svg></span></button>
+              <button class="m-row"><div class="art a2"><span></span></div><div class="song-meta"><b>Midnight City</b><small>M83</small></div><span class="icon-btn"><svg class="ico sm"><use href="#i-dots"/></svg></span></button>
+              <button class="m-row"><div class="art a3"><span></span></div><div class="song-meta"><b>SOS</b><small>SZA</small></div><span class="icon-btn"><svg class="ico sm"><use href="#i-dots"/></svg></span></button>
+              <button class="m-row"><div class="art a7"><span></span></div><div class="song-meta"><b>Danny Boy</b><small>Jeremy Chu</small></div><span class="icon-btn"><svg class="ico sm"><use href="#i-dots"/></svg></span></button>
+            </div>
+          </div>
+
+          <!-- mini player -->
+          <button class="mini" id="mini" aria-label="Open now playing">
+            <div class="art a5"><span></span></div>
+            <div class="song-meta"><b>Blinding Lights</b><small>The Weeknd</small></div>
+            <span class="icon-btn" data-like><svg class="ico sm"><use href="#i-heart"/></svg></span>
+            <span class="mini-play" data-play-toggle title="Play / pause"><svg class="ico sm"><use data-play-icon href="#i-play"/></svg></span>
+          </button>
+
+          <div class="tabbar">
+            <button class="tab on" data-mtab="home"><svg class="ico"><use href="#i-home"/></svg>Home</button>
+            <button class="tab" data-mtab="search"><svg class="ico"><use href="#i-search"/></svg>Search</button>
+            <button class="tab" data-mtab="library"><svg class="ico"><use href="#i-library"/></svg>Library</button>
+            <button class="tab" data-mtab="radio"><svg class="ico"><use href="#i-radio"/></svg>Radio</button>
+          </div>
+
+          <!-- expanded player sheet -->
+          <div class="sheet" id="sheet">
+            <div class="sheet-top">
+              <button class="icon-btn" id="sheetClose" title="Collapse"><svg class="ico"><use href="#i-down"/></svg></button>
+              <span class="sheet-center">Playing from AFTER HOURS</span>
+              <button class="icon-btn" title="More"><svg class="ico"><use href="#i-dots"/></svg></button>
+            </div>
+            <div class="art a1 sheet-cover"><span></span></div>
+            <div class="sheet-meta">
+              <div><h3>Blinding Lights</h3><p>The Weeknd</p></div>
+              <button class="icon-btn" data-like title="Like"><svg class="ico"><use href="#i-heart"/></svg></button>
+            </div>
+            <div class="progress">
+              <span class="t" id="mCur">1:04</span>
+              <div class="track" data-seek><div class="fill" data-progress></div></div>
+              <span class="t" id="mRem">-2:16</span>
+            </div>
+            <div class="controls">
+              <button class="ctrl" data-toggle title="Shuffle"><svg class="ico"><use href="#i-shuffle"/></svg></button>
+              <button class="ctrl" title="Previous"><svg class="ico"><use href="#i-prev"/></svg></button>
+              <button class="play-main" data-play-toggle title="Play / pause"><svg class="ico"><use data-play-icon href="#i-play"/></svg></button>
+              <button class="ctrl" title="Next"><svg class="ico"><use href="#i-next"/></svg></button>
+              <button class="ctrl" data-toggle title="Repeat"><svg class="ico"><use href="#i-repeat"/></svg></button>
+            </div>
+            <div class="sheet-utils">
+              <button class="sheet-util"><svg class="ico"><use href="#i-lyrics"/></svg>Lyrics</button>
+              <button class="sheet-util"><svg class="ico"><use href="#i-list"/></svg>Queue</button>
+              <button class="sheet-util"><svg class="ico"><use href="#i-sliders"/></svg>Sound</button>
+              <button class="sheet-util"><svg class="ico"><use href="#i-share"/></svg>Share</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Design specification ============ -->
+  <section class="notes" id="notes">
+    <p class="eyebrow">Design rationale / specification</p>
+    <h2>Why this layout feels familiar</h2>
+    <p class="lead">Radical layouts make people re-learn a music player they already know. So the skeleton is deliberately conventional — left rail for destinations, top-centre search, a persistent transport bar, content cards that play on click, and a bottom tab bar on mobile. The new work happens in the details: contrast, hierarchy, one accent, and reachability.</p>
+
+    <h3>Before · what the current screen teaches us</h3>
+    <div class="before-after">
+      <figure class="before-fig">
+        <img src="_before.jpg" alt="Current Weav-Tune desktop player: dark theme with red accents, dense left sidebar, crowded top bar and bottom player bar" onerror="this.closest('figure').style.display='none'">
+        <figcaption>The interface you shared — dark, red-accented, familiar in structure but hard to scan.</figcaption>
+      </figure>
+      <div class="issues">
+        <div class="issue"><i></i><div><b>Low contrast, small type</b><span>Muted grey nav labels on near-black fall below 4.5:1; secondary text sits around 11–12px. Reading the library takes effort.</span></div></div>
+        <div class="issue"><i></i><div><b>Two competing navigation systems</b><span>The top strip mixes search, "Browse", "New Tab", a hamburger and a three-dot menu next to a full left sidebar. Users cannot tell where "go somewhere" lives.</span></div></div>
+        <div class="issue"><i></i><div><b>One accent used for everything</b><span>Red marks the logo, active state, play, liked heart and a player icon. When everything is salient, nothing is.</span></div></div>
+        <div class="issue"><i></i><div><b>Inverted hierarchy</b><span>"Good afternoon, MOONCRAFT" dominates while the actual album/artist and section labels are tiny; "Recently played" is clipped with no scroll affordance.</span></div></div>
+        <div class="issue"><i></i><div><b>Tiny, ambiguous hit targets</b><span>Icon-only controls under 24px, no visible focus or pressed states, truncated titles with no tooltip or expansion.</span></div></div>
+      </div>
+    </div>
+
+    <h3>Habit → design decision</h3>
+    <table class="spec-table">
+      <thead><tr><th>Learned behaviour</th><th>What the old screen did</th><th>New decision</th></tr></thead>
+      <tbody>
+        <tr><td>Left rail = where I go</td><td>Dense sidebar in ~12px low-contrast grey, no clear active state</td><td><span class="tick">✓</span> 196px rail, 12.5px/500 text, ≥4.5:1 contrast, tinted active pill on every destination</td></tr>
+        <tr><td>One search box, top centre</td><td>Search pill competes with "Browse", "New Tab" and two menus</td><td><span class="tick">✓</span> A single search field + ⌘K / Ctrl+K. All other chrome collapsed into Sound and account</td></tr>
+        <tr><td>Home resumes, then discovers</td><td>Hero greeting dwarfs the content it points at</td><td><span class="tick">✓</span> Greeting as quiet context; "Jump back in" first, "Made for you" second, history third</td></tr>
+        <tr><td>Click a card = play it</td><td>Cards with a separate tiny play affordance</td><td><span class="tick">✓</span> Whole card is the target (≥44px), hover lifts the artwork, play state is global</td></tr>
+        <tr><td>Player never disappears</td><td>Bottom bar present — this was already right</td><td><span class="tick">✓</span> Kept verbatim: 72px bar, artwork + like + transport + progress + queue/lyrics, always visible</td></tr>
+        <tr><td>Queue and lyrics on the right</td><td>No persistent queue or lyric state</td><td><span class="tick">✓</span> 252px context panel, Up next / Lyrics tabs, closable and re-openable from the player bar</td></tr>
+        <tr><td>Thumb reaches the bottom third</td><td>Desktop layout scaled down to a phone</td><td><span class="tick">✓</span> 4-tab bottom bar + mini player directly above it; expanded sheet puts play, seek and utilities in the lower half</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Design tokens</h3>
+    <div class="token-grid">
+      <div class="token-card">
+        <h4>Colour · Weav identity</h4>
+        <div class="swatches">
+          <div class="sw"><i style="background:#0b84bd"></i><small>Accent<br>#0B84BD</small></div>
+          <div class="sw"><i style="background:#49c4e2"></i><small>Cyan<br>#49C4E2</small></div>
+          <div class="sw"><i style="background:#e1f2fb"></i><small>Soft<br>#E1F2FB</small></div>
+          <div class="sw"><i style="background:#0d2331"></i><small>Text<br>#0D2331</small></div>
+          <div class="sw"><i style="background:#ffffff"></i><small>Surface<br>#FFFFFF</small></div>
+        </div>
+        <p class="tk" style="margin:12px 0 0"><b>One accent only.</b> Blue/cyan is reserved for actions and active states. Artwork supplies the colour; the chrome stays neutral. Dark theme uses the same palette inverted with a brighter accent for contrast.</p>
+      </div>
+      <div class="token-card">
+        <h4>Type scale</h4>
+        <div class="type-row"><span style="font-size:26px;font-weight:700;letter-spacing:-.03em">Good evening</span><small>26 / 700 · H1</small></div>
+        <div class="type-row"><span style="font-size:17px;font-weight:700">Night drive</span><small>17 / 700 · H2</small></div>
+        <div class="type-row"><span style="font-size:15px;font-weight:700">Jump back in</span><small>15 / 700 · H3</small></div>
+        <div class="type-row"><span style="font-size:12.5px;font-weight:600">Blinding Lights</span><small>12.5 / 600 · Body</small></div>
+        <div class="type-row"><span style="font-size:10.5px;color:var(--text-3)">The Weeknd · Album</span><small>10.5 / 400 · Meta</small></div>
+        <p class="tk" style="margin:10px 0 0">System sans default (matches the app's font setting); Outfit / imported fonts inherit the same scale. Times use <b>tabular numerals</b>.</p>
+      </div>
+      <div class="token-card">
+        <h4>Space, radius, motion</h4>
+        <p class="tk" style="margin:0"><b>Grid</b> 4px · spacing 8 / 12 / 16 / 24<br>
+        <b>Radii</b> 8 controls · 12 cards · 16 frames · 999 pills<br>
+        <b>Targets</b> ≥44×44 desktop · ≥48×48 mobile<br>
+        <b>Motion</b> 160–240ms ease-out for state changes; 340ms spring for the player sheet; decorative glow is paused on <b>prefers-reduced-motion</b><br>
+        <b>Glass</b> blur(20px) saturate(170%) on chrome only — reading surfaces stay opaque</p>
+      </div>
+      <div class="token-card">
+        <h4>Accessibility checklist</h4>
+        <div class="checks" style="grid-template-columns:1fr">
+          <div class="check"><span>✓</span><div>Body text ≥4.5:1 and large text ≥3:1 in both themes</div></div>
+          <div class="check"><span>✓</span><div>Visible <b>:focus-visible</b> ring on every interactive element</div></div>
+          <div class="check"><span>✓</span><div>Every icon button has a title / aria-label</div></div>
+          <div class="check"><span>✓</span><div>Keyboard: ⌘K search, Space play/pause, Esc dismiss</div></div>
+          <div class="check"><span>✓</span><div>State is never colour-only (active pill, filled heart, tinted tab)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="handoff">
+      <b>Handoff note.</b> This prototype is a single self-contained HTML file with no external assets — the artwork is CSS-only, so it renders offline and in the preview panel. The shell maps 1:1 to the existing platform code: the left rail / topbar / content / context panel / player bar map to <b>SideChrome.kt, the TopBar, HomeScreen.kt, the queue sheet and BottomChrome.kt</b> in Compose; the mobile tab bar and expanding sheet map to SwiftUI <b>TabView + .sheet</b>, and to the React web player's existing flex/grid layout. Tokens are CSS custom properties at the top of this file and can be translated to Compose <code>Color</code>/<code>Typography</code> and SwiftUI <code>Color</code> assets directly. Suggested build order: tokens → persistent player → navigation shell → Home content → context panel → mobile sheet → accessibility pass.
+    </div>
+    <p class="foot">Assumption: the new interface adopts the Weav blue/cyan Liquid Glass identity from the README, with light as the default and dark as a first-class variant. If you want to keep the red-accented dark look from your screenshot instead, that is a single token swap.</p>
+  </section>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  const root = document.documentElement;
+
+  /* ---- segmented controls ---- */
+  function setupSeg(name, apply) {
+    const wrap = document.querySelector('[data-seg="' + name + '"]');
+    if (!wrap) return;
+    wrap.querySelectorAll('button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        wrap.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        apply(b.dataset.val);
+      });
+    });
+  }
+  setupSeg('theme', function (v) { root.dataset.theme = v; });
+  setupSeg('view', function (v) { document.getElementById('stage').dataset.view = v; });
+
+  /* ---- shareable deep links: ?theme=dark / ?view=mobile ---- */
+  const params = new URLSearchParams(location.search);
+  ['theme', 'view'].forEach(function (key) {
+    const val = params.get(key);
+    if (!val) return;
+    const btn = document.querySelector('[data-seg="' + key + '"] button[data-val="' + val + '"]');
+    if (btn) btn.click();
+  });
+
+  /* ---- desktop navigation ---- */
+  const content = document.getElementById('content');
+  document.querySelectorAll('.rail-item[data-view]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.rail-item').forEach(function (x) { x.classList.toggle('active', x === b); });
+      document.querySelectorAll('.view').forEach(function (v) { v.classList.toggle('is-active', v.dataset.panel === b.dataset.view); });
+      content.scrollTop = 0;
+      if (b.dataset.view === 'search') setTimeout(function () { document.getElementById('globalSearch').focus(); }, 60);
+    });
+  });
+
+  /* ---- library subtabs ---- */
+  document.querySelectorAll('.subtab').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.subtab').forEach(function (x) { x.classList.toggle('on', x === b); });
+    });
+  });
+
+  /* ---- global play state + progress ---- */
+  let playing = false, pct = 32;
+  const TOTAL = 200; // 3:20
+  function fmt(s) { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+  function renderPlay() {
+    document.querySelectorAll('[data-play-icon]').forEach(function (u) { u.setAttribute('href', playing ? '#i-pause' : '#i-play'); });
+  }
+  function renderProgress() {
+    document.querySelectorAll('[data-progress]').forEach(function (f) { f.style.width = pct + '%'; });
+    const cur = TOTAL * pct / 100;
+    ['curTime', 'mCur'].forEach(function (id) { const e = document.getElementById(id); if (e) e.textContent = fmt(cur); });
+    ['remTime', 'mRem'].forEach(function (id) { const e = document.getElementById(id); if (e) e.textContent = '-' + fmt(TOTAL - cur); });
+  }
+  function setPlaying(v) { playing = v; renderPlay(); }
+  document.querySelectorAll('[data-play]').forEach(function (b) { b.addEventListener('click', function () { setPlaying(true); }); });
+  document.querySelectorAll('[data-play-toggle]').forEach(function (b) {
+    b.addEventListener('click', function (e) { e.stopPropagation(); setPlaying(!playing); });
+  });
+  document.querySelectorAll('[data-seek], #seek').forEach(function (t) {
+    t.addEventListener('click', function (e) {
+      const r = t.getBoundingClientRect();
+      pct = Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100));
+      renderProgress();
+    });
+  });
+  setInterval(function () {
+    if (!playing) return;
+    pct += 0.12; if (pct > 100) pct = 0;
+    renderProgress();
+  }, 1000);
+  renderPlay(); renderProgress();
+
+  /* ---- likes, toggles ---- */
+  document.querySelectorAll('[data-like]').forEach(function (b) {
+    b.addEventListener('click', function (e) { e.stopPropagation(); b.classList.toggle('liked'); });
+  });
+  document.querySelectorAll('[data-toggle]').forEach(function (b) {
+    b.addEventListener('click', function () { b.classList.toggle('on'); });
+  });
+
+  /* ---- context panel ---- */
+  const body = document.getElementById('appBody');
+  function showTab(tab) {
+    document.querySelectorAll('.ctx-tab').forEach(function (t) { t.classList.toggle('on', t.dataset.tab === tab); });
+    document.getElementById('ctx-queue').hidden = tab !== 'queue';
+    document.getElementById('ctx-lyrics').hidden = tab !== 'lyrics';
+  }
+  function openContext(tab) { body.classList.remove('no-context'); showTab(tab); }
+  document.querySelectorAll('.ctx-tab').forEach(function (t) { t.addEventListener('click', function () { showTab(t.dataset.tab); }); });
+  document.getElementById('ctxClose').addEventListener('click', function () { body.classList.add('no-context'); });
+  document.querySelectorAll('[data-open-queue]').forEach(function (b) { b.addEventListener('click', function () { openContext('queue'); }); });
+  document.querySelectorAll('[data-open-lyrics]').forEach(function (b) { b.addEventListener('click', function () { openContext('lyrics'); }); });
+  document.getElementById('clearQueue').addEventListener('click', function () {
+    document.querySelectorAll('#ctx-queue .q-row').forEach(function (r, i) { if (i > 0) r.remove(); });
+  });
+  document.querySelectorAll('.q-remove').forEach(function (b) {
+    b.addEventListener('click', function () { b.closest('.q-row').remove(); });
+  });
+
+  /* ---- mobile ---- */
+  const screen = document.getElementById('phoneScreen');
+  document.getElementById('mini').addEventListener('click', function (e) {
+    if (e.target.closest('[data-like]') || e.target.closest('[data-play-toggle]')) return;
+    screen.classList.add('sheet-open');
+  });
+  document.getElementById('sheetClose').addEventListener('click', function () { screen.classList.remove('sheet-open'); });
+  const titles = { home: 'Good evening', search: 'Search', library: 'Your library', radio: 'Live radio' };
+  document.querySelectorAll('[data-mtab]').forEach(function (t) {
+    t.addEventListener('click', function () {
+      document.querySelectorAll('[data-mtab]').forEach(function (x) { x.classList.toggle('on', x === t); });
+      document.getElementById('mTitle').textContent = titles[t.dataset.mtab];
+      if (t.dataset.mtab === 'search') document.getElementById('globalSearch').focus();
+    });
+  });
+
+  /* ---- keyboard ---- */
+  const search = document.getElementById('globalSearch');
+  document.querySelectorAll('[data-focus-search]').forEach(function (b) { b.addEventListener('click', function () { search.focus(); }); });
+  document.addEventListener('keydown', function (e) {
+    const typing = /INPUT|TEXTAREA/.test(document.activeElement.tagName);
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); search.focus(); search.select(); return; }
+    if (e.key === 'Escape') { screen.classList.remove('sheet-open'); if (typing) document.activeElement.blur(); return; }
+    if (e.code === 'Space' && !typing && document.activeElement.tagName !== 'BUTTON') { e.preventDefault(); setPlaying(!playing); }
+  });
+})();
+</script>
+</body>
+</html>

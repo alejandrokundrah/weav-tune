@@ -39,5 +39,9 @@ node_modules/
 /web/extension/public/icon/
 /web/fixtures/
 
+# Editor & Tooling
+.kilo/
+.workbuddy-ai/
+
 # Design-check hook cache
 .impeccable/

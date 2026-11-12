@@ -1,11 +1,12 @@
-import { Compass, Home, Library, Search, Settings } from 'lucide-react';
+import { Compass, Library, Search, Settings } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router';
+import { HomeIcon } from '@/components/icons/NavIcons';
 import { PauseIcon, PlayIcon, ForwardIcon } from '@/components/icons/Transport';
 import { sizedArtwork } from '@/lib/artwork';
 import { usePlayer } from '@/state/player';
 import { useUi } from '@/state/ui';
 import { useLiquidGlass } from '@/lib/liquidGlass';
-const TABS = [[Home, '/home', 'Home'], [Compass, '/new', 'Explore'], [Library, '/library/playlists', 'Library'], [Search, '/search', 'Search'], [Settings, '/settings', 'Settings']] as const;
+const TABS = [[HomeIcon, '/home', 'Home'], [Compass, '/new', 'Explore'], [Library, '/library/playlists', 'Library'], [Search, '/search', 'Search'], [Settings, '/settings', 'Settings']] as const;
 
 export function MobileDock() {
   const track = usePlayer(s => s.nowPlaying);
