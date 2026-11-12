@@ -7,7 +7,7 @@ function callback(search) {
   const nodes = {message: {}, open: {hidden: true}};
   let cleared = false;
   vm.runInNewContext(script, {
-    URLSearchParams, location: {search, pathname: '/Opentune/spotify/callback/'},
+    URLSearchParams, location: {search, pathname: '/weav-tune/spotify/callback/'},
     history: {replaceState() { cleared = true; }},
     document: {getElementById(id) { return nodes[id]; }}
   });

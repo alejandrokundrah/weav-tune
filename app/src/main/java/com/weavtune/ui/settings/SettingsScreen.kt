@@ -1562,8 +1562,8 @@ private fun settingsSections(
                 Entry("About the developer", "developer author creator alejandro kundrah about") { DeveloperCard() },
                 Entry("Source code", "github open source license gpl") {
                     NavRow("Source code", {
-                        runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, "https://github.com/justshivv/Opentune".toUri())) }
-                    }, summary = "github.com/justshivv/Opentune · GPL v3", icon = Icons.Rounded.Code)
+                        runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, "https://github.com/alejandrokundrah/weav-tune".toUri())) }
+                    }, summary = "github.com/alejandrokundrah/weav-tune · GPL v3", icon = Icons.Rounded.Code)
                 },
                 Entry("Export diagnostics", "log share troubleshooting bug report") {
                     NavRow("Export diagnostics", {

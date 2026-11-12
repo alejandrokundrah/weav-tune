@@ -368,5 +368,5 @@ private fun Note(icon: ImageVector, text: String) {
 }
 
 private val WEB_PLAYER get() = com.weavtune.data.config.RemoteConfig.current.web
-private const val RELEASES = "https://github.com/justshivv/Opentune/releases/latest"
-private const val SOURCE = "https://github.com/justshivv/Opentune/tree/main/wear"
+private const val RELEASES = "https://github.com/alejandrokundrah/weav-tune/releases/latest"
+private const val SOURCE = "https://github.com/alejandrokundrah/weav-tune/tree/main/wear"

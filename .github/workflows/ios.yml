@@ -95,7 +95,7 @@ jobs:
         run: |
           cp "${{ steps.ipa.outputs.file }}" WeavTune-iOS.ipa
           title="Weav-Tune for iPhone v${{ steps.version.outputs.name }}"
-          notes="Unsigned build for SideStore, AltStore or Sideloadly, built from ${GITHUB_SHA::7}. In SideStore or AltStore, add the source https://justshivv.github.io/Opentune/ios/source.json to install Weav-Tune and get its updates on the phone."
+          notes="Unsigned build for SideStore, AltStore or Sideloadly, built from ${GITHUB_SHA::7}. In SideStore or AltStore, add the source https://alejandrokundrah.github.io/weav-tune/ios/source.json to install Weav-Tune and get its updates on the phone."
           if gh release view ios > /dev/null 2>&1; then
             gh release edit ios --title "$title" --notes "$notes" --prerelease
           else

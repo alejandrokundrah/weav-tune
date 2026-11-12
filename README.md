@@ -217,4 +217,4 @@ Weav-Tune is an independent, open-source project and is not affiliated with, end
 
 ## License
 
-Weav-Tune is open-source software licensed under the **[GNU General Public License v3.0 (GPL-3.0)](LICENSE)**. It is a fork of [OpenTune](https://github.com/justshivv/Opentune). Third-party software notices and licenses are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Weav-Tune is open-source software licensed under the **[GNU General Public License v3.0 (GPL-3.0)](LICENSE)**. Third-party software notices and licenses are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

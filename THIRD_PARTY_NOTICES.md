@@ -1,9 +1,8 @@
 # Third-party notices
 
-Weav-Tune is a fork of [OpenTune](https://github.com/justshivv/Opentune) and is
-licensed under the GNU General Public License v3.0 (see [LICENSE](LICENSE)). It
-includes or uses the following code, libraries, fonts and data, under their own
-licences.
+Weav-Tune is licensed under the GNU General Public License v3.0 (see
+[LICENSE](LICENSE)). It includes or uses the following code, libraries,
+fonts and data, under their own licences.
 
 The optional Echo motion effects are adapted from [Echo Music](https://github.com/EchoMusicApp/Echo-Music/tree/a31a72bd958f7cdc128db17d2ea6ae90c3489aa1),
 by the Echo Music contributors, under GPLv3. The sources are
@@ -68,7 +67,7 @@ License 2.0 and GPLv2 with the Classpath exception).
 The `web/` preview adapts the existing React/WXT browser player from
 [kushagrasinghx/BitChord](https://github.com/kushagrasinghx/BitChord), commit
 `edc1e6f36febf71a118e649411d2fc21b70ead45`, licensed GPL-3.0. Its research notes
-are preserved in `web/docs/`; Weav-Tune (via OpenTune) branding, addon integration,
+are preserved in `web/docs/`; Weav-Tune branding, addon integration,
 host/path restrictions and build configuration were added here. The original license
 applies to the derived files; Weav-Tune is also GPL-3.0.
 

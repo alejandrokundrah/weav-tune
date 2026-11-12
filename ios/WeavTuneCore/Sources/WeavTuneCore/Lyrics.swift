@@ -130,7 +130,7 @@ public enum TrackNameCleaner {
  */
 public enum Lrclib {
     static let base = "https://lrclib.net/api"
-    static let userAgent = "Weav-Tune iOS (https://github.com/justshivv/Opentune)"
+    static let userAgent = "Weav-Tune iOS (https://github.com/alejandrokundrah/weav-tune)"
     static let toleranceS = 8.0
     static let closeS = 2.0
 

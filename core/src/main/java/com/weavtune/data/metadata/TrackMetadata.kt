@@ -37,7 +37,7 @@ object TrackMetadataRepository {
         override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, TrackMetadata?>?) = size > 200
     }
     private val lock = Mutex()
-    private val headers get() = mapOf("User-Agent" to "WeavTune/${BuildConfig.VERSION_NAME} (https://github.com/justshivv/Opentune)")
+    private val headers get() = mapOf("User-Agent" to "WeavTune/${BuildConfig.VERSION_NAME} (https://github.com/alejandrokundrah/weav-tune)")
 
     suspend fun lookup(song: Song, durationMs: Long): TrackMetadata? = lock.withLock {
         if (durationMs <= 0 || song.artist.isBlank() || song.title.isBlank()) return@withLock null
