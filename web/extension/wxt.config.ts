@@ -1,10 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { defineConfig } from 'wxt';
 import { LYRIC_ORIGINS, patternOf } from './lib/lyricHosts';
-import { matchPatternsFor, SITE_ORIGINS } from './site.config';
+import { buildEnv, matchPatternsFor, SITE_ORIGINS } from './site.config';
 
 /** WEAVTUNE_STORE_BUILD=1 for a Chrome Web Store upload. */
-const STORE_BUILD = process.env.WEAVTUNE_STORE_BUILD === '1';
+const STORE_BUILD = buildEnv('STORE_BUILD') === '1';
 
 /**
  * Discord presence is user-token automation (prompt §7.3), so it is a build
