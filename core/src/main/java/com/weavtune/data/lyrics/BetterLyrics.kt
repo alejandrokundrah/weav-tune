@@ -19,7 +19,7 @@ import okhttp3.Request
  */
 internal object BetterLyrics {
     private const val API = "https://lyrics-api.boidu.dev/getLyrics"
-    private const val USER_AGENT = "Weav-Tune (+https://github.com/justshivv/Opentune)"
+    private const val USER_AGENT = "Weav-Tune (+https://github.com/alejandrokundrah/weav-tune)"
     /** A recording more than this much longer or shorter than the track is another version. */
     private const val TOLERANCE_MS = 4_000L
     private val json = Json { ignoreUnknownKeys = true }

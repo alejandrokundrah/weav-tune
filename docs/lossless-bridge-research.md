@@ -18,7 +18,7 @@ Read-only requests to [the manifest](https://losslessbridge.de.deplexo.com/manif
 
 The repository linked by indexed documentation, `https://github.com/ElioXY/TestingAddon`, currently returns 404. Indexed README text provided discovery hints; the live `/sources` response independently confirmed the endpoints. No unavailable source code was copied, and no claimed hi-res tier was inferred from that README.
 
-Evidence: `services/lossless-addon/reports/bridge-research-2026-10-24.json` and [probe run 40048066675](https://github.com/justshivv/Opentune/actions/runs/40048066675). Source health varies per recording and time; a Bridge cooldown does not prove that every NetEase recording is unavailable.
+Evidence: `services/lossless-addon/reports/bridge-research-2026-10-24.json` and [probe run 40048066675](https://github.com/alejandrokundrah/weav-tune/actions/runs/40048066675). Source health varies per recording and time; a Bridge cooldown does not prove that every NetEase recording is unavailable.
 
 ## Independently verified NetEase flow
 
@@ -41,10 +41,10 @@ This establishes readable FLAC headers, not audible quality, original mastering 
 
 ## Adapter validation
 
-The completed Weav-Tune adapter returned HTTP 200 for search and stream resolution for both recordings, with the same measured formats, in [run 40048382526](https://github.com/justshivv/Opentune/actions/runs/40048382526). The same run passed all 33 server tests plus the actual Workers/SQLite signature checks for native and web clients. The NetEase tests cover redirect host validation, credentials/insecure URLs, format rejection, cross-source IDs and rate-limit cooldown. The access test ensures unsigned NetEase requests never reach upstreams. Evidence: `services/lossless-addon/reports/netease-adapter-2026-10-24.json`.
+The completed Weav-Tune adapter returned HTTP 200 for search and stream resolution for both recordings, with the same measured formats, in [run 40048382526](https://github.com/alejandrokundrah/weav-tune/actions/runs/40048382526). The same run passed all 33 server tests plus the actual Workers/SQLite signature checks for native and web clients. The NetEase tests cover redirect host validation, credentials/insecure URLs, format rejection, cross-source IDs and rate-limit cooldown. The access test ensures unsigned NetEase requests never reach upstreams. Evidence: `services/lossless-addon/reports/netease-adapter-2026-10-24.json`.
 
 ## Installation
 
 Import [the NetEase manifest](https://opentune-lossless-addon.create-a-new-site-with-sites.workers.dev/netease/manifest.json) in Settings → Audio → Audio add-ons. This is a separate source; it is not automatically added to existing lists. The currently installed verification preview already signs requests for this exact origin; no app code change is needed for this adapter. Search and stream resolution remain unavailable to unverified clients. Public manifests remain importable, and returned public upstream media URLs are outside the API access lock.
 
-Deployment on 24 October at 01:12 UTC passed [production checks](https://github.com/justshivv/Opentune/actions/runs/40048690232): all four manifests returned 200, strict policy remained enabled, and all sixteen unsigned/forged-header search and stream requests returned 401. The workflow passed 33 server tests and native/browser signature checks in the Workers runtime before publishing. The saved report is `services/lossless-addon/reports/netease-deployment-2026-10-24.json`. Device playback of the newly deployed NetEase source remains to be checked; earlier live adapter probes verified its upstream FLAC headers.
+Deployment on 24 October at 01:12 UTC passed [production checks](https://github.com/alejandrokundrah/weav-tune/actions/runs/40048690232): all four manifests returned 200, strict policy remained enabled, and all sixteen unsigned/forged-header search and stream requests returned 401. The workflow passed 33 server tests and native/browser signature checks in the Workers runtime before publishing. The saved report is `services/lossless-addon/reports/netease-deployment-2026-10-24.json`. Device playback of the newly deployed NetEase source remains to be checked; earlier live adapter probes verified its upstream FLAC headers.

@@ -9,7 +9,7 @@ from pathlib import Path
 from xml.etree import ElementTree
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE = 'https://justshivv.github.io/Opentune/'
+BASE = 'https://alejandrokundrah.github.io/weav-tune/'
 
 class Page(HTMLParser):
     def __init__(self, text):
@@ -39,7 +39,7 @@ assert home.matches('meta', property='og:image')[0]['content'] == BASE + 'img/sh
 app = next(x for x in home.ld if x['@type'] == 'SoftwareApplication')
 assert app['name'] == 'Weav-Tune' and app['url'] == BASE and app['offers']['price'] == '0'
 assert 'aggregateRating' not in app
-assert app['downloadUrl'] == 'https://github.com/justshivv/Opentune/releases/latest'
+assert app['downloadUrl'] == 'https://github.com/alejandrokundrah/weav-tune/releases/latest'
 assert len(home.matches('details')) >= 6
 assert home.matches('a', href='privacy/')
 for tag, attrs in home.tags:

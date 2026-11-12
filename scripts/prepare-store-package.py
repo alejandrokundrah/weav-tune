@@ -29,10 +29,10 @@ def prepare(commit, output):
     (output / 'release.json').write_text(json.dumps({
         'name': 'Weav-Tune', 'packageName': 'com.weavtune', 'versionName': version,
         'versionCode': code, 'sourceCommit': commit,
-        'website': 'https://justshivv.github.io/Opentune/',
-        'privacyPolicy': 'https://justshivv.github.io/Opentune/privacy/',
-        'sourceCode': 'https://github.com/justshivv/Opentune',
-        'releasePage': 'https://github.com/justshivv/Opentune/releases/latest',
+        'website': 'https://alejandrokundrah.github.io/weav-tune/',
+        'privacyPolicy': 'https://alejandrokundrah.github.io/weav-tune/privacy/',
+        'sourceCode': 'https://github.com/alejandrokundrah/weav-tune',
+        'releasePage': 'https://github.com/alejandrokundrah/weav-tune/releases/latest',
         'fdroidStatus': 'Submission draft; source build and scanner review required',
     }, indent=2) + '\n')
     shutil.copy(ROOT / 'docs/publishing.md', output / 'PUBLISHING.md')

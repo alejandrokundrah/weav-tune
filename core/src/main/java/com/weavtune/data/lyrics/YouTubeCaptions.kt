@@ -112,7 +112,7 @@ object Unison {
             .addQueryParameter("artist", artist)
             .apply { if (durationMs > 0) addQueryParameter("duration", (durationMs / 1000).toString()) }
             .build()
-        val text = Http.client.newCall(Request.Builder().url(url).header("User-Agent", "Weav-Tune (+https://github.com/justshivv/Opentune)").build()).execute().use {
+        val text = Http.client.newCall(Request.Builder().url(url).header("User-Agent", "Weav-Tune (+https://github.com/alejandrokundrah/weav-tune)").build()).execute().use {
             if (it.code == 404 || !it.isSuccessful) return null
             it.body?.string().orEmpty()
         }

@@ -3,7 +3,7 @@ from time import sleep, time
 from pathlib import Path
 from hashlib import sha256
 from urllib.request import Request, urlopen
-base = 'https://justshivv.github.io/Opentune/usage/'
+base = 'https://alejandrokundrah.github.io/weav-tune/usage/'
 for attempt in range(6):
     try:
         with urlopen(Request(base + '?private=' + str(int(time())), headers={'Cache-Control':'no-cache'}), timeout=20) as response:
@@ -14,7 +14,7 @@ for attempt in range(6):
         for name, expected in manifest['assets'].items():
             with urlopen(base + name, timeout=20) as response:
                 assert sha256(response.read()).hexdigest() == expected
-        home = 'https://justshivv.github.io/Opentune/'
+        home = 'https://alejandrokundrah.github.io/weav-tune/'
         with urlopen(Request(home + '?preview=' + str(int(time())), headers={'Cache-Control':'no-cache'}), timeout=20) as response:
             metadata = response.read().decode()
         image = 'img/share-card-v3.jpg'

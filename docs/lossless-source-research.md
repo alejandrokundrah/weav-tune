@@ -8,7 +8,7 @@ The new Weav-Tune adapter implements that public Track Streamer interface indepe
 
 A [third-party Spotube adapter](https://github.com/kipavy/spotube-plugin-lossless-sources) reports successful Monochrome FLAC tests, but its [machine-readable status](https://github.com/kipavy/spotube-plugin-lossless-sources/blob/main/sources.json) was more recent than that prose during this investigation: the 2026-10-23T13:25:46Z snapshot had **zero playable sources**, with Monochrome search succeeding but audio returning **429**. This is third-party evidence, not our own playback verification. It is why we do not publish a blanket “working free lossless catalogue” claim.
 
-Our own [GitHub Actions probe](https://github.com/justshivv/Opentune/actions/runs/40010168839) at **2026-10-23T19:17:07Z** subsequently succeeded for both Monochrome samples:
+Our own [GitHub Actions probe](https://github.com/alejandrokundrah/weav-tune/actions/runs/40010168839) at **2026-10-23T19:17:07Z** subsequently succeeded for both Monochrome samples:
 
 | Recording | Search | Audio/header | Measured format |
 | --- | --- | --- | --- |
@@ -22,7 +22,7 @@ Our probe checks Wo Noor by AP Dhillon and Old Skool by Prem Dhillon, then reads
 
 ## Additional probes at 21:15 UTC
 
-The additional [Actions probe](https://github.com/justshivv/Opentune/actions/runs/40025364162) tested public endpoints without accounts or forged client identities:
+The additional [Actions probe](https://github.com/alejandrokundrah/weav-tune/actions/runs/40025364162) tested public endpoints without accounts or forged client identities:
 
 | Candidate | Observed result | Use in Weav-Tune |
 | --- | --- | --- |
@@ -58,7 +58,7 @@ The initial local live check could not connect to the execution environment's ne
 
 ## Expanded discovery at 21:49 UTC
 
-[Our source discovery run](https://github.com/justshivv/Opentune/actions/runs/40029489197) tested additional public endpoints. Exact results are in `services/lossless-addon/reports/discovery-2026-10-23.json`.
+[Our source discovery run](https://github.com/alejandrokundrah/weav-tune/actions/runs/40029489197) tested additional public endpoints. Exact results are in `services/lossless-addon/reports/discovery-2026-10-23.json`.
 
 | Source | Direct observation | Resulting integration |
 | --- | --- | --- |
@@ -77,4 +77,4 @@ Other projects investigated do not provide anonymous free catalogues: [divyanshx
 
 All measurements are bounded FLAC-header checks, not full decoding/listening tests. Public source availability, CORS and quotas can change. None of these third-party add-ons inherit Weav-Tune's first-party verification requirement.
 
-The deployed Musopen adapter passed its own catalogue-to-resolution check at 21:56 UTC: one matching Aria Da Capo result and HTTP 200 native FLAC 16-bit/44.1 kHz. All three deployed manifests returned HTTP 200. Reports: `expanded-sources-2026-10-23.json`, `discovery-expanded-2026-10-23.json` and `expanded-deployment-2026-10-23.json` in `services/lossless-addon/reports`, from [the expanded probe](https://github.com/justshivv/Opentune/actions/runs/40030304908) and [deployment](https://github.com/justshivv/Opentune/actions/runs/40030304919). The general Archive query also resolved a recording by FAAFO; that is a different artist and is not evidence of a matching Grateful Dead recording. The Musopen item metadata declares the Public Domain Mark 1.0.
+The deployed Musopen adapter passed its own catalogue-to-resolution check at 21:56 UTC: one matching Aria Da Capo result and HTTP 200 native FLAC 16-bit/44.1 kHz. All three deployed manifests returned HTTP 200. Reports: `expanded-sources-2026-10-23.json`, `discovery-expanded-2026-10-23.json` and `expanded-deployment-2026-10-23.json` in `services/lossless-addon/reports`, from [the expanded probe](https://github.com/alejandrokundrah/weav-tune/actions/runs/40030304908) and [deployment](https://github.com/alejandrokundrah/weav-tune/actions/runs/40030304919). The general Archive query also resolved a recording by FAAFO; that is a different artist and is not evidence of a matching Grateful Dead recording. The Musopen item metadata declares the Public Domain Mark 1.0.

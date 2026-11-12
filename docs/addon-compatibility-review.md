@@ -20,7 +20,7 @@ upgrade. Unknown bit depth and sample rate stay unknown until measured.
 Encrypted renditions and invalid URLs remain rejected. Fixed diagnostic reasons
 avoid exposing signed URLs or private add-on tokens.
 
-The bounded [live probe](https://github.com/justshivv/Opentune/actions/runs/40176343640)
+The bounded [live probe](https://github.com/alejandrokundrah/weav-tune/actions/runs/40176343640)
 inspected the first 64 KiB of “295” by Sidhu Moose Wala: native FLAC,
 24-bit, 44.1 kHz, stereo, 270 seconds, served by Qobuz's CDN. This proves that
 sample's format, not catalogue-wide availability or an audible Android handoff.
