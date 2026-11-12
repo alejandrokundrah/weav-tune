@@ -10,7 +10,7 @@
     "dev": "pnpm --filter @opentune/app dev",
     "dev:ext": "pnpm --filter @opentune/extension dev",
     "dev:ext:firefox": "pnpm --filter @opentune/extension dev:firefox",
-    "build": "pnpm -r build",
+    "build": "pnpm run build:site",
     "build:site": "pnpm --filter @opentune/extension package && pnpm --filter @opentune/app build",
     "typecheck": "pnpm -r typecheck",
     "test": "node scripts/prepare-fixtures.mjs && pnpm -r test",
