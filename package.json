@@ -1,0 +1,14 @@
+{
+  "name": "weav-tune",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --dir web dev",
+    "dev:ext": "pnpm --dir web dev:ext",
+    "dev:ext:firefox": "pnpm --dir web dev:ext:firefox",
+    "build": "pnpm --dir web build",
+    "build:site": "pnpm --dir web build:site",
+    "typecheck": "pnpm --dir web typecheck",
+    "test": "pnpm --dir web test"
+  }
+}
