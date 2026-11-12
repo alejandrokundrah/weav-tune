@@ -25,12 +25,12 @@ it('pins the bootstrap key, retains signed state offline and expires safely with
   vi.mocked(Date.now).mockReturnValue(fixture.now + 8 * 86400000);
   await refreshConfig(true);
   expect(currentConfig().revision).toBe(0);
-  expect(JSON.parse(saved.get('opentune:remote-config')!).key).toBe(fixture.publicKey);
-  expect(JSON.parse(saved.get('opentune:remote-config')!).revision).toBe(1);
+  expect(JSON.parse(saved.get('weavtune:remote-config')!).key).toBe(fixture.publicKey);
+  expect(JSON.parse(saved.get('weavtune:remote-config')!).revision).toBe(1);
 });
 
 it('starts offline from the validated stored copy and rejects a tampered network document', async () => {
-  saved.set('opentune:remote-config', JSON.stringify({ key: fixture.publicKey, revision: 1, envelope: JSON.stringify(fixture.envelope) }));
+  saved.set('weavtune:remote-config', JSON.stringify({ key: fixture.publicKey, revision: 1, envelope: JSON.stringify(fixture.envelope) }));
   mockFetch.mockResolvedValue(Response.json({ ...fixture.envelope, payload: fixture.envelope.payload + 'x' }));
   const { refreshConfig, currentConfig } = await import('./remote');
   await refreshConfig(true);

@@ -1,5 +1,5 @@
 {
-  "name": "@opentune/shared",
+  "name": "@weavtune/shared",
   "private": true,
   "type": "module",
   "exports": {

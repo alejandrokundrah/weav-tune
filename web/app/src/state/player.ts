@@ -1,4 +1,4 @@
-import type { DetectedExtension } from '@opentune/shared/bridge';
+import type { DetectedExtension } from '@weavtune/shared/bridge';
 import { create } from 'zustand';
 import type { Track } from '@/data/music/types';
 import { extensionQueryKey } from '@/extension/useExtension';
@@ -90,7 +90,7 @@ interface PlayerState extends Settings {
 
 // ---- Settings, kept across visits ---------------------------------------------------
 
-const SETTINGS_KEY = 'opentune:player';
+const SETTINGS_KEY = 'weavtune:player';
 const DEFAULT_SETTINGS: Settings = { shuffle: false, repeat: 'off', autoplay: true, volume: 1, muted: false, crossfadeSec: 0 };
 
 function loadSettings(): Settings {

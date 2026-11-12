@@ -1,4 +1,4 @@
-/** OpenTune's implementation of the BitChord HTTP audio add-on contract. */
+/** Weav-Tune's implementation of the BitChord HTTP audio add-on contract. */
 export function publicHttps(raw: string): URL {
   const u = new URL(raw);
   const host = u.hostname.toLowerCase();
@@ -16,7 +16,7 @@ export function endpoint(raw: string, path: string, params: Record<string, strin
   Object.entries(params).forEach(([k, v]) => u.searchParams.set(k, v));
   return u.href;
 }
-/** [admin]: published by OpenTune's owner (the community catalog); its URL stays out of sight and it can't be removed, only turned off. */
+/** [admin]: published by Weav-Tune's owner (the community catalog); its URL stays out of sight and it can't be removed, only turned off. */
 export type Addon = { id: string; name: string; url: string; enabled: boolean; admin?: boolean; ownerOff?: boolean };
 export type Recording = { title: string; artist: string; duration: number };
 export type CatalogTrack = Recording & { id: string; album?: string };

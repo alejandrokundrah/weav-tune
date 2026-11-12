@@ -37,7 +37,7 @@ assert 100 <= len(home.matches('meta', name='description')[0]['content']) <= 170
 assert home.matches('meta', name='twitter:title') and home.matches('meta', name='twitter:description')
 assert home.matches('meta', property='og:image')[0]['content'] == BASE + 'img/share-card-v3.jpg'
 app = next(x for x in home.ld if x['@type'] == 'SoftwareApplication')
-assert app['name'] == 'OpenTune' and app['url'] == BASE and app['offers']['price'] == '0'
+assert app['name'] == 'Weav-Tune' and app['url'] == BASE and app['offers']['price'] == '0'
 assert 'aggregateRating' not in app
 assert app['downloadUrl'] == 'https://github.com/justshivv/Opentune/releases/latest'
 assert len(home.matches('details')) >= 6
@@ -56,8 +56,8 @@ with tempfile.TemporaryDirectory() as directory:
     gradle = (ROOT / 'app/build.gradle.kts').read_text()
     assert manifest['versionName'] == re.search(r'versionName = "([^"]+)"', gradle)[1]
     assert manifest['versionCode'] == int(re.search(r'versionCode = (\d+)', gradle)[1])
-    assert manifest['packageName'] == 'com.opentune'
-    recipe = (output / 'fdroid/com.opentune.yml').read_text()
+    assert manifest['packageName'] == 'com.weavtune'
+    recipe = (output / 'fdroid/com.weavtune.yml').read_text()
     assert '@COMMIT@' not in recipe and '@VERSION@' not in recipe and '@VERSION_CODE@' not in recipe
     assert 'a' * 40 in recipe and 'unsignedRelease=true' in recipe and 'universalOnly=true' in recipe
     assert (output / 'PUBLISHING.md').is_file()

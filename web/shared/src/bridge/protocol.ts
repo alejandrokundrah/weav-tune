@@ -10,10 +10,10 @@
 export const BRIDGE_PROTOCOL = 1;
 
 /** Tags every window message so the relay ignores everything else on the page. */
-export const BRIDGE_CHANNEL = 'opentune-bridge';
+export const BRIDGE_CHANNEL = 'weavtune-bridge';
 
 /** The long-lived port the extension pushes `BridgeEvent`s on. */
-export const EVENTS_PORT = 'opentune-events';
+export const EVENTS_PORT = 'weavtune-events';
 
 /** What the installed extension can do; `ping` reports it. */
 export type Capability = 'yt' | 'yt.auth' | 'yt.stats' | 'addon' | 'lyrics' | 'spotify' | 'discord';
@@ -68,7 +68,7 @@ export interface YtAccount {
 export interface YtAuthState {
   /** The browser holds a YouTube session (a SAPISID cookie). */
   browserSignedIn: boolean;
-  /** The user lets OpenTune use it; "Disconnect" turns this off without signing out of Google. */
+  /** The user lets Weav-Tune use it; "Disconnect" turns this off without signing out of Google. */
   connected: boolean;
   /** True when signed-in requests will be made: signed in, connected, and a channel chosen. */
   signedIn: boolean;
@@ -79,7 +79,7 @@ export interface YtAuthState {
   problem: string | null;
 }
 
-/** The browser's open.spotify.com session, as OpenTune may use it (prompt §7.1). Names only, never tokens. */
+/** The browser's open.spotify.com session, as Weav-Tune may use it (prompt §7.1). Names only, never tokens. */
 export interface SpotifyAuthState {
   /** The browser holds a Spotify session (an `sp_dc` cookie). */
   browserSignedIn: boolean;

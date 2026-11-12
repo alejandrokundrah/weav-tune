@@ -39,7 +39,7 @@ export function AppearanceSettings() {
           checked={a.replicaGlass}
           onChange={(replicaGlass) => a.update({ replicaGlass })}
         />
-        <Toggle label="Colors from artwork" detail="Let the playing song color OpenTune." checked={a.artworkColors} onChange={(artworkColors) => a.update({ artworkColors })} />
+        <Toggle label="Colors from artwork" detail="Let the playing song color Weav-Tune." checked={a.artworkColors} onChange={(artworkColors) => a.update({ artworkColors })} />
         <fieldset className="ot-accent-picker hairline-[16px]">
           <legend>
             Accent color

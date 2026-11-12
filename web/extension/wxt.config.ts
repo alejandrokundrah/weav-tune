@@ -3,8 +3,8 @@ import { defineConfig } from 'wxt';
 import { LYRIC_ORIGINS, patternOf } from './lib/lyricHosts';
 import { matchPatternsFor, SITE_ORIGINS } from './site.config';
 
-/** OPENTUNE_STORE_BUILD=1 for a Chrome Web Store upload. */
-const STORE_BUILD = process.env.OPENTUNE_STORE_BUILD === '1';
+/** WEAVTUNE_STORE_BUILD=1 for a Chrome Web Store upload. */
+const STORE_BUILD = process.env.WEAVTUNE_STORE_BUILD === '1';
 
 /**
  * Discord presence is user-token automation (prompt §7.3), so it is a build
@@ -13,7 +13,7 @@ const STORE_BUILD = process.env.OPENTUNE_STORE_BUILD === '1';
  */
 const DISCORD_PRESENCE = process.env.DISCORD_PRESENCE ? process.env.DISCORD_PRESENCE === '1' : !STORE_BUILD;
 const DISCORD_ORIGINS = ['https://discord.com/*'];
-/** OpenTune's own Discord application, for cover images and buttons; empty leaves both to plain links. */
+/** Weav-Tune's own Discord application, for cover images and buttons; empty leaves both to plain links. */
 const DISCORD_APP_ID = (process.env.DISCORD_APP_ID ?? '').trim();
 if (DISCORD_APP_ID && !/^[0-9]{17,20}$/.test(DISCORD_APP_ID)) throw new Error('DISCORD_APP_ID must be a Discord application id');
 

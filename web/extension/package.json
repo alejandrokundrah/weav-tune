@@ -1,5 +1,5 @@
 {
-  "name": "@opentune/extension",
+  "name": "@weavtune/extension",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,7 +14,7 @@
     "icons": "node scripts/gen-icons.mjs"
   },
   "dependencies": {
-    "@opentune/shared": "workspace:*"
+    "@weavtune/shared": "workspace:*"
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",

@@ -5,9 +5,9 @@ This extends the VPS service on `claude/wizardly-sagan-8ge2ek`. It does not repl
 ## Install and open
 
 1. Build the archive with `bash services/lossless-addon/vps/pack.sh /tmp`.
-2. Copy and unpack `opentune-addon-vps.tar.gz` on your VPS. Run its `sudo bash install.sh`. The installer preserves existing settings and databases. This step deploys server code; it is not performed by merely merging this change.
-3. Edit `/etc/opentune-addon.env` using `sudoedit`. Set `CONTROL_ADMIN_USERNAME` (at least 3 characters) and a unique `CONTROL_ADMIN_PASSWORD` (at least 16 characters). Quote values containing spaces using systemd EnvironmentFile syntax. Never commit this file or put its credentials in the app.
-4. Run `sudo systemctl restart opentune-addon`.
+2. Copy and unpack `weavtune-addon-vps.tar.gz` on your VPS. Run its `sudo bash install.sh`. The installer preserves existing settings and databases. This step deploys server code; it is not performed by merely merging this change.
+3. Edit `/etc/weavtune-addon.env` using `sudoedit`. Set `CONTROL_ADMIN_USERNAME` (at least 3 characters) and a unique `CONTROL_ADMIN_PASSWORD` (at least 16 characters). Quote values containing spaces using systemd EnvironmentFile syntax. Never commit this file or put its credentials in the app.
+4. Run `sudo systemctl restart weavtune-addon`.
 5. Open **https://addon-opentune.rethinknow.in/control/** and sign in. The usage dashboard also links here. Its login is separate from the usage dashboard's login.
 
 Owner credentials stay on the server. The browser keeps its four-hour bearer session only in memory; reloading requires sign-in. Changing either credential invalidates existing sessions. Empty credentials disable login, without taking down the last published configuration or audio APIs.
@@ -41,7 +41,7 @@ Example banner:
 Example admin catalog:
 
 ```json
-[{"id":"monochrome","name":"OpenTune Monochrome","url":"https://addon-opentune.rethinknow.in/monochrome/manifest.json","enabled":true}]
+[{"id":"monochrome","name":"Weav-Tune Monochrome","url":"https://addon-opentune.rethinknow.in/monochrome/manifest.json","enabled":true}]
 ```
 
 Use stable IDs. Updating a URL/name preserves the listener's order and their on/off choice. `enabled:false` pauses that admin source without changing the listener's switch; enabling it again respects their previous choice. Personal sources remain untouched. URLs are public configuration, hidden only in the app's presentation: **do not include secrets or promise that users cannot inspect them**.
@@ -54,7 +54,7 @@ Android/TV refresh while foregrounded; the web refreshes while visible. Configur
 
 Public configuration contains no account credentials or tokens. It is intentionally available without device authentication; publishing is protected. The separate first-party audio attestation, request signatures and third-party add-on policy are unchanged. Configuration cannot disable these controls or deliver executable code.
 
-Back up **both** `auth.sqlite` and `control.sqlite` in `/var/lib/opentune-addon`. Stop the service before a file copy, or use SQLite's consistent backup mechanism (copying a live WAL database alone is not safe). Protect backups: `control.sqlite` contains the private signing key. Restore it when moving hosts, because a silently regenerated key will be rejected by previously paired clients. There is no automatic remote key-rotation override.
+Back up **both** `auth.sqlite` and `control.sqlite` in `/var/lib/weavtune-addon`. Stop the service before a file copy, or use SQLite's consistent backup mechanism (copying a live WAL database alone is not safe). Protect backups: `control.sqlite` contains the private signing key. Restore it when moving hosts, because a silently regenerated key will be rejected by previously paired clients. There is no automatic remote key-rotation override.
 
 ## What still needs code changes
 

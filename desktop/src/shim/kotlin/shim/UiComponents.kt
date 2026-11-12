@@ -1,7 +1,7 @@
-// The parts of the phone's com.opentune.ui.components that the shared interface
+// The parts of the phone's com.weavtune.ui.components that the shared interface
 // files reach for and that lean on Android: glass, haptics. See Downloads.kt for
 // why these files sit here rather than under their packages' folders.
-package com.opentune.ui.components
+package com.weavtune.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,8 +19,8 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.opentune.data.settings.AppSettings
-import com.opentune.data.settings.GlassStyle
+import com.weavtune.data.settings.AppSettings
+import com.weavtune.data.settings.GlassStyle
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint

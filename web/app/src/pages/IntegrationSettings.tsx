@@ -1,4 +1,4 @@
-import type { DiscordPresenceOptions } from '@opentune/shared/bridge';
+import type { DiscordPresenceOptions } from '@weavtune/shared/bridge';
 import { APPLE_ORIGINS, useAppleAccess } from '@/data/apple/artistArt';
 import { useAppleSettings } from '@/data/apple/motionArt';
 import { useHostAccess } from '@/extension/useHostAccess';

@@ -10,7 +10,7 @@ import {
   type DiscordState,
   type SpotifyAuthState,
   type YtAuthState,
-} from '@opentune/shared/bridge';
+} from '@weavtune/shared/bridge';
 
 declare const __SITE_ORIGINS__: string[];
 

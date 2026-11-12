@@ -174,7 +174,7 @@ importers:
       '@noble/hashes':
         specifier: 2.4.0
         version: 2.4.0
-      '@opentune/shared':
+      '@weavtune/shared':
         specifier: workspace:*
         version: link:../shared
       '@tanstack/react-query':
@@ -253,7 +253,7 @@ importers:
 
   extension:
     dependencies:
-      '@opentune/shared':
+      '@weavtune/shared':
         specifier: workspace:*
         version: link:../shared
     devDependencies:

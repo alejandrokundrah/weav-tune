@@ -9,7 +9,7 @@ export type Invitation = 'star' | 'discord';
 export const GITHUB_URL = 'https://github.com/justshivv/Opentune';
 export const DISCORD_URL = 'https://discord.gg/6udrCVh5n';
 
-const KEY = 'opentune:invitations';
+const KEY = 'weavtune:invitations';
 const DAY = 86_400_000;
 const GAP = 30 * DAY;
 const APART = 14 * DAY;

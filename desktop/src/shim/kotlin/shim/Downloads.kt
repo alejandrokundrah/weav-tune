@@ -2,7 +2,7 @@
 // stand in for parts of core the desktop does not compile. They sit here,
 // not under their packages' folders, so build.gradle.kts's include patterns
 // cannot pick up core's real ones.
-package com.opentune.data.download
+package com.weavtune.data.download
 
 import java.io.File
 

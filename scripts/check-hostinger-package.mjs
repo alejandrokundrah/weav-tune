@@ -4,13 +4,13 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import assert from 'node:assert/strict';
-const archive=resolve(process.argv[2] || 'hostinger-package/opentune-hostinger.zip');
-const dir=mkdtempSync(join(tmpdir(),'opentune-package-'));
+const archive=resolve(process.argv[2] || 'hostinger-package/weavtune-hostinger.zip');
+const dir=mkdtempSync(join(tmpdir(),'weavtune-package-'));
 let server;
 const request=(url,options={})=>fetch(url,{...options,signal:AbortSignal.timeout(10000)});
 try {
  execFileSync('python3',['-m','zipfile','-e',archive,dir],{timeout:15000});
- server=spawn(process.execPath,['server.mjs'],{cwd:join(dir,'opentune-addon'),env:{...process.env,HOST:'127.0.0.1',PORT:'0',PUBLIC_HOST:'addon.example',DATA_DIR:join(dir,'data'),
+ server=spawn(process.execPath,['server.mjs'],{cwd:join(dir,'weavtune-addon'),env:{...process.env,HOST:'127.0.0.1',PORT:'0',PUBLIC_HOST:'addon.example',DATA_DIR:join(dir,'data'),
   CONTROL_ADMIN_USERNAME:'test-owner',CONTROL_ADMIN_PASSWORD:'test-package-password-only',USAGE_ENABLED:'true',ADDON_WORKERS:'2',APP_CERT_SHA256:'a'.repeat(64)},stdio:['ignore','pipe','inherit']});
  const base=await new Promise((resolve,reject)=>{
   const timer=setTimeout(()=>reject(new Error('Packaged server did not start')),15000);

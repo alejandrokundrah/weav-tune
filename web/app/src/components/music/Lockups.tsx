@@ -59,7 +59,7 @@ function PlayPlatter({ item }: { item: MusicItem }) {
 /**
  * The artwork, linking to the item or playing it. On hover it lifts, the cover
  * zooms a little inside its frame, a soft shade rises from the bottom and the
- * play disc comes up with it (.ot-lockup-art in opentune.css).
+ * play disc comes up with it (.ot-lockup-art in weavtune.css).
  */
 function LockupArtwork({ item, width, aspect }: { item: MusicItem; width: number; aspect: number }) {
   const href = hrefFor(item);

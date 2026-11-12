@@ -13,7 +13,7 @@ cd web
 pnpm install --frozen-lockfile
 pnpm typecheck
 pnpm test
-pnpm --filter @opentune/extension icons
+pnpm --filter @weavtune/extension icons
 pnpm build:site
 ```
 

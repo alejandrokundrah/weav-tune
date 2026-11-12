@@ -34,10 +34,10 @@ jobs:
       - name: Package Hostinger backend
         run: |
           bash services/lossless-addon/vps/pack.sh hostinger-package
-          timeout 90s node scripts/check-hostinger-package.mjs hostinger-package/opentune-hostinger.zip
+          timeout 90s node scripts/check-hostinger-package.mjs hostinger-package/weavtune-hostinger.zip
       - uses: actions/upload-artifact@v4
         with:
-          name: opentune-hostinger
+          name: weavtune-hostinger
           path: hostinger-package/
 
       - uses: actions/setup-java@v4
@@ -127,19 +127,19 @@ jobs:
         run: |
           ./gradlew --no-daemon :desktop:createDistributable
           app=desktop/build/compose/binaries/main/app
-          if [ -d "$app/OpenTune.app" ]; then "$app/OpenTune.app/Contents/MacOS/OpenTune" --self-check; else "$app/OpenTune/bin/OpenTune" --self-check; fi
+          if [ -d "$app/WeavTune.app" ]; then "$app/WeavTune.app/Contents/MacOS/WeavTune" --self-check; else "$app/WeavTune/bin/WeavTune" --self-check; fi
       # One file that runs on any Linux after chmod +x, wrapped around the app image just checked.
       - name: AppImage
         if: runner.os == 'Linux'
-        run: desktop/packaging/appimage.sh desktop/build/compose/binaries/main/app/OpenTune desktop/build/compose/binaries/main/appimage/OpenTune-x86_64.AppImage
-      # Unzip anywhere and run OpenTune.exe: the app image, zipped.
+        run: desktop/packaging/appimage.sh desktop/build/compose/binaries/main/app/WeavTune desktop/build/compose/binaries/main/appimage/WeavTune-x86_64.AppImage
+      # Unzip anywhere and run WeavTune.exe: the app image, zipped.
       - name: Portable zip
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
           ./gradlew --no-daemon :desktop:createDistributable
           New-Item -ItemType Directory -Force desktop/build/compose/binaries/main/portable | Out-Null
-          Compress-Archive -Path desktop/build/compose/binaries/main/app/OpenTune -DestinationPath desktop/build/compose/binaries/main/portable/OpenTune-windows-x64-portable.zip
+          Compress-Archive -Path desktop/build/compose/binaries/main/app/WeavTune -DestinationPath desktop/build/compose/binaries/main/portable/WeavTune-windows-x64-portable.zip
       - uses: actions/upload-artifact@v4
         with:
           name: desktop-${{ matrix.os }}

@@ -1,6 +1,6 @@
 # Lossless Bridge source investigation — 24 October 2026
 
-OpenTune can resolve the same NetEase/Meting source directly, without calling Lossless Bridge. The new `/netease` adapter is deployed from `feat/first-party-lossless-addon`; the branch remains unmerged. Monochrome and Archive were already implemented. The existing strict verification layer protects the new adapter on the first-party host, while public third-party add-ons remain unchanged.
+Weav-Tune can resolve the same NetEase/Meting source directly, without calling Lossless Bridge. The new `/netease` adapter is deployed from `feat/first-party-lossless-addon`; the branch remains unmerged. Monochrome and Archive were already implemented. The existing strict verification layer protects the new adapter on the first-party host, while public third-party add-ons remain unchanged.
 
 ## Live deployment evidence
 
@@ -8,8 +8,8 @@ Read-only requests to [the manifest](https://losslessbridge.de.deplexo.com/manif
 
 | Source | Upstream | Observed state |
 | --- | --- | --- |
-| Monochrome | `https://tracks.monochrome.st` | API, healthy; already in OpenTune |
-| Internet Archive | `https://archive.org` | Bridge reports timeouts/cooldown; already in OpenTune |
+| Monochrome | `https://tracks.monochrome.st` | API, healthy; already in Weav-Tune |
+| Internet Archive | `https://archive.org` | Bridge reports timeouts/cooldown; already in Weav-Tune |
 | NetEase catalogue | `https://music.163.com/api/cloudsearch/pc` | Enabled |
 | NetEase audio | `https://api.qijieya.cn/meting/` → `*.music.126.net` | Bridge reports a recent non-FLAC result; our two direct probes succeeded |
 | GD Studio | `https://music.gdstudio.xyz`, `https://music.gdstudio.org` | Tidal, NetEase and Kuwo routes all report HTTP 403/challenge blocks |
@@ -28,7 +28,7 @@ Evidence: `services/lossless-addon/reports/bridge-research-2026-10-24.json` and 
 4. Read its redirect manually. Accept only HTTPS NetEase media hosts, with no credentials or nonstandard port. Every subsequent redirect is validated too.
 5. Read at most 64 KiB, validate native FLAC STREAMINFO and return measured bit depth, sample rate, channels and duration. MP3, HTML, malformed ranges, access refusals and quota errors are not promoted to lossless.
 
-The [Meting operator's public documentation](https://api.qijieya.cn/meting/) describes the service and its migration/availability caveats. This is a third-party hosted resolver: OpenTune sends no account credentials, but availability depends on the operator and upstream catalogue. An anonymous client API does not mean the upstream has no account dependency.
+The [Meting operator's public documentation](https://api.qijieya.cn/meting/) describes the service and its migration/availability caveats. This is a third-party hosted resolver: Weav-Tune sends no account credentials, but availability depends on the operator and upstream catalogue. An anonymous client API does not mean the upstream has no account dependency.
 
 Direct measurements from bounded original-file headers:
 
@@ -41,7 +41,7 @@ This establishes readable FLAC headers, not audible quality, original mastering 
 
 ## Adapter validation
 
-The completed OpenTune adapter returned HTTP 200 for search and stream resolution for both recordings, with the same measured formats, in [run 40048382526](https://github.com/justshivv/Opentune/actions/runs/40048382526). The same run passed all 33 server tests plus the actual Workers/SQLite signature checks for native and web clients. The NetEase tests cover redirect host validation, credentials/insecure URLs, format rejection, cross-source IDs and rate-limit cooldown. The access test ensures unsigned NetEase requests never reach upstreams. Evidence: `services/lossless-addon/reports/netease-adapter-2026-10-24.json`.
+The completed Weav-Tune adapter returned HTTP 200 for search and stream resolution for both recordings, with the same measured formats, in [run 40048382526](https://github.com/justshivv/Opentune/actions/runs/40048382526). The same run passed all 33 server tests plus the actual Workers/SQLite signature checks for native and web clients. The NetEase tests cover redirect host validation, credentials/insecure URLs, format rejection, cross-source IDs and rate-limit cooldown. The access test ensures unsigned NetEase requests never reach upstreams. Evidence: `services/lossless-addon/reports/netease-adapter-2026-10-24.json`.
 
 ## Installation
 

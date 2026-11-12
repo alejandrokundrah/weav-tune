@@ -1,7 +1,7 @@
 // The phone's draw-phase clock for the player buttons' Echo motion, which on
 // Android also pauses with the app's lifecycle and the system's animator
 // switch. See Downloads.kt for why this file sits here.
-package com.opentune.ui.player
+package com.weavtune.ui.player
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

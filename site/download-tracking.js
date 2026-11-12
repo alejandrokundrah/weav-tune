@@ -17,8 +17,8 @@
     if(url.origin!=='https://github.com' || !match) return;
     let browserId;
     try {
-      browserId=localStorage.getItem('opentune-download-id');
-      if(!browserId) { browserId=crypto.randomUUID(); localStorage.setItem('opentune-download-id',browserId); }
+      browserId=localStorage.getItem('weavtune-download-id');
+      if(!browserId) { browserId=crypto.randomUUID(); localStorage.setItem('weavtune-download-id',browserId); }
     } catch { return; } // Don't mint a new ID on every click when storage is blocked.
     const release=match[1]; if(seen.has(release)) return;
     fetch(api+'/v1/download',{method:'POST',headers:{'Content-Type':'application/json'},
