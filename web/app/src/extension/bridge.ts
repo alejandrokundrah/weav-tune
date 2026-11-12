@@ -1,4 +1,4 @@
-import type { Bridge, DetectedExtension } from '@opentune/shared/bridge';
+import type { Bridge, DetectedExtension } from '@weavtune/shared/bridge';
 import { queryClient } from '@/lib/queryClient';
 import { extensionQueryKey } from './useExtension';
 

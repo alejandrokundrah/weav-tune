@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import { currentConfig } from '@/config/remote';
-import { endpoint, flacInfo, manifestOf, matches, publicHttps, qualityParams, type Addon, type CatalogTrack, type Recording } from '@opentune/shared/addons';
-import { BridgeCallError } from '@opentune/shared/bridge';
+import { endpoint, flacInfo, manifestOf, matches, publicHttps, qualityParams, type Addon, type CatalogTrack, type Recording } from '@weavtune/shared/addons';
+import { BridgeCallError } from '@weavtune/shared/bridge';
 import { getBridge } from '@/extension/bridge';
 import { fetchPublished, mergeCatalog } from './catalog';
 import { needsVerification, verificationHeaders } from './verification';
-const KEY = 'opentune:audio-addons';
-const SAAVN_KEY = 'opentune:jiosaavn';
+const KEY = 'weavtune:audio-addons';
+const SAAVN_KEY = 'weavtune:jiosaavn';
 /** Twenty of the listener's own and twenty published ones at most. */
 function read(): Addon[] { try { const v = JSON.parse(localStorage.getItem(KEY) ?? '[]'); return Array.isArray(v) ? v.filter(x => typeof x?.url === 'string' && typeof x?.name === 'string').slice(0, 40) : []; } catch { return []; } }
 function readSaavn(): boolean { try { return localStorage.getItem(SAAVN_KEY) !== 'false'; } catch { return true; } }

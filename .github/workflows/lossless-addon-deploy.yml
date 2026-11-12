@@ -35,15 +35,15 @@ jobs:
       - name: Pin the official app signing certificate
         shell: bash
         env:
-          KEYSTORE_BASE64: ${{ secrets.OPENTUNE_KEYSTORE_BASE64 }}
-          OPENTUNE_KEYSTORE_PASSWORD: ${{ secrets.OPENTUNE_KEYSTORE_PASSWORD }}
-          OPENTUNE_KEY_ALIAS: ${{ secrets.OPENTUNE_KEY_ALIAS }}
+          KEYSTORE_BASE64: ${{ secrets.WEAVTUNE_KEYSTORE_BASE64 }}
+          WEAVTUNE_KEYSTORE_PASSWORD: ${{ secrets.WEAVTUNE_KEYSTORE_PASSWORD }}
+          WEAVTUNE_KEY_ALIAS: ${{ secrets.WEAVTUNE_KEY_ALIAS }}
         run: |
           set -euo pipefail
-          test -n "$KEYSTORE_BASE64" && test -n "$OPENTUNE_KEYSTORE_PASSWORD" && test -n "$OPENTUNE_KEY_ALIAS"
+          test -n "$KEYSTORE_BASE64" && test -n "$WEAVTUNE_KEYSTORE_PASSWORD" && test -n "$WEAVTUNE_KEY_ALIAS"
           trap 'rm -f "$RUNNER_TEMP/attestation.keystore" "$RUNNER_TEMP/app-public.der"' EXIT
           printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/attestation.keystore"
-          keytool -exportcert -keystore "$RUNNER_TEMP/attestation.keystore" -storepass:env OPENTUNE_KEYSTORE_PASSWORD -alias "$OPENTUNE_KEY_ALIAS" -file "$RUNNER_TEMP/app-public.der"
+          keytool -exportcert -keystore "$RUNNER_TEMP/attestation.keystore" -storepass:env WEAVTUNE_KEYSTORE_PASSWORD -alias "$WEAVTUNE_KEY_ALIAS" -file "$RUNNER_TEMP/app-public.der"
           node --input-type=module <<'JS'
           import { readFileSync, appendFileSync } from 'node:fs';
           import { createHash } from 'node:crypto';
@@ -67,7 +67,7 @@ jobs:
           node --input-type=module <<'JS'
           import { readFileSync, appendFileSync } from 'node:fs';
           const log = readFileSync(`${process.env.RUNNER_TEMP}/lossless-deploy.log`, 'utf8');
-          const url = log.match(/https:\/\/opentune-lossless-addon\.[a-z0-9-]+\.workers\.dev\b/i)?.[0];
+          const url = log.match(/https:\/\/weavtune-lossless-addon\.[a-z0-9-]+\.workers\.dev\b/i)?.[0];
           if (!url) throw new Error('Deployment did not report a workers.dev URL');
           appendFileSync(process.env.GITHUB_OUTPUT, `url=${url}\n`);
           for (const source of ['monochrome', 'archive', 'musopen', 'netease']) {

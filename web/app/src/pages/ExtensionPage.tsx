@@ -2,7 +2,7 @@ import { ChevronRight } from 'lucide-react';
 import { useState, type ComponentType } from 'react';
 import { FaChrome, FaFirefoxBrowser } from 'react-icons/fa';
 import { SiDiscord, SiSpotify, SiYoutubemusic } from 'react-icons/si';
-import type { Capability } from '@opentune/shared/bridge';
+import type { Capability } from '@weavtune/shared/bridge';
 import { PageHeader } from '@/components/PageHeader';
 import { config } from '@/config';
 import { useExtension, type ExtensionStatus } from '@/extension/useExtension';
@@ -26,7 +26,7 @@ interface Download {
 
 /**
  * The two builds, as published (extension.json): the zip and the folder in it
- * carry the version, "opentune-extension-chrome (0.4.3)". Before that file
+ * carry the version, "weav-tune-extension-chrome (0.4.3)". Before that file
  * has loaded, the configured URLs and the unversioned names stand in.
  */
 function downloadsFor(published: PublishedExtension | null): Download[] {

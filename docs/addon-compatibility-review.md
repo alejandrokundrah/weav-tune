@@ -1,6 +1,6 @@
 # Add-on compatibility and upgrade review
 
-Reviewed 25 October 2026 against OpenTune main `5806de0` and
+Reviewed 25 October 2026 against Weav-Tune main `5806de0` and
 [BitChord `1189e6a`](https://github.com/kushagrasinghx/BitChord/tree/1189e6a566c9181111205f26a983f7984f9393ea).
 
 Applied to `claude/wizardly-sagan-8ge2ek` at `ffc77f8`, preserving its newer Spotify, artwork, VPS authentication and owner-pause changes.
@@ -10,7 +10,7 @@ Applied to `claude/wizardly-sagan-8ge2ek` at `ffc77f8`, preserving its newer Spo
 The public Qobuz TV add-on at `https://bppcaf.bot-keep.xyz/manifest.json`
 returns a stream response containing `url`, `manifest: "none"`,
 `encrypted: false`, and `quality: "LOSSLESS"`. It does not supply a codec.
-OpenTune previously rejected this response before inspecting the media.
+Weav-Tune previously rejected this response before inspecting the media.
 
 The parser now accepts a lossless quality hint when no stronger codec evidence
 is present. An explicit codec, recognized format/container/MIME, or concrete
@@ -28,7 +28,7 @@ The manifest disables downloads; playback support must preserve that policy.
 
 ## Requests and quality upgrades
 
-| Area | BitChord | OpenTune |
+| Area | BitChord | Weav-Tune |
 | --- | --- | --- |
 | Quality negotiation | Maps requested tier onto manifest options | Already does this; hi-res falls back to the declared `lossless` option |
 | Sparse stream metadata | Infers FLAC from a lossless quality tier | Fixed here; direct FLAC still needs byte and duration verification |
@@ -39,7 +39,7 @@ The manifest disables downloads; playback support must preserve that policy.
 | Rate limits | Shared per-client quiet period after HTTP 429 | Current resolver holds limits per song; this remains a difference, not changed by the parsing fix |
 
 This change does not transplant BitChord's playback engine. The failing response
-never reached OpenTune's upgrade engine. Regression coverage exercises the exact
+never reached Weav-Tune's upgrade engine. Regression coverage exercises the exact
 response shape, misleading codec labels, invalid media, duration mismatch,
 streaming-only policy, and the existing delayed-better-candidate path.
 

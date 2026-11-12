@@ -21,7 +21,7 @@ backend = urlparse(json.loads((ROOT / 'usage-config.json').read_text())['apiBase
 mode = 'normal'
 def route(request):
     url = urlparse(request.request.url)
-    cors = {'Access-Control-Allow-Origin':'http://opentune.test','Access-Control-Allow-Headers':'Authorization, Content-Type, Accept','Access-Control-Allow-Methods':'GET, POST, OPTIONS'}
+    cors = {'Access-Control-Allow-Origin':'http://weavtune.test','Access-Control-Allow-Headers':'Authorization, Content-Type, Accept','Access-Control-Allow-Methods':'GET, POST, OPTIONS'}
     if url.netloc == backend and request.request.method == 'OPTIONS':
         request.fulfill(status=204, headers=cors)
         return
@@ -52,7 +52,7 @@ def route(request):
         request.fulfill(json=[{'tag_name': 'v0.4.' + str(i), 'assets': [{'name': 'app.apk', 'download_count': 10}]} for i in range(12)] if '/releases' in url.path else {})
     elif url.netloc == 'usage.test' and url.path == '/login':
         request.fulfill(body=login_html, content_type='text/html')
-    elif url.netloc in ('opentune.test', 'usage.test'):
+    elif url.netloc in ('weavtune.test', 'usage.test'):
         if url.path == '/usage-config.json':
             request.fulfill(json={'apiBase': 'https://usage.test'})
         else:
@@ -78,7 +78,7 @@ with sync_playwright() as p:
         page = context.new_page()
         errors = []
         page.on('pageerror', lambda error: errors.append(str(error)))
-        page.goto('http://opentune.test/')
+        page.goto('http://weavtune.test/')
         page.wait_for_timeout(300)
         no_overflow(page)
         page.reload()
@@ -94,7 +94,7 @@ with sync_playwright() as p:
             assert box['y'] >= 0 and box['y'] + box['height'] <= header['height'] + 1, box
         assert page.locator('meta[property="og:image"]').get_attribute('content').endswith('/share-card-v3.jpg')
         page.screenshot(path=str(OUT / f'home-{width}.png'))
-        page.goto('http://opentune.test/usage/')
+        page.goto('http://weavtune.test/usage/')
         expect(page.locator('#owner-login')).to_be_visible()
         expect(page.locator('#owner-dashboard')).to_be_hidden()
         page.get_by_label('Username').fill('owner')
@@ -107,7 +107,7 @@ with sync_playwright() as p:
         page.get_by_label('Password').fill('fixture-password-1234')
         page.get_by_role('button', name='Sign in', exact=True).click()
         expect(page.locator('#period-plays')).to_have_text('84')
-        assert page.url == 'http://opentune.test/usage/'
+        assert page.url == 'http://weavtune.test/usage/'
         page.reload()
         expect(page.locator('#period-plays')).to_have_text('84')
         expect(page.locator('#owner-login')).to_be_hidden()
@@ -163,7 +163,7 @@ with sync_playwright() as p:
         page.get_by_role('button', name='Sign out').click()
         expect(page.locator('#owner-login')).to_be_visible()
         expect(page.locator('#owner-dashboard')).to_be_hidden()
-        assert page.evaluate("sessionStorage.getItem('opentune.owner.session')") is None
+        assert page.evaluate("sessionStorage.getItem('weavtune.owner.session')") is None
         assert not errors, errors
         context.close()
     context = browser.new_context()
@@ -186,7 +186,7 @@ with sync_playwright() as p:
     context.route('**/*', route)
     page = context.new_page()
     mode = 'normal'
-    page.goto('http://opentune.test/usage/')
+    page.goto('http://weavtune.test/usage/')
     page.get_by_label('Username').fill('owner')
     page.get_by_label('Password').fill('fixture-password-1234')
     page.get_by_role('button', name='Sign in', exact=True).click()

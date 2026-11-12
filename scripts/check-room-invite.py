@@ -13,7 +13,7 @@ with sync_playwright() as p:
         page.set_viewport_size({'width': width, 'height': 800})
         page.goto(url + '#code=K7QXM2PA9DTE')
         assert page.locator('#open').is_visible()
-        assert page.locator('#open').get_attribute('href') == 'intent://together/K7QXM2PA9DTE#Intent;scheme=opentune;package=com.opentune;end'
+        assert page.locator('#open').get_attribute('href') == 'intent://together/K7QXM2PA9DTE#Intent;scheme=weavtune;package=com.weavtune;end'
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
         page.screenshot(path=str(reports / f'room-invite-{width}.png'))
     for fragment in ('', '#code=invalid', '#code=K7QXM2PA9DTEAAAA', '#code=%3Cscript%3E'):

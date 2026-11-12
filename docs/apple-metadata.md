@@ -17,7 +17,7 @@ Research reference: [Echo Music](https://github.com/EchoMusicApp/Echo-Music) use
 [Apple chart feeds](https://github.com/EchoMusicApp/Echo-Music/blob/main/app/src/main/kotlin/com/music/echo/ui/screens/search/suggestions/AppleMusicScraper.kt),
 and its [album descriptions](https://github.com/EchoMusicApp/Echo-Music/blob/main/app/src/main/kotlin/com/music/echo/utils/AppleMusicAboutAlbum.kt)
 and [motion artwork](https://github.com/EchoMusicApp/Echo-Music/blob/main/applecanvas/src/main/kotlin/com/music/echo/applecanvas/AppleMusicCanvasProvider.kt)
-use the Apple web catalog with a token extracted from the web player. OpenTune's implementation
+use the Apple web catalog with a token extracted from the web player. Weav-Tune's implementation
 uses the documented Search API and does not copy that token extraction or bundle a third-party token.
 Apple charts, editorial descriptions and motion artwork are not included in this change.
 

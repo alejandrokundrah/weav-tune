@@ -1,5 +1,5 @@
 import { currentConfig, refreshConfig } from '@/config/remote';
-import { endpoint, type Addon } from '@opentune/shared/addons';
+import { endpoint, type Addon } from '@weavtune/shared/addons';
 
 /** Where the site says the owner's server is; the catalog is only ever read from one of these. */
 const CONFIG_URL = 'https://justshivv.github.io/Opentune/usage-config.json';

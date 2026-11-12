@@ -1,4 +1,4 @@
-import { detectExtension, type DetectedExtension } from '@opentune/shared/bridge';
+import { detectExtension, type DetectedExtension } from '@weavtune/shared/bridge';
 import { useQuery } from '@tanstack/react-query';
 import { config } from '@/config';
 import { queryClient } from '@/lib/queryClient';

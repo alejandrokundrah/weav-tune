@@ -6,7 +6,7 @@ import {
   type BridgeEvent,
   type BridgeEventMessage,
   type BridgeResponse,
-} from '@opentune/shared/bridge';
+} from '@weavtune/shared/bridge';
 
 /** How long a dropped event port waits before reconnecting, while the page is visible. */
 const RECONNECT_MS = 2000;

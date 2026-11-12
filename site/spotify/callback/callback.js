@@ -9,7 +9,7 @@
   if (state.length !== 1 || !/^[A-Za-z0-9_-]{43}$/.test(state[0]) ||
       !((code.length === 1 && code[0].length > 0 && code[0].length <= 4096 && error.length === 0) ||
         (error.length === 1 && code.length === 0))) {
-    document.getElementById('message').textContent = 'This sign-in link is incomplete. Start Spotify sign-in again in OpenTune.';
+    document.getElementById('message').textContent = 'This sign-in link is incomplete. Start Spotify sign-in again in Weav-Tune.';
     return;
   }
   const output = new URLSearchParams({state: state[0]});

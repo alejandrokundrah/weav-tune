@@ -14,11 +14,11 @@ function callback(search) {
   assert.ok(cleared);
   return nodes;
 }
-test('hands off a code only to OpenTune and clears browser history', () => {
+test('hands off a code only to Weav-Tune and clears browser history', () => {
   const nodes = callback('?state=' + 'a'.repeat(43) + '&code=one%26two');
   assert.equal(nodes.open.hidden, false);
   const uri = new URL(nodes.open.href);
-  assert.equal(uri.protocol, 'opentune:');
+  assert.equal(uri.protocol, 'weavtune:');
   assert.equal(uri.hostname, 'spotify-callback');
   assert.equal(uri.searchParams.get('code'), 'one&two');
 });

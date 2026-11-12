@@ -1,11 +1,11 @@
 // Zips the built extension for the site's Extension page and writes the
 // manifest the page checks for updates:
 //
-//   web/app/public/downloads/opentune-extension-chrome (<version>).zip
-//   web/app/public/downloads/opentune-extension-firefox (<version>).zip
+//   web/app/public/downloads/weav-tune-extension-chrome (<version>).zip
+//   web/app/public/downloads/weav-tune-extension-firefox (<version>).zip
 //   web/app/public/downloads/extension.json    { version, builtAt, files }
 //
-// Each zip holds a single folder (opentune-extension-<browser> (<version>)/) rather than
+// Each zip holds a single folder (weav-tune-extension-<browser> (<version>)/) rather than
 // loose files, so "Extract here" leaves one tidy folder to load unpacked.
 //
 //   corepack pnpm --dir web/extension package   (builds both, then runs this)
@@ -19,7 +19,7 @@ const output = fileURLToPath(new URL('../.output/', import.meta.url));
 const target = fileURLToPath(new URL('../../app/public/downloads/', import.meta.url));
 mkdirSync(target, { recursive: true });
 // Each version's zips are named for it; the previous ones go.
-for (const name of readdirSync(target)) if (/^(?:opentune|weav-tune)-extension-.*\.zip$/.test(name)) rmSync(join(target, name));
+for (const name of readdirSync(target)) if (/^(?:weavtune|weav-tune)-extension-.*\.zip$/.test(name)) rmSync(join(target, name));
 
 function filesUnder(dir) {
   return readdirSync(dir).flatMap((name) => {

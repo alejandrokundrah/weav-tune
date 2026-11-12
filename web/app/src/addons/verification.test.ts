@@ -7,7 +7,7 @@ describe('verification is private to the official source', () => {
     expect(isOfficialAddon(OFFICIAL_ADDON + '/monochrome/manifest.json')).toBe(true);
     expect(needsVerification(OFFICIAL_ADDON + '/monochrome/search?q=track')).toBe(true);
     for (const url of [
-      'https://public-addon.example/search?q=OpenTune',
+      'https://public-addon.example/search?q=Weav-Tune',
       'https://public-addon.example/auth/web/info',
       'https://losslessbridge.de.deplexo.com/stream/123',
       'https://bluebit.jucepe0929.workers.dev/search?q=test',

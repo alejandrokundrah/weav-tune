@@ -13,29 +13,29 @@ here=$(cd "$(dirname "$0")" && pwd)
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 
-appdir="$work/OpenTune.AppDir"
+appdir="$work/WeavTune.AppDir"
 mkdir -p "$appdir"
-cp -a "$app" "$appdir/opentune"
+cp -a "$app" "$appdir/weavtune"
 
 cat > "$appdir/AppRun" <<'EOF'
 #!/bin/sh
 here=$(dirname "$(readlink -f "$0")")
-exec "$here/opentune/bin/OpenTune" "$@"
+exec "$here/weavtune/bin/WeavTune" "$@"
 EOF
 chmod +x "$appdir/AppRun"
 
-cat > "$appdir/opentune.desktop" <<'EOF'
+cat > "$appdir/weavtune.desktop" <<'EOF'
 [Desktop Entry]
 Type=Application
-Name=OpenTune
+Name=Weav-Tune
 Comment=A music player for YouTube Music
-Exec=OpenTune
-Icon=opentune
+Exec=Weav-Tune
+Icon=weavtune
 Categories=AudioVideo;Audio;Player;
 Terminal=false
 EOF
-cp "$here/icons/AppIcon.png" "$appdir/opentune.png"
-ln -s opentune.png "$appdir/.DirIcon"
+cp "$here/icons/AppIcon.png" "$appdir/weavtune.png"
+ln -s weavtune.png "$appdir/.DirIcon"
 
 tool="${APPIMAGETOOL:-$work/appimagetool}"
 if [ ! -x "$tool" ]; then

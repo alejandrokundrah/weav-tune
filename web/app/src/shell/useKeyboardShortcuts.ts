@@ -25,7 +25,7 @@ function focusSearch(navigate: ReturnType<typeof useNavigate>) {
 }
 
 /**
- * The web player's shortcuts, which OpenTune matches (report §8): Space
+ * The web player's shortcuts, which Weav-Tune matches (report §8): Space
  * play/pause; ⌘/Ctrl+→ / ← next/previous; ⌘/Ctrl+↑ / ↓ volume; ⌘/Ctrl+F or
  * "/" focuses search; ⌘/Ctrl+\ folds the sidebar; Esc closes the full-screen
  * player, else the side panel.

@@ -1,4 +1,4 @@
-import type { DiscordNowPlaying, DiscordPresenceOptions, DiscordState } from '@opentune/shared/bridge';
+import type { DiscordNowPlaying, DiscordPresenceOptions, DiscordState } from '@weavtune/shared/bridge';
 import { installDiscordFetchRule } from './rules';
 
 declare const __DISCORD_PRESENCE__: boolean;
@@ -28,8 +28,8 @@ declare const __DISCORD_APP_ID__: string;
  */
 
 /**
- * OpenTune's own Discord application, from the build (DISCORD_APP_ID). Empty
- * in a build without one: the card still goes up named OpenTune, with the
+ * Weav-Tune's own Discord application, from the build (DISCORD_APP_ID). Empty
+ * in a build without one: the card still goes up named Weav-Tune, with the
  * cover as a plain link and no application behind its buttons.
  */
 export const APPLICATION_ID: string = __DISCORD_APP_ID__;
@@ -207,7 +207,7 @@ export class Gateway {
       try {
         this.onMessage(JSON.parse(String(event.data)) as Payload);
       } catch (error) {
-        console.warn('OpenTune: Discord gateway payload', error);
+        console.warn('Weav-Tune: Discord gateway payload', error);
       }
     };
     socket.onclose = (event) => {
@@ -252,7 +252,7 @@ export class Gateway {
   }
 
   private drop(why: string): void {
-    console.info(`OpenTune: Discord gateway dropped (${why})`);
+    console.info(`Weav-Tune: Discord gateway dropped (${why})`);
     this.ready = false;
     this.socket?.close();
   }
@@ -534,7 +534,7 @@ export async function setPresence(track: DiscordNowPlaying | null, options: Disc
   await ensureGateway(held.token).sendActivity(presence);
 }
 
-/** Every OpenTune page has gone: nobody is playing, so the card comes down with the socket. */
+/** Every Weav-Tune page has gone: nobody is playing, so the card comes down with the socket. */
 export function allPagesClosed(): void {
   gateway?.clearActivity();
   idleTimer = setTimeout(closeGateway, 2_000);
@@ -597,7 +597,7 @@ function readToken(): string {
     if (!chunks) return '';
     let found = '';
     chunks.push([
-      [Symbol('opentune')],
+      [Symbol('weavtune')],
       {},
       (require: { c: Record<string, Module> }) => {
         for (const id in require.c) {

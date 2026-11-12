@@ -6,7 +6,7 @@ const b64 = (b: ArrayBuffer | Uint8Array<ArrayBuffer>) => btoa(String.fromCharCo
 const hash = async (s: string) => [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes(s)))].map(x => x.toString(16).padStart(2, '0')).join('');
 async function database(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('opentune-addon-device', 1);
+    const request = indexedDB.open('weavtune-addon-device', 1);
     request.onupgradeneeded = () => { request.result.createObjectStore('session'); };
     request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error);
   });

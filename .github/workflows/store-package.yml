@@ -28,17 +28,17 @@ jobs:
       - name: Prepare signing key
         if: inputs.format != 'fdroid-unsigned'
         env:
-          KEYSTORE_BASE64: ${{ secrets.OPENTUNE_KEYSTORE_BASE64 }}
+          KEYSTORE_BASE64: ${{ secrets.WEAVTUNE_KEYSTORE_BASE64 }}
         run: |
-          test -n "$KEYSTORE_BASE64" || { echo "Configure the existing OpenTune release signing secrets first."; exit 1; }
+          test -n "$KEYSTORE_BASE64" || { echo "Configure the existing Weav-Tune release signing secrets first."; exit 1; }
           printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/store.keystore"
-          echo "OPENTUNE_KEYSTORE=$RUNNER_TEMP/store.keystore" >> "$GITHUB_ENV"
+          echo "WEAVTUNE_KEYSTORE=$RUNNER_TEMP/store.keystore" >> "$GITHUB_ENV"
       - name: Build selected package
         env:
           STORE_FORMAT: ${{ inputs.format }}
-          OPENTUNE_KEYSTORE_PASSWORD: ${{ secrets.OPENTUNE_KEYSTORE_PASSWORD }}
-          OPENTUNE_KEY_ALIAS: ${{ secrets.OPENTUNE_KEY_ALIAS }}
-          OPENTUNE_KEY_PASSWORD: ${{ secrets.OPENTUNE_KEY_PASSWORD }}
+          WEAVTUNE_KEYSTORE_PASSWORD: ${{ secrets.WEAVTUNE_KEYSTORE_PASSWORD }}
+          WEAVTUNE_KEY_ALIAS: ${{ secrets.WEAVTUNE_KEY_ALIAS }}
+          WEAVTUNE_KEY_PASSWORD: ${{ secrets.WEAVTUNE_KEY_PASSWORD }}
         run: |
           case "$STORE_FORMAT" in
             signed-apk) ./gradlew --no-daemon testDebugUnitTest lintDebug assembleRelease; cp app/build/outputs/apk/release/*.apk dist/store/ ;;
@@ -49,7 +49,7 @@ jobs:
           find . -maxdepth 1 -type f \( -name '*.apk' -o -name '*.aab' \) -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: OpenTune-store-${{ inputs.format }}
+          name: WeavTune-store-${{ inputs.format }}
           path: dist/store/
       - name: Remove temporary key
         if: always()

@@ -1,15 +1,16 @@
 # Third-party notices
 
-OpenTune is licensed under the GNU General Public License v3.0 (see
-[LICENSE](LICENSE)). It includes or uses the following code, libraries,
-fonts and data, under their own licences.
+Weav-Tune is a fork of [OpenTune](https://github.com/justshivv/Opentune) and is
+licensed under the GNU General Public License v3.0 (see [LICENSE](LICENSE)). It
+includes or uses the following code, libraries, fonts and data, under their own
+licences.
 
 The optional Echo motion effects are adapted from [Echo Music](https://github.com/EchoMusicApp/Echo-Music/tree/a31a72bd958f7cdc128db17d2ea6ae90c3489aa1),
 by the Echo Music contributors, under GPLv3. The sources are
 `ui/player/MiniPlayer.kt` (animated glow and wavy play button) and
 `ui/component/BottomSheet.kt` (soft spring), under
 `app/src/main/kotlin/com/music/echo/` at that revision.
-OpenTune adapts these in `ui/player/EchoMotion.kt`, `PlayerButtons.kt`
+Weav-Tune adapts these in `ui/player/EchoMotion.kt`, `PlayerButtons.kt`
 and `ui/PageMotion.kt`, with its own palette, pause/lifecycle
 handling and reduced-motion behavior. See [Echo motion](docs/echo-motion.md).
 
@@ -23,14 +24,14 @@ been removed; FLAC validation and rendition-cache behavior remain in `data/lossl
 The HTTP add-on client in `data/addons/` implements the documented
 [BitChord add-on protocol](https://bitchord.kushagrasingh.in/docs), informed by
 [BitChord's source](https://github.com/kushagrasinghx/BitChord) under GPLv3.
-OpenTune supplies its own settings, persistence, strict catalog matching,
+Weav-Tune supplies its own settings, persistence, strict catalog matching,
 transport validation and ordered lookup integration. No executable extension
 packages are bundled.
 
 The JioSaavn URL decoding and
 conditional 320 kbps rendition selection follow
 [BitChord's JioSaavnService](https://github.com/kushagrasinghx/BitChord/blob/main/app/src/main/java/com/music/bitchord/data/jiosaavn/JioSaavnService.kt)
-(GPLv3). OpenTune adds conservative catalog matching and byte/size verification.
+(GPLv3). Weav-Tune adds conservative catalog matching and byte/size verification.
 
 The Innertube client, response parser and YouTube stream resolver under
 `data/innertube/` are adapted from
@@ -67,9 +68,9 @@ License 2.0 and GPLv2 with the Classpath exception).
 The `web/` preview adapts the existing React/WXT browser player from
 [kushagrasinghx/BitChord](https://github.com/kushagrasinghx/BitChord), commit
 `edc1e6f36febf71a118e649411d2fc21b70ead45`, licensed GPL-3.0. Its research notes
-are preserved in `web/docs/`; OpenTune branding, addon integration, host/path
-restrictions and build configuration were added here. The original license
-applies to the derived files; OpenTune is also GPL-3.0.
+are preserved in `web/docs/`; Weav-Tune (via OpenTune) branding, addon integration,
+host/path restrictions and build configuration were added here. The original license
+applies to the derived files; Weav-Tune is also GPL-3.0.
 
 `LosslessAudioPolicy` adapts BitChord's Samsung FLAC decoder exclusion and
 STREAMINFO measurement approach from `AudioOutputPolicy.kt` and

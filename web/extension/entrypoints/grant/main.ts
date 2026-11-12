@@ -1,4 +1,4 @@
-import { publicHttps } from '@opentune/shared/addons';
+import { publicHttps } from '@weavtune/shared/addons';
 import '../popup/style.css';
 import './style.css';
 

@@ -183,7 +183,7 @@ function ExtensionCard() {
 
 /**
  * Settings (SettingsSheet on the phone): sources and playback first, then
- * how it looks, the accounts it uses, Listen Together, and where OpenTune
+ * how it looks, the accounts it uses, Listen Together, and where Weav-Tune
  * lives. One page, grouped rows, a list of the sections beside it.
  */
 export default function SettingsPage() {

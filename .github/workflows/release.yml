@@ -4,10 +4,10 @@
 # main, and the release follows.
 #
 # Publishing requires the official signing secrets:
-#   OPENTUNE_KEYSTORE_BASE64   the keystore file, base64-encoded
-#   OPENTUNE_KEYSTORE_PASSWORD
-#   OPENTUNE_KEY_ALIAS
-#   OPENTUNE_KEY_PASSWORD
+#   WEAVTUNE_KEYSTORE_BASE64   the keystore file, base64-encoded
+#   WEAVTUNE_KEYSTORE_PASSWORD
+#   WEAVTUNE_KEY_ALIAS
+#   WEAVTUNE_KEY_PASSWORD
 # Missing signing material stops the release; debug-signed APKs are never published.
 name: Release
 
@@ -65,12 +65,12 @@ jobs:
       - name: Keystore
         if: steps.version.outputs.skip != 'true'
         env:
-          KEYSTORE_BASE64: ${{ secrets.OPENTUNE_KEYSTORE_BASE64 }}
+          KEYSTORE_BASE64: ${{ secrets.WEAVTUNE_KEYSTORE_BASE64 }}
         run: |
           set -euo pipefail
           test -n "$KEYSTORE_BASE64" || { echo '::error::Official release signing key is required.'; exit 1; }
           printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/release.keystore"
-          echo "OPENTUNE_KEYSTORE=$RUNNER_TEMP/release.keystore" >> "$GITHUB_ENV"
+          echo "WEAVTUNE_KEYSTORE=$RUNNER_TEMP/release.keystore" >> "$GITHUB_ENV"
 
       - name: Build
         if: steps.version.outputs.skip != 'true'
@@ -78,9 +78,9 @@ jobs:
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
           LASTFM_API_SECRET: ${{ secrets.LASTFM_API_SECRET }}
           DISCORD_APP_ID: ${{ vars.DISCORD_APP_ID || secrets.DISCORD_APP_ID }}
-          OPENTUNE_KEYSTORE_PASSWORD: ${{ secrets.OPENTUNE_KEYSTORE_PASSWORD }}
-          OPENTUNE_KEY_ALIAS: ${{ secrets.OPENTUNE_KEY_ALIAS }}
-          OPENTUNE_KEY_PASSWORD: ${{ secrets.OPENTUNE_KEY_PASSWORD }}
+          WEAVTUNE_KEYSTORE_PASSWORD: ${{ secrets.WEAVTUNE_KEYSTORE_PASSWORD }}
+          WEAVTUNE_KEY_ALIAS: ${{ secrets.WEAVTUNE_KEY_ALIAS }}
+          WEAVTUNE_KEY_PASSWORD: ${{ secrets.WEAVTUNE_KEY_PASSWORD }}
         run: ./gradlew --no-daemon testDebugUnitTest assembleRelease
 
       - name: Verify official APK signing identity and version
@@ -104,7 +104,7 @@ jobs:
           mkdir dist
           for f in app/build/outputs/apk/release/*.apk; do
             abi=$(basename "$f" .apk | sed -e 's/^app-//' -e 's/-release$//')
-            cp "$f" "dist/OpenTune-${TAG}-${abi}.apk"
+            cp "$f" "dist/WeavTune-${TAG}-${abi}.apk"
           done
           (cd dist && sha256sum *.apk > SHA256SUMS.txt)
 
@@ -116,9 +116,9 @@ jobs:
         # From main this also creates the tag, on the commit that was built.
         run: |
           if [ -f "docs/releases/${TAG#v}.md" ]; then
-            gh release create "$TAG" dist/* --target "$GITHUB_SHA" --title "OpenTune $TAG" --notes-file "docs/releases/${TAG#v}.md"
+            gh release create "$TAG" dist/* --target "$GITHUB_SHA" --title "Weav-Tune $TAG" --notes-file "docs/releases/${TAG#v}.md"
           else
-            gh release create "$TAG" dist/* --target "$GITHUB_SHA" --title "OpenTune $TAG" --generate-notes
+            gh release create "$TAG" dist/* --target "$GITHUB_SHA" --title "Weav-Tune $TAG" --generate-notes
           fi
 
       - name: Remove signing material

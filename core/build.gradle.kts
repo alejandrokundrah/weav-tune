@@ -16,7 +16,7 @@ val appBuild = rootProject.file("app/build.gradle.kts").readText()
 val appVersionName = Regex("""versionName = "([^"]+)"""").find(appBuild)!!.groupValues[1]
 val appVersionCode = Regex("""versionCode = (\d+)""").find(appBuild)!!.groupValues[1]
 
-// Registered OpenTune application credentials are supplied by the build owner.
+// Registered Weav-Tune application credentials are supplied by the build owner.
 // Last.fm mobile authentication requires these; listeners only enter their login.
 fun lastFmCredential(name: String): String {
     val value = providers.environmentVariable(name).orNull.orEmpty().trim()
@@ -25,7 +25,7 @@ fun lastFmCredential(name: String): String {
 }
 
 android {
-    namespace = "com.opentune.core"
+    namespace = "com.weavtune.core"
     compileSdk = 37
 
     defaultConfig {
