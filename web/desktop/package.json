@@ -5,6 +5,8 @@
   "version": "1.0.0",
   "description": "Weav-Tune for Windows, macOS and Linux: the web player in its own window.",
   "author": "Weav-Tune",
+  "homepage": "https://alejandrokundrah.github.io/weav-tune/",
+  "repository": "github:alejandrokundrah/weav-tune",
   "main": "build/main.cjs",
   "scripts": {
     "bundle": "node scripts/bundle.mjs",
