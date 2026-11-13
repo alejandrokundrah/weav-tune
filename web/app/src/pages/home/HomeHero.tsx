@@ -18,15 +18,13 @@ interface HomeHeroProps {
 }
 
 /**
- * The home screen's featured card: a pane of Liquid Glass over the artist's photograph, which
- * melts into the glass from the right. The photograph is also blurred behind the whole card, so
- * the glass takes its colours from the artist.
+ * The home screen's featured card: the artist's photograph on the right, fading into the dark card
+ * towards the name, Play and View Artist on the left.
  */
 export function HomeHero({ eyebrow, title, detail, image, href, onPlay, loading }: HomeHeroProps) {
   const photo = image ? sizedArtwork(image, 900, 16 / 9) : null;
   return (
-    <section className="wh-hero wh-glass" aria-label={eyebrow} data-loading={loading || undefined}>
-      {photo && <img className="wh-hero-wash" src={photo} alt="" aria-hidden="true" referrerPolicy="no-referrer" decoding="async" />}
+    <section className="wh-hero wh-card" aria-label={eyebrow} data-loading={loading || undefined}>
       {photo && <img className="wh-hero-photo" src={photo} alt="" referrerPolicy="no-referrer" decoding="async" fetchPriority="high" />}
       <div className="wh-hero-copy">
         <p className="wh-eyebrow">
@@ -48,7 +46,7 @@ export function HomeHero({ eyebrow, title, detail, image, href, onPlay, loading 
             </button>
           )}
           {href && (
-            <PrefetchLink className="wh-pill wh-pill-glass" to={href}>
+            <PrefetchLink className="wh-pill wh-pill-ghost" to={href}>
               View Artist
               <ChevronRight size={16} strokeWidth={2.6} />
             </PrefetchLink>

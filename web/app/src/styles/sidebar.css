@@ -2,10 +2,15 @@
    Sidebar, after the brand design (shell/Sidebar.tsx)
 
    Every row is a rounded tile and a name. The tiles are grey and the page you are on turns its tile
-   to the accent colour; its row catches a little light and carries a bar of the accent against the
+   to the accent colour; its row is lightly shaded and carries a bar of the accent against the
    sidebar's right edge. Section names are small capitals with room between the letters. The fold to a
    rail (weavtune.css) keeps working: the tiles stay where the icons were.
    ========================================================================== */
+
+/* The panel itself: opaque, with a hairline against the page. */
+.ot-side { background: var(--opaqueShelfBG); border-right: 1px solid var(--labelDivider); }
+aside.glass-material { border-left: 1px solid var(--labelDivider); }
+header.glass-material { border-bottom: 1px solid var(--labelDivider); }
 
 .ot-side {
   --ws-tile: 30px;
@@ -22,26 +27,12 @@
   border: 0;
   border-radius: 14px 0 0 14px;
   background: transparent;
-  box-shadow: none;
   color: var(--systemSecondary);
   font: 500 15px / 20px var(--font-family);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
-.ot-side .ot-nav-item:hover {
-  background: rgb(255 255 255 / 0.05);
-  border: 0;
-  box-shadow: none;
-  color: var(--systemPrimary);
-}
-:root[data-appearance='light'] .ot-side .ot-nav-item:hover { background: rgb(0 0 0 / 0.05); }
-.ot-side .ot-nav-item[aria-current='page'] {
-  background: linear-gradient(90deg, rgb(255 255 255 / 0.11), rgb(255 255 255 / 0.015));
-  border: 0;
-  box-shadow: none;
-  color: var(--systemPrimary);
-  font-weight: 600;
-}
-:root[data-appearance='light'] .ot-side .ot-nav-item[aria-current='page'] { background: linear-gradient(90deg, rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.01)); }
+.ot-side .ot-nav-item:hover { background: var(--systemQuinary); color: var(--systemPrimary); }
+.ot-side .ot-nav-item[aria-current='page'] { background: var(--navSidebarSelectedState); color: var(--systemPrimary); font-weight: 600; }
 /* The accent bar against the sidebar's edge. */
 .ot-side .ot-nav-item[aria-current='page']::after {
   content: '';
@@ -52,10 +43,7 @@
   width: 4px;
   border-radius: 4px 0 0 4px;
   background: var(--keyColor);
-  box-shadow: 0 0 14px color-mix(in srgb, var(--keyColor) 70%, transparent);
 }
-.ot-side .ot-nav-item svg { scale: none; }
-.ot-side .ot-nav-item:hover svg { scale: none; }
 
 /* ---- Tiles --------------------------------------------------------------- */
 
@@ -68,14 +56,9 @@
   border-radius: 9px;
   background: var(--systemTertiary);
   color: #fff;
-  box-shadow: inset 0.5px 0.5px 0 rgb(255 255 255 / 0.3);
-  transition: background-color 0.2s ease, box-shadow 0.2s ease, scale 0.3s var(--ot-ease-settle);
+  transition: background-color 0.2s ease;
 }
-.ot-nav-item:hover .ws-tile { scale: 1.06; }
-.ot-nav-item[aria-current='page'] .ws-tile {
-  background: linear-gradient(160deg, color-mix(in srgb, var(--keyColor) 78%, #fff), var(--keyColorBG));
-  box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.5), 0 6px 16px -4px color-mix(in srgb, var(--keyColor) 65%, transparent);
-}
+.ot-nav-item[aria-current='page'] .ws-tile { background: var(--keyColorBG); }
 
 /* ---- Section names -------------------------------------------------------- */
 
@@ -104,8 +87,7 @@
   transition: background-color 0.2s ease;
 }
 .ws-source svg { flex: none; margin-inline: 3px; }
-.ws-source:hover, .ws-source[aria-current='page'] { background: rgb(255 255 255 / 0.07); }
-:root[data-appearance='light'] .ws-source:hover, :root[data-appearance='light'] .ws-source[aria-current='page'] { background: rgb(0 0 0 / 0.06); }
+.ws-source:hover, .ws-source[aria-current='page'] { background: var(--systemQuinary); }
 
 @media (min-width: 484px) {
   .ot-side-sources { overflow: hidden; max-height: 100px; transition: max-height 0.38s var(--ot-ease-settle), opacity 0.22s ease 0.1s; }

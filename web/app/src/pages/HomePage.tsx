@@ -45,7 +45,7 @@ function useFeaturedArtistPage(id: string | null) {
 }
 
 /**
- * The home screen, in Liquid Glass: a search bar, the featured artist's card with their releases
+ * The home screen: a search bar, the featured artist's card with their releases
  * and top songs, and a rail with the listener, similar artists and what they played last. The
  * feed's own shelves follow underneath, as before.
  */

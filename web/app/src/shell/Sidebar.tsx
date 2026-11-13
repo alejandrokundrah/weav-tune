@@ -166,7 +166,7 @@ function Sources({ onNavigate }: { onNavigate: () => void }) {
   );
 }
 
-/** The left glass sidebar (report §1). */
+/** The left sidebar (report §1). */
 export function Sidebar() {
   const drawerOpen = useUi((s) => s.drawerOpen);
   const setDrawerOpen = useUi((s) => s.setDrawerOpen);

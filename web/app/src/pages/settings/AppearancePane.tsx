@@ -147,7 +147,7 @@ export function AppearancePane() {
       <section className={`${settingsUi.group} mt-3`} aria-label="Glass">
         <Toggle
           label="Liquid Glass"
-          detail={liquidGlassSupported() ? 'The player and floating buttons bend what’s behind them, like a lens.' : 'Needs Chrome or Edge. This browser keeps frosted glass.'}
+          detail={liquidGlassSupported() ? 'The player bends what’s behind it, like a lens.' : 'Needs Chrome or Edge. This browser keeps the player’s frosted glass.'}
           checked={a.liquidGlass && liquidGlassSupported()}
           onChange={(liquidGlass) => a.update({ liquidGlass })}
         />
