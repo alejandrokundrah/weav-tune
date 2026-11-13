@@ -143,12 +143,8 @@ export default function SearchPage() {
 
   return (
     <>
-      {/*
-        The sticky scope bar holding the field (report §6: 62px, padding 12px 0). Its glass sits on
-        a layer behind it, not on the bar: an element with a backdrop-filter is a backdrop root, so
-        the suggestions inside it could only blur the bar itself and showed the page underneath unblurred.
-      */}
-      <div className="sticky top-0 z-[calc(var(--z-default)+5)] flex justify-center px-(--body-gutter) py-3 before:absolute before:inset-0 before:-z-1 before:bg-header-material before:[backdrop-filter:saturate(180%)_blur(20px)]">
+      {/* The sticky scope bar holding the field (report §6: 62px, padding 12px 0). */}
+      <div className="sticky top-0 z-[calc(var(--z-default)+5)] flex justify-center px-(--body-gutter) py-3 before:absolute before:inset-0 before:-z-1 before:bg-page">
         <SearchField initial={query} onSearch={(q) => setParams(q ? { q } : {})} />
       </div>
       {missing ? <NeedsExtension what="and search YouTube Music" /> : query ? <Results query={query} /> : <Landing />}

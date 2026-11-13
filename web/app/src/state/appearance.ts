@@ -16,12 +16,10 @@ export interface Appearance {
   motion: boolean;
   /** The floating pills bend what's behind them (Chromium only; frosted elsewhere). */
   liquidGlass: boolean;
-  /** The extracted Group 45.svg glass material on the app chrome; the Apple Music player is untouched. */
-  replicaGlass: boolean;
 }
 export const DEFAULT_APPEARANCE: Appearance = {
   mode: 'system', accent: '#25a0d4', pureBlack: true, artworkColors: true,
-  playerBackground: 'mesh', playerStyle: 'classic', motion: true, liquidGlass: true, replicaGlass: true,
+  playerBackground: 'mesh', playerStyle: 'classic', motion: true, liquidGlass: true,
 };
 export function appearanceOf(value: unknown): Appearance {
   const v = (value && typeof value === 'object' ? value : {}) as Partial<Appearance>;
@@ -35,7 +33,6 @@ export function appearanceOf(value: unknown): Appearance {
     playerStyle: PLAYER_STYLES.includes(v.playerStyle!) ? v.playerStyle! : 'classic',
     motion: typeof v.motion === 'boolean' ? v.motion : true,
     liquidGlass: typeof v.liquidGlass === 'boolean' ? v.liquidGlass : true,
-    replicaGlass: typeof v.replicaGlass === 'boolean' ? v.replicaGlass : true,
   };
 }
 const KEY = 'weav:appearance';

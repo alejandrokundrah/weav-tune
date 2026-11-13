@@ -11,7 +11,7 @@ type Option = { kind: 'query'; text: string; typed: string; rest: string } | { k
 
 /**
  * The centred search field and its suggestions (report §6): a pill field, and
- * a glass dropdown of completions, then artist, album and song suggestions.
+ * a dropdown of completions, then artist, album and song suggestions.
  * Arrow keys move through it; Enter picks; Escape closes.
  */
 export function SearchField({ initial, onSearch }: { initial: string; onSearch: (query: string) => void }) {
@@ -57,7 +57,7 @@ export function SearchField({ initial, onSearch }: { initial: string; onSearch: 
         <Search size={15} strokeWidth={2.4} className="pointer-events-none absolute left-2.5 text-secondary" aria-hidden="true" />
         <input
           ref={input}
-          className="h-[38px] w-full rounded-pill border border-search-border bg-[var(--glassMaterialBackground)] [backdrop-filter:var(--glassMaterialBackdropFilter)] shadow-[inset_1px_1px_0_rgba(255,255,255,0.25)] pt-1.5 pr-[30px] pb-[5px] pl-7 type-body text-primary placeholder:text-tertiary focus:border-key focus:shadow-[inset_1px_1px_0_rgba(255,255,255,0.35),0_0_16px_rgba(var(--keyColor-rgb),0.35)] transition-all [&::-webkit-search-cancel-button]:hidden"
+          className="h-[38px] w-full rounded-pill border border-search-border bg-quinary pt-1.5 pr-[30px] pb-[5px] pl-7 type-body text-primary placeholder:text-tertiary focus:border-key transition-colors [&::-webkit-search-cancel-button]:hidden"
           type="search"
           value={value}
           placeholder="Artists, Songs, Lyrics, and More"
@@ -102,10 +102,10 @@ export function SearchField({ initial, onSearch }: { initial: string; onSearch: 
         )}
       </form>
       {showList && (
-        // The dropdown: 302px of glass, 3px under the field.
+        // The dropdown: 302px panel, 3px under the field.
         <ul
           id={listId}
-          className="absolute top-[calc(100%+3px)] left-0 z-(--z-contextual-menus) max-h-[min(700px,70vh)] w-[302px] overflow-y-auto rounded-[9px] border border-[#00000033] bg-thick-material py-1.5 shadow-[inset_0_0_0_1px_#ffffff33,0_8px_40px_#0000008c] [backdrop-filter:blur(60px)_saturate(2.2)]"
+          className="absolute top-[calc(100%+3px)] left-0 z-(--z-contextual-menus) max-h-[min(700px,70vh)] w-[302px] overflow-y-auto rounded-[9px] border border-[#00000033] bg-(--opaqueShelfBG) py-1.5 shadow-[0_0_0_0.5px_var(--vibrantDivider),0_8px_40px_#0000008c]"
           role="listbox"
         >
           {options.map((option, i) => (

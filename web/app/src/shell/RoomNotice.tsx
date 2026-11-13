@@ -13,7 +13,7 @@ export function RoomNotice() {
   }, [notice]);
   if (!notice) return null;
   return (
-    <p key={notice.at} className="ot-room-notice glass-pill" data-shown={shown || undefined} role="status">
+    <p key={notice.at} className="ot-room-notice" data-shown={shown || undefined} role="status">
       {notice.text}
     </p>
   );

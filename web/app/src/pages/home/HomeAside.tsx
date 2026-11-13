@@ -15,7 +15,7 @@ export function ProfileCard() {
   const status = useYtAuth();
   const active = status.state === 'ready' && status.auth.connected ? status.auth.active : null;
   return (
-    <div className="wh-profile wh-glass">
+    <div className="wh-profile wh-card">
       {active?.avatarUrl ? (
         <img className="wh-avatar" src={active.avatarUrl} alt="" width={44} height={44} referrerPolicy="no-referrer" />
       ) : (
@@ -37,7 +37,7 @@ export function ProfileCard() {
 }
 
 /**
- * Artists the featured one's listeners also play, one large glass-captioned card at a time on
+ * Artists the featured one's listeners also play, one large captioned card at a time on
  * a scroll-snapped track; the dots follow the scroll and jump to a card.
  */
 export function FansAlsoLike({ artists }: { artists: MusicItem[] }) {
@@ -59,7 +59,7 @@ export function FansAlsoLike({ artists }: { artists: MusicItem[] }) {
           <li key={artist.id}>
             <PrefetchLink className="wh-fan" to={hrefFor(artist) ?? '#'}>
               <Artwork src={artist.thumbnail} displayWidth={304} radius="24px" />
-              <span className="wh-fan-caption wh-glass">
+              <span className="wh-fan-caption">
                 <strong>{artist.title}</strong>
                 <span>Artist</span>
               </span>

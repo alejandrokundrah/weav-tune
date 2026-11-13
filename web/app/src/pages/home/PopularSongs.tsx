@@ -34,7 +34,7 @@ export function PopularSongs({ tracks, source, seeAll }: { tracks: Track[]; sour
           </PrefetchLink>
         )}
       </header>
-      <ol className="wh-songs wh-glass">
+      <ol className="wh-songs wh-card">
         {tracks.map((track, i) => {
           const current = track.videoId === playingId;
           const running = current && (status === 'playing' || status === 'buffering' || status === 'loading');

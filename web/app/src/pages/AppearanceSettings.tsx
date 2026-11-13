@@ -29,15 +29,9 @@ export function AppearanceSettings() {
         <Toggle label="Pure black" detail="True black surfaces in dark mode." checked={a.pureBlack} onChange={(pureBlack) => a.update({ pureBlack })} />
         <Toggle
           label="Liquid Glass"
-          detail={liquidGlassSupported() ? 'The player and floating buttons bend what’s behind them, like a lens.' : 'Needs Chrome or Edge. This browser keeps frosted glass.'}
+          detail={liquidGlassSupported() ? 'The player bends what’s behind it, like a lens.' : 'Needs Chrome or Edge. This browser keeps the player’s frosted glass.'}
           checked={a.liquidGlass && liquidGlassSupported()}
           onChange={(liquidGlass) => a.update({ liquidGlass })}
-        />
-        <Toggle
-          label="Replica Liquid Glass shell"
-          detail="Applies the extracted Group 45 glass to the sidebar, panels and page chrome. The original Apple Music player pill is unchanged."
-          checked={a.replicaGlass}
-          onChange={(replicaGlass) => a.update({ replicaGlass })}
         />
         <Toggle label="Colors from artwork" detail="Let the playing song color Weav-Tune." checked={a.artworkColors} onChange={(artworkColors) => a.update({ artworkColors })} />
         <fieldset className="ot-accent-picker hairline-[16px]">

@@ -14,7 +14,7 @@ interface MenuProps {
 }
 
 /**
- * Apple's contextual menu (report §8): a glass panel, 185px minimum, 13px
+ * Apple's contextual menu (report §8): a panel, 185px minimum, 13px
  * items, hairline separators, red for destructive items. Closes on Escape, a
  * click outside, or a scroll of the page under it.
  */
@@ -70,7 +70,7 @@ export function Menu({ anchor, placement = 'below-end', onClose, label, children
       <div
         ref={panel}
         // Apple's amp-contextual-menu (report §8).
-        className="fixed z-(--z-contextual-menus) max-w-[300px] min-w-[185px] animate-menu-in overflow-y-auto rounded-[10px] bg-thick-material p-[5px] shadow-[0_0_0_0.5px_var(--vibrantDivider),0_10px_40px_var(--glassMaterialShadowColor)] [backdrop-filter:saturate(2.2)_blur(32px)]"
+        className="fixed z-(--z-contextual-menus) max-w-[300px] min-w-[185px] animate-menu-in overflow-y-auto rounded-[10px] bg-(--opaqueShelfBG) p-[5px] shadow-[0_0_0_0.5px_var(--vibrantDivider),0_10px_40px_var(--glassMaterialShadowColor)]"
         style={position}
         role="menu"
         aria-label={label}

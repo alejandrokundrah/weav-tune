@@ -86,27 +86,8 @@ function usePageScroll() {
   }, [location, navigation]);
 }
 
-/** Marks the top-edge glass while the page is scrolled down, without re-rendering anything. */
-function useScrollEdge() {
-  const edge = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const page = document.getElementById('scrollable-page');
-    if (!page) return;
-    let frame = 0;
-    const mark = () => {
-      frame = 0;
-      if (edge.current) edge.current.dataset.shown = String(page.scrollTop > 8);
-    };
-    const onScroll = () => { if (!frame) frame = requestAnimationFrame(mark); };
-    mark();
-    page.addEventListener('scroll', onScroll, { passive: true });
-    return () => { page.removeEventListener('scroll', onScroll); cancelAnimationFrame(frame); };
-  }, []);
-  return edge;
-}
-
 /**
- * The app frame (report §1): glass sidebar, the scrolling page, the floating
+ * The app frame (report §1): the sidebar, the scrolling page, the floating
  * player pill, the side panel, and the bottom band when there is one.
  */
 export function AppShell() {
@@ -114,7 +95,6 @@ export function AppShell() {
   useKeyboardShortcuts();
   useDiscordPresence();
   usePageScroll();
-  const edge = useScrollEdge();
   // Plays into the account's YouTube Music history (Settings › Share Listening Activity).
   useEffect(() => startHistoryReporting(), []);
   // The sources the owner publishes ("Added by admin"), folded into the listener's list.
@@ -206,22 +186,6 @@ export function AppShell() {
       {/* The side panel slides in from beyond the right edge; never let it scroll the page. */}
       <div className="relative min-h-0 overflow-hidden">
         <Appearance />
-        {/* Refraction source for the replica glass sheen; the Apple Music player does not use it. */}
-        <svg className="ot-replica-defs" width="0" height="0" aria-hidden="true" focusable="false">
-          <defs>
-            <filter id="otReplicaRefract" x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
-              <feTurbulence type="fractalNoise" baseFrequency="0.010 0.018" numOctaves="2" seed="7" result="noise" />
-              <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G" />
-            </filter>
-          </defs>
-        </svg>
-        {/* Ambient Liquid Glass Backdrop Canvas */}
-        <div className="ot-liquid-canvas pointer-events-none absolute inset-0 -z-0 overflow-hidden" aria-hidden="true">
-          <div className="ot-liquid-orb ot-orb-1" />
-          <div className="ot-liquid-orb ot-orb-2" />
-          <div className="ot-liquid-orb ot-orb-3" />
-          <div className="ot-liquid-orb ot-orb-4" />
-        </div>
         <Sidebar />
         <MobileTopBar />
         {/* The page scrolls under the fixed sidebar and the floating player. */}
@@ -237,8 +201,6 @@ export function AppShell() {
             </div>
           </div>
         </main>
-        {/* Frosted glass that gathers along the page's top edge once it scrolls under it. */}
-        <div ref={edge} className="ot-scroll-edge" aria-hidden="true" />
         <PlayerBar />
         <MobileDock />
         <SidePanel />

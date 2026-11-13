@@ -56,7 +56,7 @@ function Row({
         <Artwork src={track.thumbnail} displayWidth={40} radius="var(--radius-artwork-small)" />
         {/* The ✕ over the artwork's top-left, on hover. */}
         <button
-          className="absolute -top-1.5 -left-1.5 hidden size-[22px] place-items-center rounded-full bg-thick-material text-primary shadow-[0_1px_3px_#0004] [backdrop-filter:blur(10px)] group-hover/row:grid"
+          className="absolute -top-1.5 -left-1.5 hidden size-[22px] place-items-center rounded-full bg-(--opaqueShelfBG) text-primary shadow-[0_1px_3px_#0004] group-hover/row:grid"
           aria-label={`Remove ${track.title}`}
           onClick={() => removeAt(at)}
         >
