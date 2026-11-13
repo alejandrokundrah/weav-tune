@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { errorResponse, isBridgeRequest, type BridgeResponse } from '@weavtune/shared/bridge';
+import { BRIDGE_CHANNEL, errorResponse, isBridgeRequest, type BridgeEvent, type BridgeResponse } from '@weavtune/shared/bridge';
 
 /**
  * The page's bridge client (web/shared/src/bridge/client.ts) already has a window-message
@@ -13,6 +13,11 @@ window.addEventListener('message', (event: MessageEvent) => {
   void (ipcRenderer.invoke('weavtune:bridge', request) as Promise<BridgeResponse>)
     .then((response) => window.postMessage(response, location.origin))
     .catch((error: unknown) => window.postMessage(errorResponse(request.id, 'internal', String(error)), location.origin));
+});
+
+// Pushes from the main process (a sign-in finished) reach the page as the relay's event messages.
+ipcRenderer.on('weavtune:event', (_event, payload: BridgeEvent) => {
+  window.postMessage({ channel: BRIDGE_CHANNEL, direction: 'event', payload }, location.origin);
 });
 
 contextBridge.exposeInMainWorld('weavtuneDesktop', {

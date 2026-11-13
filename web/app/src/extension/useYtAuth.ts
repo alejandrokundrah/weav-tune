@@ -140,3 +140,8 @@ export function useSetConnected() {
     onSuccess: adopt,
   });
 }
+
+/** The desktop app's own Google sign-in window; in a browser, the sign-in page is a link. */
+export function openYtSignIn(): void {
+  void detected()?.bridge.call('yt.signIn', {});
+}

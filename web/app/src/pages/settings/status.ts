@@ -6,7 +6,6 @@ import { useYtAuth } from '@/extension/useYtAuth';
 import { useRoom } from '@/together/room';
 import { ACCENTS, useAppearance } from '@/state/appearance';
 import { usePlayer } from '@/state/player';
-import { isDesktop } from '@/lib/desktop';
 import type { SectionId } from './sections';
 
 /** ok: working. warn: needs something from you. off: not in use. */
@@ -48,9 +47,7 @@ export function useSectionStatus(): Record<SectionId, SectionStatus> {
     playback: { text: `AutoPlay ${autoplay ? 'on' : 'off'}, ${crossfadeSec ? `${crossfadeSec} s crossfade` : 'no crossfade'}` },
     lyrics: { text: 'Sources, order and timing' },
     appearance: { text: `${mode}, ${accent}` },
-    accounts: isDesktop()
-      ? { text: 'Not in the desktop app yet', tone: 'off' }
-      : !present
+    accounts: !present
       ? { text: 'Needs the extension', tone: 'warn' }
       : connected.length
         ? { text: `${list(connected)} connected`, tone: 'ok' }
