@@ -1,0 +1,355 @@
+/* ==========================================================================
+   Home screen, Liquid Glass (pages/home/*)
+
+   One surface recipe (.wh-glass): a thin tint over a blurred, saturated backdrop, a sheen that
+   falls from the top left, and a specular rim caught at the top left and the bottom right.
+   Everything on the page is built from it, so the screen reads as panes of one material over
+   the app's ambient colour field (.ot-liquid-canvas). The player pill is not touched here.
+   ========================================================================== */
+
+.wh-glass {
+  --wh-radius: 24px;
+  --wh-fill: color-mix(in srgb, var(--glassMaterialBackground) 58%, transparent);
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--wh-radius);
+  background:
+    linear-gradient(135deg, rgb(255 255 255 / 0.12) 0%, rgb(255 255 255 / 0.02) 46%, rgb(255 255 255 / 0.05) 100%),
+    var(--wh-fill);
+  -webkit-backdrop-filter: blur(26px) saturate(1.9) brightness(1.05);
+  backdrop-filter: blur(26px) saturate(1.9) brightness(1.05);
+  box-shadow: 0 22px 48px -18px var(--glassMaterialShadowColor), 0 2px 6px -2px rgb(0 0 0 / 0.18);
+}
+.wh-glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 1.5px 1.5px 0 -0.5px rgb(255 255 255 / 0.55),
+    inset -1.5px -1.5px 0 -0.5px rgb(255 255 255 / 0.26),
+    inset 0 0 0 0.5px rgb(255 255 255 / 0.14),
+    inset 0 0 22px rgb(255 255 255 / 0.05);
+}
+:root[data-appearance='light'] .wh-glass::after {
+  box-shadow:
+    inset 1.5px 1.5px 0 -0.5px rgb(255 255 255 / 0.95),
+    inset -1.5px -1.5px 0 -0.5px rgb(255 255 255 / 0.6),
+    inset 0 0 0 0.5px rgb(0 0 0 / 0.08),
+    inset 0 0 18px rgb(255 255 255 / 0.25);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .wh-glass { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--opaqueShelfBG); }
+}
+
+/* ---- Layout ------------------------------------------------------------ */
+
+.wh-home {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px 32px;
+  padding: 20px var(--body-gutter) 0;
+}
+.wh-home { position: relative; }
+/* A soft pool of colour under the panes, so the glass has something to bend. */
+.wh-home::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(520px 380px at 10% 64%, rgb(var(--keyColor-rgb) / 0.2), transparent 70%),
+    radial-gradient(460px 360px at 72% 86%, rgb(120 100 240 / 0.15), transparent 70%),
+    radial-gradient(380px 300px at 96% 30%, rgb(var(--keyColor-rgb) / 0.12), transparent 70%);
+}
+.wh-main { position: relative; z-index: 1; min-width: 0; display: flex; flex-direction: column; gap: 34px; }
+.wh-aside { position: relative; z-index: 1; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
+@media (min-width: 1180px) {
+  .wh-home { grid-template-columns: minmax(0, 1fr) 304px; }
+  /* The rail rides along with the page; Recently Played scrolls inside it. */
+  .wh-home > .wh-aside {
+    position: sticky;
+    top: 20px;
+    align-self: start;
+    max-height: calc(100dvh - var(--player-pill-height) - var(--player-bottom-offset) - 44px);
+  }
+}
+@media (max-width: 483.98px) {
+  .wh-home { padding-top: 12px; }
+}
+
+/* The page's entrance: each block rises in a beat after the one above. */
+.wh-main > *, .wh-aside > * { animation: ot-rise 0.55s var(--ot-ease-emph) both; }
+.wh-main > :nth-child(2) { animation-delay: 0.06s; }
+.wh-main > :nth-child(3) { animation-delay: 0.12s; }
+.wh-main > :nth-child(4) { animation-delay: 0.18s; }
+.wh-aside > :nth-child(2) { animation-delay: 0.1s; }
+.wh-aside > :nth-child(3) { animation-delay: 0.16s; }
+@media (prefers-reduced-motion: reduce) {
+  .wh-main > *, .wh-aside > * { animation: none; }
+}
+
+/* ---- Top bar ----------------------------------------------------------- */
+
+.wh-topbar { display: flex; align-items: center; gap: 12px; }
+.wh-topbar > :first-child { flex: 1; min-width: 0; }
+.wh-topbar > :first-child > div { width: min(560px, 100%); }
+.wh-topbar > :first-child input { height: 46px; padding-left: 40px; font-size: 14px; }
+.wh-topbar > :first-child svg:first-child { left: 15px; width: 17px; height: 17px; }
+.wh-topbar .ot-circle-button { width: 46px; height: 46px; }
+@media (max-width: 483.98px) {
+  /* The phone has its own top bar with the search. */
+  .wh-topbar > :first-child { display: none; }
+  .wh-topbar { justify-content: flex-end; }
+}
+
+/* ---- Hero -------------------------------------------------------------- */
+
+.wh-hero {
+  --wh-radius: 30px;
+  --wh-fill: rgb(10 15 20 / 0.55);
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  color: #fff;
+}
+:root[data-appearance='light'] .wh-hero { --wh-fill: rgb(10 15 20 / 0.5); }
+/* The photograph, blurred behind the glass, so its colours come through the pane. */
+.wh-hero-wash {
+  position: absolute;
+  inset: -60px;
+  z-index: -2;
+  width: calc(100% + 120px);
+  height: calc(100% + 120px);
+  object-fit: cover;
+  filter: blur(46px) saturate(1.7) brightness(0.75);
+  opacity: 0.85;
+}
+/* The photograph itself, on the right, melting into the glass towards the text. */
+.wh-hero-photo {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: 0;
+  width: min(66%, 760px);
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 22%;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 42%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 42%);
+  transition: scale 1.2s var(--ot-ease-settle);
+}
+.wh-hero:hover .wh-hero-photo { scale: 1.025; }
+.wh-hero-copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 36px 40px;
+  max-width: min(62%, 560px);
+}
+.wh-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 5px 12px 5px 9px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.12);
+  box-shadow: inset 0.5px 0.5px 0 rgb(255 255 255 / 0.4);
+  font: 600 13px / 16px var(--font-family);
+  color: rgb(255 255 255 / 0.92);
+}
+.wh-eyebrow svg { color: var(--keyColor); }
+.wh-hero-title {
+  margin: 2px 0 0;
+  font: 700 clamp(34px, 4.6vw, 56px) / 1.02 var(--font-family);
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  text-shadow: 0 2px 24px rgb(0 0 0 / 0.35);
+}
+.wh-hero-detail {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font: 500 15px / 20px var(--font-family);
+  color: rgb(255 255 255 / 0.78);
+}
+.wh-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+.wh-hero[data-loading] .wh-hero-title { min-width: 240px; min-height: 52px; border-radius: 14px; background: rgb(255 255 255 / 0.1); color: transparent; animation: wh-pulse 1.4s ease-in-out infinite; }
+@keyframes wh-pulse { 50% { opacity: 0.45; } }
+@media (max-width: 767.98px) {
+  .wh-hero { min-height: 340px; align-items: flex-end; --wh-radius: 26px; }
+  .wh-hero-photo { width: 100%; -webkit-mask-image: linear-gradient(0deg, transparent 8%, #000 80%); mask-image: linear-gradient(0deg, transparent 8%, #000 80%); height: 70%; inset: 0 0 auto 0; }
+  .wh-hero-copy { max-width: none; padding: 26px 24px; }
+}
+
+/* Pills: the hero's Play (the key colour as tinted glass) and the clear glass one beside it. */
+.wh-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font: 700 15px / 1 var(--font-family);
+  letter-spacing: 0.01em;
+  transition: scale 0.18s var(--ot-ease-settle), filter 0.18s, background-color 0.18s;
+}
+.wh-pill:active { scale: 0.96; }
+.wh-pill-key {
+  color: #fff;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--keyColor) 80%, #fff) 0%, var(--keyColorBG) 100%);
+  box-shadow:
+    inset 1px 1px 0 rgb(255 255 255 / 0.6),
+    inset -1px -1px 0 rgb(255 255 255 / 0.15),
+    0 10px 28px -6px color-mix(in srgb, var(--keyColor) 70%, transparent);
+}
+.wh-pill-key:hover { filter: brightness(1.08); }
+.wh-pill-glass {
+  color: #fff;
+  padding-right: 18px;
+  background: rgb(255 255 255 / 0.14);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  backdrop-filter: blur(16px) saturate(1.6);
+  box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.5), inset -1px -1px 0 rgb(255 255 255 / 0.18), 0 8px 22px -8px rgb(0 0 0 / 0.4);
+}
+.wh-pill-glass:hover { background: rgb(255 255 255 / 0.22); }
+
+/* ---- Section headings --------------------------------------------------- */
+
+.wh-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 14px; }
+.wh-heading h2 { margin: 0; font: 700 22px / 28px var(--font-family); letter-spacing: -0.02em; }
+.wh-heading-small h2 { font-size: 19px; line-height: 24px; }
+.wh-see-all { display: inline-flex; align-items: center; gap: 1px; font: 600 14px / 20px var(--font-family); color: var(--keyColor); transition: opacity 0.15s; }
+.wh-see-all:hover { opacity: 0.75; }
+
+/* ---- Popular Releases --------------------------------------------------- */
+
+.wh-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: clamp(136px, 15vw, 178px);
+  gap: 18px;
+  margin: -8px -4px;
+  padding: 8px 4px 16px;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: none;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+.wh-row::-webkit-scrollbar { display: none; }
+.wh-row > li { min-width: 0; scroll-snap-align: start; }
+.wh-row .ot-lockup-art, .wh-row .ot-lockup-art > div { border-radius: 20px !important; }
+.wh-row .ot-lockup-art { box-shadow: 0 16px 30px -16px rgb(0 0 0 / 0.55), inset 0 0 0 0.5px rgb(255 255 255 / 0.18); }
+.wh-row .ot-lockup-art:hover { box-shadow: 0 22px 36px -14px rgb(0 0 0 / 0.6), 0 0 0 1px color-mix(in srgb, var(--keyColor) 40%, transparent); }
+
+/* ---- Popular Songs ------------------------------------------------------- */
+
+.wh-songs { margin: 0; padding: 8px; list-style: none; }
+.wh-song {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 2fr) minmax(90px, 1fr) 84px 36px 36px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 18px;
+  transition: background-color 0.15s;
+}
+.wh-song:hover { background: rgb(255 255 255 / 0.08); box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.16); }
+.wh-song[data-current] { background: color-mix(in srgb, var(--keyColor) 16%, transparent); box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--keyColor) 45%, white), 0 6px 20px -8px color-mix(in srgb, var(--keyColor) 40%, transparent); }
+.wh-song[data-current] .wh-song-title { color: var(--keyColor); }
+.wh-song-index { position: relative; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; color: var(--systemSecondary); font: 600 15px / 1 var(--font-family); font-variant-numeric: tabular-nums; }
+.wh-song-glyph { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; color: var(--systemPrimary); transition: opacity 0.12s; }
+.wh-song:hover .wh-song-number, .wh-song-index:focus-visible .wh-song-number, .wh-song[data-current] .wh-song-number { opacity: 0; }
+.wh-song:hover .wh-song-glyph, .wh-song-index:focus-visible .wh-song-glyph, .wh-song[data-current] .wh-song-glyph { opacity: 1; }
+.wh-song[data-current] .wh-song-glyph { color: var(--keyColor); }
+.wh-song-main { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.wh-song-art { flex: none; width: 54px; box-shadow: 0 8px 16px -8px rgb(0 0 0 / 0.6); border-radius: 10px; }
+.wh-song-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.wh-song-title { display: flex; align-items: center; min-width: 0; font: 600 15px / 20px var(--font-family); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wh-song-artist { font: 400 13px / 16px var(--font-family); color: var(--systemSecondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wh-song-meta { display: inline-flex; align-items: center; gap: 8px; font: 500 14px / 1 var(--font-family); color: var(--systemSecondary); font-variant-numeric: tabular-nums; }
+.wh-song-meta svg { flex: none; opacity: 0.8; }
+.wh-song-time { justify-content: flex-end; }
+@media (max-width: 767.98px) {
+  .wh-song { grid-template-columns: 34px minmax(0, 1fr) 60px 34px 34px; }
+  .wh-song-plays { display: none; }
+  .wh-song-time svg { display: none; }
+  .wh-song-art { width: 46px; }
+}
+
+.wh-icon-btn { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: var(--systemSecondary); transition: background-color 0.15s, color 0.15s, scale 0.16s var(--ot-ease-settle); }
+.wh-icon-btn:hover, .wh-icon-btn[data-open] { background: var(--systemQuaternary); color: var(--systemPrimary); }
+.wh-icon-btn:active { scale: 0.92; }
+.wh-song .ot-fav[aria-pressed='true'] { color: var(--keyColor); }
+/* Favorite and the menu rest quietly until the row is hovered, as the design's rows do. */
+.wh-song .wh-icon-btn { opacity: 0.55; }
+.wh-song:hover .wh-icon-btn, .wh-song .wh-icon-btn[aria-pressed='true'], .wh-song .wh-icon-btn[data-open], .wh-song .wh-icon-btn:focus-visible { opacity: 1; }
+
+/* ---- Rail ----------------------------------------------------------------- */
+
+.wh-profile { --wh-radius: 24px; display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+.wh-avatar { flex: none; width: 44px; height: 44px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px rgb(255 255 255 / 0.22); }
+.wh-avatar-mark { display: grid; place-items: center; background: color-mix(in srgb, var(--keyColor) 22%, transparent); color: var(--keyColor); font: 700 17px / 1 var(--font-family); }
+.wh-profile-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.wh-profile-text strong { font: 700 16px / 20px var(--font-family); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wh-profile-text span { font: 400 13px / 16px var(--font-family); color: var(--systemSecondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.wh-fans { display: flex; margin: 0; padding: 0; list-style: none; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: 24px; }
+.wh-fans::-webkit-scrollbar { display: none; }
+.wh-fans > li { flex: 0 0 100%; min-width: 0; scroll-snap-align: start; }
+.wh-fan { position: relative; display: block; overflow: hidden; border-radius: 24px; box-shadow: 0 22px 36px -18px rgb(0 0 0 / 0.6); }
+.wh-fan > div { aspect-ratio: 1 / 0.98 !important; border-radius: 24px !important; }
+.wh-fan img { transition: scale 0.7s var(--ot-ease-settle); }
+.wh-fan:hover img { scale: 1.05; }
+.wh-fan-caption.wh-glass {
+  --wh-radius: 18px;
+  --wh-fill: rgb(10 14 18 / 0.42);
+  position: absolute;
+  inset: auto 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 10px 14px;
+  color: #fff;
+}
+.wh-fan-caption strong { font: 700 15px / 20px var(--font-family); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wh-fan-caption span { font: 400 12px / 15px var(--font-family); color: rgb(255 255 255 / 0.68); }
+.wh-dots { display: flex; justify-content: center; gap: 7px; margin-top: 12px; }
+.wh-dots button { width: 7px; height: 7px; padding: 0; border-radius: 99px; background: var(--systemQuaternary); transition: width 0.25s var(--ot-ease-settle), background-color 0.2s; }
+.wh-dots button[aria-current='true'] { width: 20px; background: var(--keyColor); }
+
+.wh-recent { min-height: 0; display: flex; flex-direction: column; }
+.wh-recent-list {
+  margin: 0 -6px;
+  padding: 0 6px 24px;
+  list-style: none;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(#000 calc(100% - 36px), transparent);
+  mask-image: linear-gradient(#000 calc(100% - 36px), transparent);
+}
+.wh-recent-list::-webkit-scrollbar { display: none; }
+.wh-recent-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 7px 8px; border-radius: 16px; text-align: start; transition: background-color 0.15s, box-shadow 0.15s; }
+.wh-recent-row > div { flex: none; width: 44px; }
+.wh-recent-row:hover { background: rgb(255 255 255 / 0.08); box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.16); }
+.wh-recent-row[data-current] .wh-recent-text strong { color: var(--keyColor); }
+.wh-recent-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
+.wh-recent-text strong { font: 600 14px / 18px var(--font-family); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wh-recent-text span { font: 400 12px / 16px var(--font-family); color: var(--systemSecondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wh-recent-time { flex: none; font: 500 12px / 1 var(--font-family); color: var(--systemTertiary); font-variant-numeric: tabular-nums; }
+
+/* The feed's own shelves, kept below the new layout. */
+.wh-more { margin-top: 10px; }
