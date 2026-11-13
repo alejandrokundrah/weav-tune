@@ -6,14 +6,18 @@
  *  matched on the whole origin. localhost is added for non-store builds.
  */
 export const PRODUCTION_ORIGIN = 'https://justshivv.github.io';
-const EXTRA_ORIGINS = (process.env.WEAVTUNE_SITE_ORIGINS ?? '')
+
+/** Build setting, also read under its former OPENTUNE_ name so existing deployments keep working. */
+export const buildEnv = (name: string): string | undefined => process.env[`WEAVTUNE_${name}`] ?? process.env[`OPENTUNE_${name}`];
+
+const EXTRA_ORIGINS = (buildEnv('SITE_ORIGINS') ?? '')
   .split(',')
   .map((s) => s.trim())
   .filter(Boolean);
 export const SITE_ORIGINS = [
   PRODUCTION_ORIGIN,
   ...EXTRA_ORIGINS,
-  ...(process.env.WEAVTUNE_STORE_BUILD === '1' ? [] : ['http://localhost:5173']),
+  ...(buildEnv('STORE_BUILD') === '1' ? [] : ['http://localhost:5173']),
 ];
 export function matchPatternsFor(origins: string[]): string[] {
   return origins.map((o) => (o === PRODUCTION_ORIGIN ? `${o}/Opentune/player/*` : `${new URL(o).protocol}//${new URL(o).hostname}/*`));

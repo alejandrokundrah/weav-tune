@@ -10,12 +10,13 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@fontsource-variable/plus-jakarta-sans": "5.3.0",
     "@noble/curves": "2.3.0",
     "@noble/hashes": "2.4.0",
-    "@weavtune/shared": "workspace:*",
     "@tanstack/react-query": "^5.104.3",
     "@tanstack/react-virtual": "^3.14.19",
     "@uimaxbai/am-lyrics": "^1.8.2",
+    "@weavtune/shared": "workspace:*",
     "bgutils-js": "^4.0.3",
     "googlevideo": "^4.1.1",
     "hls.js": "~1.6.19",

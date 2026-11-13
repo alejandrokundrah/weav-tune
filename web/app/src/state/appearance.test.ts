@@ -7,8 +7,12 @@ it('recovers invalid persisted choices without losing valid preferences', () => 
     .toEqual({ ...DEFAULT_APPEARANCE, pureBlack: false, playerStyle: 'vinyl' });
 });
 it('saves appearance changes independently and round-trips across reloads', () => {
-  useAppearance.getState().update({ mode: 'dark', playerStyle: 'polaroid', motion: false });
+  useAppearance.getState().update({ mode: 'dark', playerStyle: 'polaroid', motion: false, replicaGlass: false });
   const saved = appearanceOf(JSON.parse(localStorage.getItem('weav:appearance')!));
-  expect(saved).toMatchObject({ mode: 'dark', playerStyle: 'polaroid', motion: false });
+  expect(saved).toMatchObject({ mode: 'dark', playerStyle: 'polaroid', motion: false, replicaGlass: false });
   expect(saved.accent).toBe(DEFAULT_APPEARANCE.accent);
+});
+it('keeps the glass shell off, even for old saved appearances that turned it on', () => {
+  expect(appearanceOf({}).replicaGlass).toBe(false);
+  expect(appearanceOf({ replicaGlass: true }).replicaGlass).toBe(false);
 });

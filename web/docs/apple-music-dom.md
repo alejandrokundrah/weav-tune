@@ -11,7 +11,7 @@ Apple's CSS is not copied into this repo. This file records measurements, which 
 
 We replicate the live site.
 
-**Font.** The app now sets **Kyonira Regular** everywhere — a bundled CFF OpenType display serif (`src/assets/fonts/kyonira.otf`, `@font-face` in `styles/tokens.css`). **DM Sans from Google Fonts** (weights 400/500/600/700/800 plus italics, `display=swap`) remains in the stack as the fallback for the few glyphs Kyonira lacks and for non-Latin scripts; it was the app's original typeface in place of the SF Pro / Inter stack from §2.2. Kyonira ships one weight (400), so 500–800 are synthesised, and its hairlines are more delicate at small sizes. Apple's type *scale* (sizes, weights, line heights) is kept. Single-line labels that are truncated (lockup titles, LCD title) keep `text-overflow: ellipsis`.
+**Font.** The app sets **Plus Jakarta Sans** (variable, weights 200–800, OFL) everywhere, bundled from `@fontsource-variable/plus-jakarta-sans` and loaded in `src/main.tsx`; the stack in `styles/tokens.css` falls back to system fonts.
 
 ---
 

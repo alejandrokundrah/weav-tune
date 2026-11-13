@@ -1,344 +1,245 @@
-import { ArrowUpRight, AudioLines, ChevronRight, Info, Palette, Play, Plug, Smartphone, Tv, Users, Wrench } from 'lucide-react';
-import { lazy, Suspense, useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react';
-import { MdOutlineExtension } from 'react-icons/md';
-import { SiApplemusic, SiDiscord, SiGithub, SiSpotify, SiYoutubemusic } from 'react-icons/si';
-import { PageHeader } from '@/components/PageHeader';
+import { ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type RefObject } from 'react';
+import { useSearchParams } from 'react-router';
 import { PrefetchLink } from '@/components/PrefetchLink';
 import { LogoMark } from '@/components/icons/LogoMark';
-import { LyricsIcon } from '@/components/icons/Transport';
-import { config } from '@/config';
-import { useRemoteConfig } from '@/config/remote';
-import { useAddons } from '@/addons/client';
-import { useDiscord } from '@/extension/useDiscord';
 import { useExtension } from '@/extension/useExtension';
 import { useYtAuth } from '@/extension/useYtAuth';
-import { useRoom } from '@/together/room';
-import { useHistorySettings } from '@/playback/historyReporting';
-import { CROSSFADE_CHOICES, usePlayer } from '@/state/player';
-import { AppleMusicIntegration, AppleMusicToggles, CanvasToggle, LyricSourcesAccess, SpotifyIntegration, Toggle } from './IntegrationSettings';
-import { AppearanceSettings } from './AppearanceSettings';
+import { AppearancePane } from './settings/AppearancePane';
+import { AboutPane, AccountsPane, AudioPane, LyricsPane, PlaybackPane, TogetherPane, youtubeText } from './settings/panes';
+import { searchSettings } from './settings/search';
+import { SECTIONS, sectionById, type SectionId, type SectionMeta } from './settings/sections';
+import { useSectionStatus } from './settings/status';
 import { settingsUi } from './settingsStyles';
 
 const LyricsSettings = lazy(() => import('@/shell/LyricsSettings').then((m) => ({ default: m.LyricsSettings })));
 
-/** An integration's coloured glyph, as on the Extension page. */
-function Glyph({ Icon, color, ink }: { Icon: ComponentType<{ size?: number }>; color: string; ink?: string }) {
-  return (
-    <span className={settingsUi.integrationIcon} style={{ backgroundColor: color, ...(ink && { color: ink }) }}>
-      <Icon size={15} />
-    </span>
-  );
-}
+/** Below this width the list and the open category take turns; at or above it they sit side by side. */
+const WIDE = 820;
 
-/** A row that opens a page of its own. */
-function LinkRow({ to, icon, title, value }: { to: string; icon?: ReactNode; title: string; value?: string | null }) {
-  return (
-    <PrefetchLink to={to} className={`${icon ? settingsUi.integration : settingsUi.integrationPlain} ${settingsUi.linkRow}`}>
-      {icon}
-      <span className={settingsUi.integrationName}>{title}</span>
-      <span className={settingsUi.value}>
-        {value && <span>{value}</span>}
-        <ChevronRight size={16} className="flex-none text-tertiary" />
-      </span>
-    </PrefetchLink>
-  );
-}
-
-/** A row that leaves for another site. */
-function ExternalRow({ href, icon, title, value }: { href: string; icon: ReactNode; title: string; value?: string }) {
-  return (
-    <a href={href} target="_blank" rel="noreferrer" className={`${settingsUi.integration} ${settingsUi.linkRow}`}>
-      {icon}
-      <span className={settingsUi.integrationName}>{title}</span>
-      <span className={settingsUi.value}>
-        {value && <span>{value}</span>}
-        <ArrowUpRight size={16} className="flex-none text-tertiary" />
-      </span>
-    </a>
-  );
-}
-
-/** The page's sections, in order: the side list and the chips are built from this. */
-type SectionIcon = ComponentType<{ size?: number; strokeWidth?: number | string }>;
-const SECTIONS: { id: string; name: string; icon: SectionIcon; color: string }[] = [
-  { id: 'audio', name: 'Audio', icon: AudioLines, color: '#25a0d4' },
-  { id: 'playback', name: 'Playback', icon: Play, color: '#2fa84f' },
-  { id: 'lyrics', name: 'Lyrics', icon: LyricsIcon, color: '#d6337a' },
-  { id: 'appearance', name: 'Appearance', icon: Palette, color: '#8e5bd8' },
-  { id: 'accounts', name: 'Accounts', icon: Plug, color: '#3478f6' },
-  { id: 'together', name: 'Listen Together', icon: Users, color: '#f08a24' },
-  { id: 'about', name: 'About', icon: Info, color: '#636366' },
-];
-
-function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
-  return (
-    <section id={`set-${id}`} className="ot-set-section" aria-labelledby={`set-${id}-title`}>
-      <h2 id={`set-${id}-title`} className="ot-set-title">{title}</h2>
-      {children}
-    </section>
-  );
-}
-
-/** Which section the reader is in: the last one whose title has passed the top quarter of the page. */
-function useCurrentSection(): string {
-  const [current, setCurrent] = useState(SECTIONS[0]!.id);
-  useEffect(() => {
-    const page = document.getElementById('scrollable-page');
-    if (!page) return;
-    let frame = 0;
-    const read = () => {
-      frame = 0;
-      const line = page.getBoundingClientRect().top + page.clientHeight * 0.25;
-      let at = SECTIONS[0]!.id;
-      for (const { id } of SECTIONS) {
-        const el = document.getElementById(`set-${id}`);
-        if (el && el.getBoundingClientRect().top <= line) at = id;
-      }
-      // At the very bottom the last sections may never reach the line; the last one is current.
-      if (page.scrollTop + page.clientHeight >= page.scrollHeight - 4) at = SECTIONS[SECTIONS.length - 1]!.id;
-      setCurrent(at);
-    };
-    const onScroll = () => { frame ||= requestAnimationFrame(read); };
+function useWide(ref: RefObject<HTMLElement | null>, min: number): boolean {
+  const [wide, setWide] = useState(false);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const read = () => setWide(el.clientWidth >= min);
     read();
-    page.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      page.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(frame);
-    };
-  }, []);
-  return current;
+    const observer = new ResizeObserver(read);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref, min]);
+  return wide;
 }
 
-function jumpTo(id: string) {
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'false';
-  document.getElementById(`set-${id}`)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-}
-
-/**
- * The sections, twice over: a list beside the page where there's room for one,
- * chips that stick to the top where there isn't. CSS shows one or the other.
- */
-function SectionNav({ current }: { current: string }) {
-  const chips = useRef<HTMLDivElement>(null);
-  // Keeps the current chip in view as the page scrolls past sections.
-  useEffect(() => {
-    const row = chips.current;
-    const chip = row?.querySelector<HTMLElement>('[aria-current="true"]');
-    if (!row || !chip || row.offsetParent === null) return;
-    const left = chip.offsetLeft - 16;
-    const right = chip.offsetLeft + chip.offsetWidth + 40 - row.clientWidth;
-    if (row.scrollLeft > left) row.scrollTo({ left, behavior: 'smooth' });
-    else if (row.scrollLeft < right) row.scrollTo({ left: right, behavior: 'smooth' });
-  }, [current]);
-  return (
-    <>
-      <nav className="ot-set-side" aria-label="Settings sections">
-        {SECTIONS.map(({ id, name, icon: Icon, color }) => (
-          <button key={id} aria-current={current === id || undefined} onClick={() => jumpTo(id)}>
-            <span style={{ background: color }}><Icon size={14} strokeWidth={2.4} /></span>
-            {name}
-          </button>
-        ))}
-      </nav>
-      <div ref={chips} className="ot-set-jump" role="navigation" aria-label="Settings sections">
-        {SECTIONS.map(({ id, name }) => (
-          <button key={id} aria-current={current === id || undefined} onClick={() => jumpTo(id)}>{name}</button>
-        ))}
-      </div>
-    </>
-  );
-}
-
-function youtubeText(auth: ReturnType<typeof useYtAuth>): string {
-  if (auth.state === 'checking') return 'Checking…';
-  if (auth.state === 'unavailable') return 'Needs the extension';
-  const { browserSignedIn, connected, active } = auth.auth;
-  if (!browserSignedIn) return 'Not signed in';
-  if (!connected) return 'Disconnected';
-  return active ? active.name : 'Signed in';
-}
-
-/** The extension's state at the top: what works now, and the one thing to do next. */
-function ExtensionCard() {
+/** The extension's state at the top of the list: what works now, and the one thing to do next. */
+function ExtensionStrip() {
   const extension = useExtension();
   const yt = useYtAuth();
   const present = extension.state === 'present';
   return (
     <section className="ot-set-hero" aria-label="Weav-Tune Extension">
-      <LogoMark size={26} className="ot-set-mark" />
+      <LogoMark size={22} className="ot-set-mark" />
       <div className="ot-set-hero-text">
-        <p className="type-title-3-emphasized">{present ? 'Extension connected' : 'Weav-Tune on the web'}</p>
-        <p className="type-body-tall text-secondary">
-          {present
-            ? `Version ${extension.extension.info.version} · YouTube Music: ${youtubeText(yt)}`
-            : 'Install the extension to play YouTube Music, sign in, and use Spotify and Discord.'}
+        <p className="type-title-3-emphasized">{present ? 'Extension connected' : 'Extension not installed'}</p>
+        <p className="type-callout text-secondary">
+          {present ? `Version ${extension.extension.info.version}. YouTube Music: ${youtubeText(yt)}` : 'Needed for YouTube Music, Spotify and Discord.'}
         </p>
       </div>
       <PrefetchLink to="/extension" className={present ? 'ot-set-hero-button ot-quiet' : 'ot-set-hero-button'}>
-        {present ? 'Manage' : 'Get the extension'}
+        {present ? 'Manage' : 'Get it'}
       </PrefetchLink>
     </section>
   );
 }
 
+function Pane({ id, onOpenLyrics }: { id: SectionId; onOpenLyrics: () => void }) {
+  switch (id) {
+    case 'audio': return <AudioPane />;
+    case 'playback': return <PlaybackPane />;
+    case 'lyrics': return <LyricsPane onOpenSources={onOpenLyrics} />;
+    case 'appearance': return <AppearancePane />;
+    case 'accounts': return <AccountsPane />;
+    case 'together': return <TogetherPane />;
+    case 'about': return <AboutPane />;
+  }
+}
+
+/** Finds the row a search result named, scrolls it into view and lights it for a moment. */
+function flashRow(root: HTMLElement | null, title: string) {
+  const row = Array.from(root?.querySelectorAll<HTMLElement>('.ot-set-pane section > *') ?? []).find((el) => el.textContent?.trim().startsWith(title));
+  if (!row) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'false';
+  row.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+  row.setAttribute('data-flash', '');
+  window.setTimeout(() => row.removeAttribute('data-flash'), 1800);
+}
+
+function Tile({ section, small }: { section: SectionMeta; small?: boolean }) {
+  const Icon = section.icon;
+  return (
+    <span className={small ? 'ot-set-tile ot-set-tile-sm' : 'ot-set-tile'} style={{ background: section.color }} aria-hidden="true">
+      <Icon size={small ? 14 : 16} strokeWidth={2.2} />
+    </span>
+  );
+}
+
 /**
- * Settings (SettingsSheet on the phone): sources and playback first, then
- * how it looks, the accounts it uses, Listen Together, and where Weav-Tune
- * lives. One page, grouped rows, a list of the sections beside it.
+ * Settings, as a list and the category it opens. Side by side where there's
+ * room; on a phone the list is a screen of its own and a category slides in
+ * after it. The sub-pages (Audio sources, Discord, Listen Together) keep
+ * their own routes.
  */
 export default function SettingsPage() {
-  const links = useRemoteConfig((s) => s.config.data.links);
-  const extension = useExtension();
-  const yt = useYtAuth();
-  const discord = useDiscord();
-  const room = useRoom((s) => s.view);
-  const autoplay = usePlayer((s) => s.autoplay);
-  const crossfadeSec = usePlayer((s) => s.crossfadeSec);
-  const shareHistory = useHistorySettings((s) => s.share);
-  const setShareHistory = useHistorySettings((s) => s.setShare);
-  const { setAutoplay, setCrossfade } = usePlayer.getState();
+  const root = useRef<HTMLDivElement>(null);
+  const wide = useWide(root, WIDE);
+  const [params, setParams] = useSearchParams();
+  const selected = sectionById(params.get('s'));
+  const open = selected ?? (wide ? SECTIONS[0]! : null);
+  const focusTitle = params.get('f');
+  const status = useSectionStatus();
+  const [query, setQuery] = useState('');
+  const results = useMemo(() => searchSettings(query), [query]);
   const [lyrics, setLyrics] = useState(false);
-  const sources = useAddons((st) => st.sources.filter((a) => a.enabled && !a.ownerOff).length);
-  const jioSaavn = useAddons((st) => st.jioSaavn);
-  const sourcesText = [sources ? `${sources} add-on${sources === 1 ? '' : 's'}` : 'No add-ons', jioSaavn ? 'JioSaavn' : null].filter(Boolean).join(' · ');
-  const present = extension.state === 'present';
-  const current = useCurrentSection();
-  const discordText = !present
-    ? 'Needs the extension'
-    : discord.state === 'ready' && discord.discord.connected
-      ? discord.discord.enabled
-        ? 'On'
-        : 'Off'
-      : discord.state === 'ready' && discord.discord.available
-        ? 'Not connected'
-        : 'Update the extension';
+
+  const go = useCallback(
+    (id: SectionId, focus?: string) => {
+      const next = new URLSearchParams({ s: id });
+      if (focus) next.set('f', focus);
+      // Side by side, picking a category is a change of view, not a step to go back from.
+      setParams(next, { replace: wide });
+      document.getElementById('scrollable-page')?.scrollTo({ top: 0 });
+    },
+    [setParams, wide],
+  );
+
+  // A search result opens its category, then the row it named.
+  useEffect(() => {
+    if (!focusTitle || !open) return;
+    const timer = window.setTimeout(() => {
+      flashRow(root.current, focusTitle);
+      setParams(
+        (p) => {
+          const next = new URLSearchParams(p);
+          next.delete('f');
+          return next;
+        },
+        { replace: true },
+      );
+    }, 120);
+    return () => window.clearTimeout(timer);
+  }, [focusTitle, open?.id, setParams]);
+
+  const move = (e: KeyboardEvent<HTMLElement>) => {
+    const keys = ['ArrowDown', 'ArrowUp', 'Home', 'End'];
+    if (!keys.includes(e.key)) return;
+    const items = Array.from(e.currentTarget.querySelectorAll<HTMLElement>('[data-cat]'));
+    const at = items.indexOf(document.activeElement as HTMLElement);
+    const to = e.key === 'Home' ? 0 : e.key === 'End' ? items.length - 1 : Math.min(items.length - 1, Math.max(0, at + (e.key === 'ArrowDown' ? 1 : -1)));
+    e.preventDefault();
+    items[to]?.focus();
+  };
+
+  const searching = query.trim().length > 0;
 
   return (
-    <div className="ot-settings">
+    <div ref={root} className="ot-settings" data-view={selected ? 'detail' : 'list'}>
       <div className="ot-set-frame">
-      <PageHeader title="Settings" />
-      <div className="ot-set-layout">
-        <SectionNav current={current} />
-        <div className="ot-set-content">
-          <ExtensionCard />
-
-          <Section id="audio" title="Audio">
-            <section className={settingsUi.group}>
-              <LinkRow to="/settings/addons" icon={<Glyph Icon={AudioLines} color="#25a0d4" />} title="Audio sources" value={sourcesText} />
-            </section>
-            <p className={settingsUi.footer}>Lossless FLAC from add-ons and 320 kbps from JioSaavn, in the order you choose. YouTube Music is the fallback.</p>
-          </Section>
-
-          <Section id="playback" title="Playback">
-            <section className={settingsUi.group}>
-              <Toggle label="AutoPlay" detail="When the queue ends, keep playing similar music." checked={autoplay} onChange={setAutoplay} />
-              <label className={settingsUi.controlRow}>
-                <span className={settingsUi.rowText}>
-                  <span>Crossfade</span>
-                  <span className={settingsUi.rowDetail}>Blend the end of one song into the next.</span>
-                </span>
-                <select className={settingsUi.select} value={crossfadeSec} onChange={(e) => setCrossfade(Number(e.currentTarget.value))}>
-                  {CROSSFADE_CHOICES.map((seconds) => (
-                    <option key={seconds} value={seconds}>
-                      {seconds === 0 ? 'Off' : `${seconds} seconds`}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </section>
-          </Section>
-
-          <Section id="lyrics" title="Lyrics">
-            <section className={settingsUi.group}>
-              <button className={`${settingsUi.integrationPlain} ${settingsUi.linkRow}`} onClick={() => setLyrics(true)}>
-                <span className={settingsUi.rowText}>
-                  <span>Lyric sources</span>
-                  <span className={settingsUi.rowDetail}>Order, sources, syllable timing</span>
-                </span>
-                <ChevronRight size={16} className="text-tertiary" />
-              </button>
-              <div className={settingsUi.integrationPlain}>
-                <span className={settingsUi.rowText}>
-                  <span>Access to lyric sites</span>
-                  <span className={settingsUi.rowDetail}>KuGou, Musixmatch, Genius and others answer only the extension.</span>
-                </span>
-                {present ? <LyricSourcesAccess /> : <span className={settingsUi.value}>Needs the extension</span>}
-              </div>
-            </section>
-          </Section>
-
-          <Section id="appearance" title="Appearance">
-            <AppearanceSettings />
-          </Section>
-
-          <Section id="accounts" title="Accounts & integrations">
-            <section className={settingsUi.group}>
-              <div className={settingsUi.integration}>
-                <Glyph Icon={SiYoutubemusic} color="#ffffff" ink="#ff0033" />
-                <span className={settingsUi.integrationName}>YouTube Music</span>
-                <span className={settingsUi.value}><span>{youtubeText(yt)}</span></span>
-              </div>
-              <div className={settingsUi.integration}>
-                <Glyph Icon={SiSpotify} color="#1ed760" ink="#000000" />
-                <span className={settingsUi.integrationName}>Spotify</span>
-                {present ? <SpotifyIntegration /> : <span className={settingsUi.value}>Needs the extension</span>}
-              </div>
-              <LinkRow to="/settings/discord" icon={<Glyph Icon={SiDiscord} color="#5865f2" />} title="Discord" value={discordText} />
-              <LinkRow
-                to="/extension"
-                icon={<Glyph Icon={MdOutlineExtension} color="#636366" />}
-                title="Weav-Tune Extension"
-                value={present ? `v${extension.extension.info.version}` : 'Not installed'}
-              />
-            </section>
-            <section className={`${settingsUi.group} mt-3 empty:hidden`}>
-              <Toggle
-                label="Share listening activity to YouTube"
-                detail={
-                  present && !extension.extension.info.capabilities.includes('yt.stats')
-                    ? 'Update the Weav-Tune extension to share: this version can’t send plays to YouTube.'
-                    : 'Songs you play here go to your YouTube Music history and shape its recommendations.'
-                }
-                checked={shareHistory}
-                onChange={setShareHistory}
-              />
-              <CanvasToggle />
-            </section>
-            <h3 className={settingsUi.sectionHeader}>Apple Music</h3>
-            <section className={settingsUi.group}>
-              <div className={settingsUi.integration}>
-                <Glyph Icon={SiApplemusic} color="#fa2d48" />
-                <span className={settingsUi.integrationName}>Access to Apple Music</span>
-                {present ? <AppleMusicIntegration /> : <span className={settingsUi.value}>Needs the extension</span>}
-              </div>
-              <AppleMusicToggles />
-            </section>
-            <p className={settingsUi.footer}>Animated covers and artist art from Apple Music’s public pages. No Apple Music account needed.</p>
-          </Section>
-
-          <Section id="together" title="Listen Together">
-            <section className={settingsUi.group}>
-              <LinkRow
-                to="/settings/listen-together"
-                icon={<Glyph Icon={Users} color="#f08a24" />}
-                title="Rooms"
-                value={room && room.phase !== 'ended' ? (room.hosting ? 'Hosting a room' : `In ${room.hostName ?? 'a'}’s room`) : 'With the web player and the Android app'}
-              />
-            </section>
-          </Section>
-
-          <Section id="about" title="About">
-            <section className={settingsUi.group}>
-              <ExternalRow href={config.androidAppUrl} icon={<Glyph Icon={Smartphone} color="#2fa84f" />} title="Weav-Tune for Android" value="Download" />
-              <ExternalRow href={links.tv} icon={<Glyph Icon={Tv} color="#3478f6" />} title="Weav-Tune on TV" />
-              <ExternalRow href="#/settings/addons" icon={<Glyph Icon={Wrench} color="#49c4e2" />} title="Build an add-on" />
-              <ExternalRow href={links.github} icon={<Glyph Icon={SiGithub} color="#24292f" />} title="Source code" value="GitHub" />
-              <ExternalRow href={links.discord} icon={<Glyph Icon={SiDiscord} color="#5865f2" />} title="Community" value="Discord" />
-            </section>
-            <p className={settingsUi.footer}>Weav-Tune is free and open source. Report bugs, suggest features and share the add-ons you build.</p>
-          </Section>
+        <div className="ot-set-head">
+          {selected && (
+            <PrefetchLink to="/settings" className="ot-set-back">
+              <ChevronLeft size={20} strokeWidth={2.25} />
+              Settings
+            </PrefetchLink>
+          )}
+          <h1 className="ot-set-pagetitle type-header-emphasized text-balance">Settings</h1>
         </div>
-      </div>
+
+        <div className="ot-set-layout">
+          <div className="ot-set-listcol">
+            <div className="ot-set-search">
+              <Search size={16} aria-hidden="true" />
+              <input
+                type="search"
+                value={query}
+                placeholder="Search settings"
+                aria-label="Search settings"
+                autoComplete="off"
+                spellCheck={false}
+                onChange={(e) => setQuery(e.currentTarget.value)}
+                onKeyDown={(e) => e.key === 'Escape' && setQuery('')}
+              />
+              {query && (
+                <button type="button" aria-label="Clear search" onClick={() => setQuery('')}>
+                  <X size={14} strokeWidth={2.4} />
+                </button>
+              )}
+            </div>
+
+            {searching ? (
+              <section className={`${settingsUi.group} ot-set-results`} aria-label="Search results" aria-live="polite">
+                {results.length ? (
+                  results.map((entry) => {
+                    const section = sectionById(entry.section)!;
+                    return (
+                      <button
+                        key={`${entry.section}:${entry.title}`}
+                        className="ot-set-cat"
+                        onClick={() => {
+                          setQuery('');
+                          go(entry.section, entry.title);
+                        }}
+                      >
+                        <Tile section={section} small />
+                        <span className="ot-set-cat-text">
+                          <span className="ot-set-cat-name">{entry.title}</span>
+                          <span className="ot-set-cat-status">{entry.detail}</span>
+                        </span>
+                        <span className="ot-set-where">{section.name}</span>
+                      </button>
+                    );
+                  })
+                ) : (
+                  <p className="ot-set-empty">No settings match “{query.trim()}”. Try a shorter word, like “lyrics” or “glass”.</p>
+                )}
+              </section>
+            ) : (
+              <>
+                <ExtensionStrip />
+                <nav className={`${settingsUi.group} ot-set-cats`} aria-label="Settings categories" onKeyDown={move}>
+                  {SECTIONS.map((section) => {
+                    const s = status[section.id];
+                    return (
+                      <button key={section.id} data-cat className="ot-set-cat" aria-current={open?.id === section.id ? 'page' : undefined} onClick={() => go(section.id)}>
+                        <Tile section={section} />
+                        <span className="ot-set-cat-text">
+                          <span className="ot-set-cat-name">{section.name}</span>
+                          <span className="ot-set-cat-status">{s.text}</span>
+                        </span>
+                        {s.tone && <i className="ot-set-dot" data-tone={s.tone} aria-hidden="true" />}
+                        <ChevronRight size={16} className="ot-set-chev" aria-hidden="true" />
+                      </button>
+                    );
+                  })}
+                </nav>
+              </>
+            )}
+          </div>
+
+          <div className="ot-set-detail">
+            {open && (
+              <div className="ot-set-pane" key={open.id}>
+                <header className="ot-set-pane-head">
+                  <Tile section={open} />
+                  <div>
+                    <h2 className="type-title-1-emphasized">{open.name}</h2>
+                    <p className="type-body-tall text-secondary">{open.blurb}</p>
+                  </div>
+                </header>
+                <Pane id={open.id} onOpenLyrics={() => setLyrics(true)} />
+              </div>
+            )}
+          </div>
+        </div>
       </div>
       {lyrics && (
         <Suspense fallback={null}>
