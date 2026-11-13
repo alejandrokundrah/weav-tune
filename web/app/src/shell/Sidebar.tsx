@@ -22,6 +22,7 @@ import { config } from '@/config';
 import { LIBRARY_SECTIONS, type LibrarySection } from '@/data/music/library';
 import { useLibraryPlaylists, useSignedIn } from '@/data/music/queries';
 import { useSpotifyPlaylists } from '@/data/spotify/queries';
+import { isDesktop } from '@/lib/desktop';
 import { useExtensionUpdate } from '@/extension/useExtensionUpdate';
 import { useSpotifySignedIn } from '@/extension/useSpotifyAuth';
 import { useUi } from '@/state/ui';
@@ -215,18 +216,20 @@ export function Sidebar() {
         </div>
         <div className="ot-side-bottom flex flex-col gap-2 pt-3 pr-3 pb-5 pl-5">
           <Sources onNavigate={close} />
-          <PrefetchNavLink to="/extension" className={`${item} relative`} onClick={close} title={tip('Weav-Tune Extension')}>
-            {/* Chrome's own toolbar glyph for extensions (Material "extension"). */}
-            <Tile>
-              <MdOutlineExtension size={17} />
-            </Tile>
-            <span className={navLabel}>Weav-Tune Extension</span>
-            {update.state === 'available' && (
-              <span className="ot-side-badge ml-auto rounded-[10px] bg-key px-[7px] py-0.5 type-subhead-emphasized text-white" title={`Version ${update.latest.version} is available`}>
-                Update
-              </span>
-            )}
-          </PrefetchNavLink>
+          {!isDesktop() && (
+            <PrefetchNavLink to="/extension" className={`${item} relative`} onClick={close} title={tip('Weav-Tune Extension')}>
+              {/* Chrome's own toolbar glyph for extensions (Material "extension"). */}
+              <Tile>
+                <MdOutlineExtension size={17} />
+              </Tile>
+              <span className={navLabel}>Weav-Tune Extension</span>
+              {update.state === 'available' && (
+                <span className="ot-side-badge ml-auto rounded-[10px] bg-key px-[7px] py-0.5 type-subhead-emphasized text-white" title={`Version ${update.latest.version} is available`}>
+                  Update
+                </span>
+              )}
+            </PrefetchNavLink>
+          )}
           <div className="ot-side-full flex flex-col">
             <AccountButton />
           </div>

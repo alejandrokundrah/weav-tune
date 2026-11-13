@@ -199,10 +199,10 @@ weav-tune/
 ├── web/
 │   ├── app/              # Vite + React web player with Liquid Glass styling
 │   ├── extension/        # WXT browser extension (Chrome, Edge, Firefox)
+│   ├── desktop/          # Desktop app: the web player in an Electron window
 │   └── shared/           # Shared types, RPC bridge, and protocol schemas
 ├── app/                  # Native Android app (Kotlin, Jetpack Compose, Media3)
 ├── ios/                  # Native iOS app (SwiftUI, WeavTuneCore)
-├── desktop/              # Desktop JavaFX resources and integration
 ├── docs/                 # Documentation, specifications, and screenshots
 └── services/             # Lossless audio add-on microservices
 ```
