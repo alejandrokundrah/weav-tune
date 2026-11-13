@@ -12,6 +12,7 @@
 @import 'tailwindcss/utilities.css' layer(utilities);
 @import './tokens.css' layer(base);
 @import './weavtune.css';
+@import './home.css';
 @import './motion.css';
 
 /* Tailwind's hover: is (hover: hover)-gated; the design's hovers aren't. */
