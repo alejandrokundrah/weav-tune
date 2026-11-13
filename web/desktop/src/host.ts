@@ -6,16 +6,21 @@ import {
   type BridgeRequest,
   type BridgeResponse,
   type Capability,
+  type BridgeEvent,
+  type BridgeMethod,
   type HttpRequest,
   type HttpResponse,
+  type SpotifyAuthState,
   type YtAuthState,
+  type YtFetchParams,
 } from '@weavtune/shared/bridge';
 
 /**
  * The bridge the web player already speaks to its browser extension, answered by the app itself
- * (web/extension/entrypoints/background.ts). What needs a browser's cookie jar (signed-in YouTube
- * Music, Spotify, Discord) isn't offered: `ping` leaves those capabilities out, and the player
- * shows each as unavailable.
+ * (web/extension/entrypoints/background.ts). The signed-in services are the extension's own code
+ * (ytAuth.ts, ytFetch.ts, spotify.ts) running against the app's cookie jar; they come in through
+ * [HostOptions.yt] and [HostOptions.spotify]. Discord needs the desktop's local chat client and
+ * isn't offered: `ping` leaves it out, and the player shows it as unavailable.
  */
 
 /** Lyric providers the page can't reach itself (web/extension/lib/lyricHosts.ts). */
@@ -42,30 +47,49 @@ export const LYRIC_ORIGINS = [
   'https://amp-api.music.apple.com',
 ] as const;
 
-export const CAPABILITIES: Capability[] = ['yt', 'addon', 'lyrics'];
+export const CAPABILITIES: Capability[] = ['yt', 'yt.auth', 'yt.stats', 'addon', 'lyrics', 'spotify'];
 
-/** Where an anonymous `yt.fetch` may go: BotGuard, which a page can't call with YouTube's Origin. */
-const YT_ALLOWED = [/^https:\/\/www\.youtube\.com\/api\/jnn\//];
 const ADDON_MAX_BYTES = 2 * 1024 * 1024;
 
 export type Fetch = (url: string, init: { method?: string; headers?: Record<string, string>; body?: string | Uint8Array; signal?: AbortSignal }) => Promise<Response>;
+
+/** YouTube Music's session, as web/extension/lib/ytAuth.ts and ytFetch.ts keep it. */
+export interface YtService {
+  fetch(request: YtFetchParams): Promise<HttpResponse>;
+  authState(refresh: boolean): Promise<YtAuthState>;
+  selectChannel(channelId: string): Promise<YtAuthState>;
+  setConnected(connected: boolean): Promise<YtAuthState>;
+}
+
+/** Spotify's session, as web/extension/lib/spotify.ts keeps it. */
+export interface SpotifyService {
+  authState(refresh: boolean): Promise<SpotifyAuthState>;
+  setConnected(connected: boolean): Promise<SpotifyAuthState>;
+  playlists(offset: number): Promise<unknown>;
+  tracks(playlistId: string, offset: number): Promise<unknown>;
+  playlistInfo(playlistId: string): Promise<unknown>;
+  searchTracks(query: string): Promise<unknown>;
+  canvas(trackId: string): Promise<string | null>;
+}
 
 export interface HostOptions {
   version: string;
   fetch: Fetch;
   /** Hosts the user has allowed for add-ons, kept between runs. */
   grants: { has(origin: string): boolean; add(origin: string): void };
+  yt: YtService;
+  spotify: SpotifyService;
+  /** Opens the app's own sign-in window. */
+  signIn(service: 'youtube' | 'spotify'): void;
+  /** Tells the open player about a change it didn't ask for. */
+  broadcast(event: BridgeEvent): void;
 }
-
-const SIGNED_OUT: YtAuthState = { browserSignedIn: false, connected: false, signedIn: false, accounts: [], active: null, problem: null };
 
 function toBase64(bytes: Uint8Array): string {
   let binary = '';
   for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
   return btoa(binary);
 }
-
-const fromBase64 = (value: string) => Uint8Array.from(atob(value), (c) => c.charCodeAt(0));
 
 async function serialise(response: Response): Promise<HttpResponse> {
   const headers: Record<string, string> = {};
@@ -88,16 +112,6 @@ class HostError extends Error {
 }
 
 export function createHost(options: HostOptions) {
-  async function ytFetch(request: HttpRequest & { auth?: boolean }): Promise<HttpResponse> {
-    if (request.auth) throw new HostError('unauthenticated', 'Signed-in YouTube Music is not available in the desktop app yet.');
-    if (!YT_ALLOWED.some((pattern) => pattern.test(request.url))) {
-      const { origin, pathname } = new URL(request.url);
-      throw new HostError('forbidden', `yt.fetch doesn't serve ${origin}${pathname}`);
-    }
-    const body = request.body === undefined ? undefined : request.bodyEncoding === 'base64' ? fromBase64(request.body) : request.body;
-    return serialise(await options.fetch(request.url, { method: request.method ?? 'GET', headers: request.headers ?? {}, body, signal: AbortSignal.timeout(30_000) }));
-  }
-
   async function addonFetch(request: HttpRequest): Promise<HttpResponse> {
     const url = publicHttps(request.url);
     if ((request.method && request.method !== 'GET') || request.body || (request.headers && Object.keys(request.headers).length)) {
@@ -151,11 +165,44 @@ export function createHost(options: HostOptions) {
         case 'ping':
           return okResponse<'ping'>(request.id, { version: options.version, protocol: BRIDGE_PROTOCOL, browser: 'chromium', capabilities: CAPABILITIES });
         case 'yt.fetch':
-          return okResponse<'yt.fetch'>(request.id, await ytFetch((request as BridgeRequest<'yt.fetch'>).params));
+          return okResponse<'yt.fetch'>(request.id, await options.yt.fetch((request as BridgeRequest<'yt.fetch'>).params));
         case 'yt.authState':
-        case 'yt.selectChannel':
-        case 'yt.setConnected':
-          return okResponse<'yt.authState'>(request.id, SIGNED_OUT);
+          return okResponse<'yt.authState'>(request.id, await options.yt.authState((request as BridgeRequest<'yt.authState'>).params.refresh === true));
+        case 'yt.selectChannel': {
+          const state = await options.yt.selectChannel((request as BridgeRequest<'yt.selectChannel'>).params.channelId);
+          options.broadcast({ event: 'yt.authState', data: state });
+          return okResponse<'yt.selectChannel'>(request.id, state);
+        }
+        case 'yt.setConnected': {
+          const state = await options.yt.setConnected((request as BridgeRequest<'yt.setConnected'>).params.connected === true);
+          options.broadcast({ event: 'yt.authState', data: state });
+          return okResponse<'yt.setConnected'>(request.id, state);
+        }
+        case 'yt.signIn':
+          options.signIn('youtube');
+          return okResponse<'yt.signIn'>(request.id, {});
+        case 'spotify.authState':
+          return okResponse<'spotify.authState'>(request.id, await options.spotify.authState((request as BridgeRequest<'spotify.authState'>).params.refresh === true));
+        case 'spotify.setConnected': {
+          const state = await options.spotify.setConnected((request as BridgeRequest<'spotify.setConnected'>).params.connected === true);
+          options.broadcast({ event: 'spotify.authState', data: state });
+          return okResponse<'spotify.setConnected'>(request.id, state);
+        }
+        case 'spotify.signIn':
+          options.signIn('spotify');
+          return okResponse<'spotify.signIn'>(request.id, {});
+        case 'spotify.playlists':
+          return okResponse<'spotify.playlists'>(request.id, (await options.spotify.playlists((request as BridgeRequest<'spotify.playlists'>).params.offset ?? 0)) as never);
+        case 'spotify.tracks': {
+          const { playlistId, offset } = (request as BridgeRequest<'spotify.tracks'>).params;
+          return okResponse<'spotify.tracks'>(request.id, (await options.spotify.tracks(playlistId, offset ?? 0)) as never);
+        }
+        case 'spotify.playlist':
+          return okResponse<'spotify.playlist'>(request.id, (await options.spotify.playlistInfo((request as BridgeRequest<'spotify.playlist'>).params.playlistId)) as never);
+        case 'spotify.searchTracks':
+          return okResponse<'spotify.searchTracks'>(request.id, (await options.spotify.searchTracks((request as BridgeRequest<'spotify.searchTracks'>).params.query)) as never);
+        case 'spotify.canvas':
+          return okResponse<'spotify.canvas'>(request.id, { url: await options.spotify.canvas((request as BridgeRequest<'spotify.canvas'>).params.trackId) });
         case 'addon.requestPermission': {
           const { url, urls = [] } = (request as BridgeRequest<'addon.requestPermission'>).params;
           // Adding the add-on in settings is the user's own choice; there's no browser prompt to answer.
@@ -176,8 +223,9 @@ export function createHost(options: HostOptions) {
           return errorResponse(request.id, 'unsupported', `${request.method} isn't available in the desktop app.`);
       }
     } catch (error) {
-      if (error instanceof HostError) return errorResponse(request.id, error.code, error.message);
-      return errorResponse(request.id, error instanceof Error && error.name === 'TimeoutError' ? 'network' : 'internal', error instanceof Error ? error.message : String(error));
+      const known = (error as { code?: string }).code;
+      const code = known === 'forbidden' || known === 'unauthenticated' || known === 'permission' ? known : error instanceof TypeError || (error instanceof Error && error.name === 'TimeoutError') ? 'network' : 'internal';
+      return errorResponse(request.id, code, error instanceof Error ? error.message : String(error));
     }
   };
 }

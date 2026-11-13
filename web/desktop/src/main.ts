@@ -1,8 +1,12 @@
 import { app, BrowserWindow, ipcMain, net, protocol, screen, session, shell } from 'electron';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { extname, join, normalize, sep } from 'node:path';
-import type { BridgeRequest } from '@weavtune/shared/bridge';
+import type { BridgeEvent, BridgeRequest } from '@weavtune/shared/bridge';
+import * as spotify from '../../extension/lib/spotify';
+import { activeIdentityReset, ytService } from './yt';
+import { installBrowserShim, onCookieChanged, sessionRules } from './browserShim';
 import { createHost } from './host';
+import { openSignIn } from './signIn';
 import { allowsPageRead, applyEdits, mainRequestEdits, pageRequestEdits, withCors } from './rules';
 
 /**
@@ -89,8 +93,15 @@ function installNetworkRules(): void {
   const ses = session.defaultSession;
   ses.webRequest.onBeforeSendHeaders({ urls: ['https://*/*'] }, (details, done) => {
     const fromPage = details.webContentsId !== undefined && details.webContentsId !== 0;
-    const edits = fromPage ? (details.resourceType === 'xhr' || details.resourceType === 'media' ? pageRequestEdits(details.url) : null) : mainRequestEdits(details.url);
-    done({ requestHeaders: edits ? (applyEdits(details.requestHeaders, edits) as Record<string, string>) : details.requestHeaders });
+    let headers = details.requestHeaders as Record<string, string | string[]>;
+    if (fromPage) {
+      const edits = details.resourceType === 'xhr' || details.resourceType === 'media' ? pageRequestEdits(details.url) : null;
+      if (edits) headers = applyEdits(headers, edits);
+    } else {
+      // The app's own requests: the fixed ones, then the session rules the extension's code sets.
+      for (const edits of [mainRequestEdits(details.url), sessionRules.editsFor(details.url)]) if (edits) headers = applyEdits(headers, edits);
+    }
+    done({ requestHeaders: headers as Record<string, string> });
   });
   ses.webRequest.onHeadersReceived({ urls: ['https://*/*'] }, (details, done) => {
     const fromPage = details.webContentsId !== undefined && details.webContentsId !== 0;
@@ -161,7 +172,14 @@ app.on('second-instance', () => {
 void app.whenReady().then(() => {
   protocol.handle(SCHEME, servePlayer);
 
+  // Google and Spotify turn away windows that call themselves Electron; this is a Chromium like Chrome's.
+  session.defaultSession.setUserAgent(app.userAgentFallback.replace(/\s(Electron|weav-tune|@weavtune\/desktop)\/\S+/gi, ''));
+  installBrowserShim(dataFile('extension-storage.json'));
+
   const grants = new Set<string>(readJson<string[]>('addon-hosts.json', []));
+  const broadcast = (event: BridgeEvent) => {
+    for (const win of BrowserWindow.getAllWindows()) if (!win.isDestroyed() && win.webContents.getURL().startsWith(ORIGIN)) win.webContents.send('weavtune:event', event);
+  };
   const host = createHost({
     version: app.getVersion(),
     grants: {
@@ -172,7 +190,39 @@ void app.whenReady().then(() => {
       },
     },
     fetch: (url, init) => net.fetch(url, { ...init, credentials: 'omit', bypassCustomProtocolHandlers: true } as RequestInit),
+    yt: ytService,
+    spotify: {
+      authState: async (refresh) => {
+        if (refresh) spotify.invalidateSession();
+        return spotify.authState();
+      },
+      setConnected: spotify.setConnected,
+      playlists: spotify.playlists,
+      tracks: spotify.tracks,
+      playlistInfo: spotify.playlistInfo,
+      searchTracks: spotify.searchTracks,
+      canvas: spotify.canvas,
+    },
+    signIn: (service) => openSignIn(service, main),
+    broadcast,
   });
+
+  // A sign-in or sign-out: re-read the accounts and tell the open player (background.ts does the same in a browser).
+  let ytTimer: ReturnType<typeof setTimeout> | undefined;
+  let spotifyTimer: ReturnType<typeof setTimeout> | undefined;
+  onCookieChanged(({ cookie }) => {
+    if (spotify.isSessionCookie(cookie as never)) {
+      spotify.invalidateSession();
+      clearTimeout(spotifyTimer);
+      spotifyTimer = setTimeout(() => void spotify.authState().then((data) => broadcast({ event: 'spotify.authState', data })).catch(() => undefined), 1000);
+      return;
+    }
+    if (!activeIdentityReset(cookie)) return;
+    clearTimeout(ytTimer);
+    // Signing in sets several cookies in a burst; answer the last one.
+    ytTimer = setTimeout(() => void ytService.authState(true).then((data) => broadcast({ event: 'yt.authState', data })).catch(() => undefined), 1000);
+  });
+
   ipcMain.handle('weavtune:bridge', (event, request: unknown) => {
     // Only the player's own page may use the bridge.
     if (event.senderFrame?.origin !== ORIGIN) throw new Error('forbidden');

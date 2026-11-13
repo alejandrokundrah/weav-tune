@@ -8,7 +8,7 @@ import { useRemoteConfig } from '@/config/remote';
 import { useAddons } from '@/addons/client';
 import { useDiscord } from '@/extension/useDiscord';
 import { useExtension } from '@/extension/useExtension';
-import { useYtAuth } from '@/extension/useYtAuth';
+import { openYtSignIn, useYtAuth } from '@/extension/useYtAuth';
 import { useRoom } from '@/together/room';
 import { useHistorySettings } from '@/playback/historyReporting';
 import { CROSSFADE_CHOICES, usePlayer } from '@/state/player';
@@ -145,12 +145,12 @@ export function AccountsPane() {
         <div className={settingsUi.integration}>
           <Glyph Icon={SiYoutubemusic} color="#ffffff" ink="#ff0033" />
           <span className={settingsUi.integrationName}>YouTube Music</span>
-          <span className={settingsUi.value}><span>{desktop ? 'Not in the desktop app yet' : youtubeText(yt)}</span></span>
+          <span className={settingsUi.value}><span>{youtubeText(yt)}</span>{desktop && yt.state === 'ready' && !yt.auth.browserSignedIn && <button className={settingsUi.inlineButton} onClick={openYtSignIn}>Sign In</button>}</span>
         </div>
         <div className={settingsUi.integration}>
           <Glyph Icon={SiSpotify} color="#1ed760" ink="#000000" />
           <span className={settingsUi.integrationName}>Spotify</span>
-          {desktop ? <span className={settingsUi.value}>Not in the desktop app yet</span> : present ? <SpotifyIntegration /> : <span className={settingsUi.value}>Needs the extension</span>}
+          {present ? <SpotifyIntegration /> : <span className={settingsUi.value}>Needs the extension</span>}
         </div>
         {!desktop && <LinkRow to="/settings/discord" icon={<Glyph Icon={SiDiscord} color="#5865f2" />} title="Discord" value={discordText} />}
         {!desktop && <LinkRow

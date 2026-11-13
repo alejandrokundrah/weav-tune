@@ -1,7 +1,8 @@
 import { ArrowUpRight, ChevronsUpDown, LogIn, RotateCw } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { Menu, MenuHeader, MenuItem, MenuSeparator } from '@/components/Menu';
-import { useRefreshYtAuth, useSelectChannel, useSetConnected, useYtAuth } from '@/extension/useYtAuth';
+import { openYtSignIn, useRefreshYtAuth, useSelectChannel, useSetConnected, useYtAuth } from '@/extension/useYtAuth';
+import { isDesktop } from '@/lib/desktop';
 
 const SIGN_IN_URL = 'https://accounts.google.com/ServiceLogin?service=youtube&continue=https://music.youtube.com/';
 
@@ -43,7 +44,20 @@ export function AccountButton({ compact = false }: { compact?: boolean }) {
 
   if (!auth.browserSignedIn) {
     return (
-      <a className={compact ? roundPill : pill} href={SIGN_IN_URL} target="_blank" rel="noreferrer" aria-label={compact ? 'Sign In' : undefined} title={compact ? 'Sign In' : undefined}>
+      <a
+        className={compact ? roundPill : pill}
+        href={SIGN_IN_URL}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={compact ? 'Sign In' : undefined}
+        title={compact ? 'Sign In' : undefined}
+        onClick={(event) => {
+          // The desktop app signs in in a window of its own, not a browser tab.
+          if (!isDesktop()) return;
+          event.preventDefault();
+          openYtSignIn();
+        }}
+      >
         {compact ? <LogIn size={17} strokeWidth={2.2} /> : 'Sign In'}
       </a>
     );
@@ -118,7 +132,8 @@ export function AccountButton({ compact = false }: { compact?: boolean }) {
           <MenuItem
             onSelect={() => {
               close();
-              window.open(SIGN_IN_URL.replace('ServiceLogin', 'AddSession'), '_blank', 'noreferrer');
+              if (isDesktop()) openYtSignIn();
+              else window.open(SIGN_IN_URL.replace('ServiceLogin', 'AddSession'), '_blank', 'noreferrer');
             }}
             trailing={<ArrowUpRight size={13} />}
           >
