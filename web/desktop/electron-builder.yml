@@ -1,0 +1,40 @@
+# Installers for Windows, macOS and Linux. The version comes from the release tag
+# (.github/workflows/desktop-release.yml passes -c.extraMetadata.version); the built player
+# (web/app/dist) travels beside the app as resources/player.
+appId: com.weavtune.desktop
+productName: Weav-Tune
+copyright: Weav-Tune contributors, GPL-3.0
+directories:
+  output: dist
+  buildResources: icons
+files:
+  - build/**
+  - icons/**
+  - package.json
+extraResources:
+  - from: ../app/dist
+    to: player
+asar: true
+win:
+  icon: icons/icon.ico
+  target: [{ target: nsis, arch: [x64] }]
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  artifactName: WeavTune-v${version}-windows-${arch}-setup.${ext}
+mac:
+  icon: icons/icon.icns
+  category: public.app-category.music
+  target: [{ target: dmg }]
+dmg:
+  artifactName: WeavTune-v${version}-macos-${arch}.${ext}
+linux:
+  executableName: weav-tune
+  icon: icons/icon.png
+  category: Audio
+  maintainer: Weav-Tune <noreply@users.noreply.github.com>
+  target: [AppImage, deb]
+appImage:
+  artifactName: WeavTune-v${version}-linux-${arch}.${ext}
+deb:
+  artifactName: WeavTune-v${version}-linux-${arch}.${ext}

@@ -19,4 +19,3 @@ rootProject.name = "WeavTune"
 include(":app")
 include(":core")
 include(":wear")
-include(":desktop")

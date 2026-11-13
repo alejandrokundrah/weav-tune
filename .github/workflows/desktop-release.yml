@@ -73,66 +73,49 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            tasks: :desktop:packageDeb :desktop:packageRpm
+            args: --linux
           - os: windows-latest
-            tasks: :desktop:packageMsi :desktop:packageExe
+            args: --win
           - os: macos-latest
-            tasks: :desktop:packageDmg
+            args: --mac
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 60
+    timeout-minutes: 45
     env:
       TAG: ${{ needs.release.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ needs.release.outputs.ref }}
-      - uses: actions/setup-java@v4
+      - uses: pnpm/action-setup@v4
         with:
-          distribution: temurin
-          java-version: "21"
-      # The build includes the Android modules, which need the SDK to configure.
-      - uses: android-actions/setup-android@v3
+          package_json_file: web/package.json
+      - uses: actions/setup-node@v4
         with:
-          packages: platform-tools platforms;android-37.0 build-tools;36.0.0
-      - uses: gradle/actions/setup-gradle@v4
-      - name: RPM tools
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y rpm
-      - name: Installers
-        shell: bash
-        env:
-          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
-          LASTFM_API_SECRET: ${{ secrets.LASTFM_API_SECRET }}
-          DISCORD_APP_ID: ${{ vars.DISCORD_APP_ID || secrets.DISCORD_APP_ID }}
-        run: ./gradlew --no-daemon ${{ matrix.tasks }} :desktop:createDistributable
-      # The packaged app on its own trimmed runtime: FFmpeg, GraalJS and SQLite must load there too.
-      - name: Packaged app self-check
-        if: runner.os != 'Windows'
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - name: Build the player and the app
+        working-directory: web
         shell: bash
         run: |
-          app=desktop/build/compose/binaries/main/app
-          if [ -d "$app/WeavTune.app" ]; then "$app/WeavTune.app/Contents/MacOS/WeavTune" --self-check; else "$app/WeavTune/bin/WeavTune" --self-check; fi
-      - name: Name the files for the release
+          pnpm install --frozen-lockfile
+          pnpm --filter @weavtune/app build
+          pnpm --filter @weavtune/desktop bundle
+      - name: Installers
+        working-directory: web/desktop
+        shell: bash
+        run: |
+          version="${TAG#v}"
+          pnpm exec electron-builder ${{ matrix.args }} --publish never -c.extraMetadata.version="$version"
+      - name: Collect the files for the release
         shell: bash
         run: |
           set -euo pipefail
           out="$RUNNER_TEMP/desktop" && mkdir -p "$out"
-          bin=desktop/build/compose/binaries/main
-          case "$RUNNER_OS" in
-            Linux)
-              cp "$bin"/deb/*.deb "$out/WeavTune-$TAG-linux-amd64.deb"
-              cp "$bin"/rpm/*.rpm "$out/WeavTune-$TAG-linux-x86_64.rpm"
-              desktop/packaging/appimage.sh "$bin/app/WeavTune" "$out/WeavTune-$TAG-linux-x86_64.AppImage"
-              ;;
-            Windows)
-              cp "$bin"/msi/*.msi "$out/WeavTune-$TAG-windows-x64.msi"
-              cp "$bin"/exe/*.exe "$out/WeavTune-$TAG-windows-x64-setup.exe"
-              pwsh -NoProfile -Command "Compress-Archive -Path '$bin/app/WeavTune' -DestinationPath '$out/WeavTune-$TAG-windows-x64-portable.zip'"
-              ;;
-            macOS)
-              cp "$bin"/dmg/*.dmg "$out/WeavTune-$TAG-macos-$(uname -m | sed 's/x86_64/x64/').dmg"
-              ;;
-          esac
+          cd web/desktop/dist
+          for f in WeavTune-*.exe WeavTune-*.dmg WeavTune-*.AppImage WeavTune-*.deb; do
+            [ -e "$f" ] && cp "$f" "$out/"
+          done
           ls -la "$out"
       - name: Attach to the release
         shell: bash

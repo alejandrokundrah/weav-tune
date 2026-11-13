@@ -7,6 +7,7 @@ import type { RoomView } from '@/together/session';
 import { usePlayer } from '@/state/player';
 import { Toggle } from './IntegrationSettings';
 import { settingsUi } from './settingsStyles';
+import { shareBase } from '@/lib/desktop';
 
 const primary = 'flex-none rounded-pill bg-key-bg px-5 py-2 type-body-emphasized text-white disabled:opacity-45';
 const secondary = 'flex-none rounded-pill bg-quaternary px-4 py-2 type-body-emphasized text-primary disabled:opacity-45';
@@ -87,7 +88,7 @@ function Room({ view }: { view: RoomView }) {
   const autoplay = usePlayer((s) => s.autoplay);
   const [copied, setCopied] = useState<'code' | 'link' | null>(null);
   const copy = (what: 'code' | 'link') => {
-    const text = what === 'code' ? pretty(view.code) : `${window.location.origin}${window.location.pathname}#/together?code=${view.code}`;
+    const text = what === 'code' ? pretty(view.code) : `${shareBase()}#/together?code=${view.code}`;
     void navigator.clipboard.writeText(text).then(() => { setCopied(what); setTimeout(() => setCopied(null), 1500); }, () => undefined);
   };
   const ended = view.phase === 'ended';

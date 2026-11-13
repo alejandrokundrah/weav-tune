@@ -11,6 +11,7 @@ import { searchSettings } from './settings/search';
 import { SECTIONS, sectionById, type SectionId, type SectionMeta } from './settings/sections';
 import { useSectionStatus } from './settings/status';
 import { settingsUi } from './settingsStyles';
+import { isDesktop } from '@/lib/desktop';
 
 const LyricsSettings = lazy(() => import('@/shell/LyricsSettings').then((m) => ({ default: m.LyricsSettings })));
 
@@ -204,7 +205,7 @@ export default function SettingsPage() {
               </section>
             ) : (
               <>
-                <ExtensionStrip />
+                {!isDesktop() && <ExtensionStrip />}
                 <nav className={`${settingsUi.group} ot-set-cats`} aria-label="Settings categories" onKeyDown={move}>
                   {SECTIONS.map((section) => {
                     const s = status[section.id];

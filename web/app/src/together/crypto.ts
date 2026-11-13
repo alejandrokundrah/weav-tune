@@ -1,3 +1,4 @@
+import { shareBase } from '@/lib/desktop';
 import { schnorr, secp256k1 } from '@noble/curves/secp256k1.js';
 
 /*
@@ -65,8 +66,7 @@ export class RoomCode {
   }
   /** The website's invite page, which opens the room in the app or here. */
   get link(): string {
-    const origin = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : '';
-    return `${origin}#/together?code=${this.raw}`;
+    return `${shareBase()}#/together?code=${this.raw}`;
   }
 
   seal(plain: string) {

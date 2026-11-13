@@ -1,0 +1,27 @@
+{
+  "name": "@weavtune/desktop",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Weav-Tune for Windows, macOS and Linux: the web player in its own window.",
+  "author": "Weav-Tune",
+  "main": "build/main.cjs",
+  "scripts": {
+    "bundle": "node scripts/bundle.mjs",
+    "start": "pnpm --filter @weavtune/app build && pnpm bundle && electron .",
+    "typecheck": "tsc -p .",
+    "test": "vitest run --passWithNoTests",
+    "dist": "pnpm --filter @weavtune/app build && pnpm bundle && electron-builder"
+  },
+  "dependencies": {
+    "@weavtune/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "electron": "^39.0.0",
+    "electron-builder": "^26.0.0",
+    "esbuild": "^0.25.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.4"
+  }
+}

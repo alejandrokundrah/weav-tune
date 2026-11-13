@@ -14,6 +14,7 @@ import { useHistorySettings } from '@/playback/historyReporting';
 import { CROSSFADE_CHOICES, usePlayer } from '@/state/player';
 import { AppleMusicIntegration, AppleMusicToggles, CanvasToggle, LyricSourcesAccess, SpotifyIntegration, Toggle } from '../IntegrationSettings';
 import { settingsUi } from '../settingsStyles';
+import { isDesktop } from '@/lib/desktop';
 
 /** An integration's coloured glyph, as on the Extension page. */
 function Glyph({ Icon, color, ink }: { Icon: ComponentType<{ size?: number }>; color: string; ink?: string }) {
@@ -128,6 +129,7 @@ export function AccountsPane() {
   const shareHistory = useHistorySettings((s) => s.share);
   const setShareHistory = useHistorySettings((s) => s.setShare);
   const present = extension.state === 'present';
+  const desktop = isDesktop();
   const discordText = !present
     ? 'Needs the extension'
     : discord.state === 'ready' && discord.discord.connected
@@ -143,22 +145,22 @@ export function AccountsPane() {
         <div className={settingsUi.integration}>
           <Glyph Icon={SiYoutubemusic} color="#ffffff" ink="#ff0033" />
           <span className={settingsUi.integrationName}>YouTube Music</span>
-          <span className={settingsUi.value}><span>{youtubeText(yt)}</span></span>
+          <span className={settingsUi.value}><span>{desktop ? 'Not in the desktop app yet' : youtubeText(yt)}</span></span>
         </div>
         <div className={settingsUi.integration}>
           <Glyph Icon={SiSpotify} color="#1ed760" ink="#000000" />
           <span className={settingsUi.integrationName}>Spotify</span>
-          {present ? <SpotifyIntegration /> : <span className={settingsUi.value}>Needs the extension</span>}
+          {desktop ? <span className={settingsUi.value}>Not in the desktop app yet</span> : present ? <SpotifyIntegration /> : <span className={settingsUi.value}>Needs the extension</span>}
         </div>
-        <LinkRow to="/settings/discord" icon={<Glyph Icon={SiDiscord} color="#5865f2" />} title="Discord" value={discordText} />
-        <LinkRow
+        {!desktop && <LinkRow to="/settings/discord" icon={<Glyph Icon={SiDiscord} color="#5865f2" />} title="Discord" value={discordText} />}
+        {!desktop && <LinkRow
           to="/extension"
           icon={<Glyph Icon={MdOutlineExtension} color="#636366" />}
           title="Weav-Tune Extension"
           value={present ? `v${extension.extension.info.version}` : 'Not installed'}
-        />
+        />}
       </section>
-      <section className={`${settingsUi.group} mt-3 empty:hidden`}>
+      {!desktop && <section className={`${settingsUi.group} mt-3 empty:hidden`}>
         <Toggle
           label="Share listening activity to YouTube"
           detail={
@@ -170,7 +172,7 @@ export function AccountsPane() {
           onChange={setShareHistory}
         />
         <CanvasToggle />
-      </section>
+      </section>}
       <h3 className={settingsUi.sectionHeader}>Apple Music</h3>
       <section className={settingsUi.group}>
         <div className={settingsUi.integration}>

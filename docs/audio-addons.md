@@ -22,7 +22,7 @@ For downloads, choose **Lossless** in Download quality. The same priority order 
 
 ## Platform scope and validation
 
-The client is integrated with the shared Android playback/download engine and phone/TV settings. The desktop JavaFX backend remains unchanged and does not gain FLAC support from this integration. Watch playback shares the engine but has no new add-on editor.
+The client is integrated with the shared Android playback/download engine and phone/TV settings. The desktop app is the web player in its own window; it reads add-on manifests but does not play FLAC. Watch playback shares the engine but has no new add-on editor.
 
 `AddonProtocolTest`, `AddonStoreTest`, and `AddonResolverTest` cover URL handling, quality negotiation, cache/cooldown behavior, persistence, priority/fallback, strict matching and provider restrictions. `scripts/probe-audio-addons.py` performs optional live compatibility checks of the three public example services and redacts URLs. Endpoint success does not establish availability for all recordings or verify playback on a physical device.
 
