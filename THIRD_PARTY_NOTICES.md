@@ -44,7 +44,10 @@ are used as libraries under GPLv3. Liquid Glass uses Kyant's
 [backdrop](https://github.com/Kyant0/AndroidLiquidGlass) library, and
 frosted glass uses [Haze](https://github.com/chrisbanes/haze). The
 [Outfit](https://github.com/Outfitio/Outfit-Fonts) font is used under the
-SIL Open Font License 1.1 (`third_party/outfit/OFL.txt`). Album covers
+SIL Open Font License 1.1 (`third_party/outfit/OFL.txt`). The web player uses
+the [Plus Jakarta Sans](https://github.com/tokotype/PlusJakartaSans) font,
+bundled through `@fontsource-variable/plus-jakarta-sans`, under the same
+licence. Album covers
 come from the [Cover Art Archive](https://coverartarchive.org) through
 [MusicBrainz](https://musicbrainz.org), and recommendations from
 [ListenBrainz](https://listenbrainz.org), all run by the MetaBrainz

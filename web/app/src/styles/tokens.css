@@ -9,20 +9,9 @@
  * variants are the ones used here (report §9).
  */
 
-/* Kyonira Regular: one weight (400), CFF OpenType, Latin-1 coverage. Bundled
- * from src/assets so the URL survives a non-root `base`. Bold/italic are
- * synthesised; DM Sans stays in the stack for glyphs Kyonira lacks. */
-@font-face {
-  font-family: 'Kyonira';
-  src: url('../assets/fonts/kyonira.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 :root {
   /* ---- Type ------------------------------------------------------------ */
-  --font-family: 'Kyonira', 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family: 'Plus Jakarta Sans Variable', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
   /* font: <weight> <size>/<line-height> (report §10) */
   --header-emphasized: 700 34px / 40px var(--font-family);

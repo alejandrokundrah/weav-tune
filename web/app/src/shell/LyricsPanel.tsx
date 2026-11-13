@@ -32,8 +32,8 @@ type AmLyricsElement = HTMLElement & {
  */
 const HIDE_FOOTER = '.lyrics-footer { visibility: hidden !important; pointer-events: none !important; }';
 
-/** The app's Kyonira stack (@font-face in styles/tokens.css), with DM Sans as fallback. */
-const LYRIC_FONT = "'Kyonira', 'DM Sans', system-ui, sans-serif";
+/** The app's Plus Jakarta Sans stack (bundled via src/main.tsx), with system fonts as fallback. */
+const LYRIC_FONT = "'Plus Jakarta Sans Variable', system-ui, sans-serif";
 
 let lyricFont: Promise<void> | null = null;
 let lyricFontLoaded = false;

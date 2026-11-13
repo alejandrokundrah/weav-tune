@@ -4,6 +4,8 @@ import { createRoot } from 'react-dom/client';
 import { createHashRouter, RouterProvider } from 'react-router';
 import { queryClient } from '@/lib/queryClient';
 import { routes } from '@/routes';
+import '@fontsource-variable/plus-jakarta-sans';
+import '@fontsource-variable/plus-jakarta-sans/wght-italic.css';
 import '@/styles/global.css';
 
 const router = createHashRouter(routes);
