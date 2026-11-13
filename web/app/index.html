@@ -9,14 +9,7 @@
     <title>Weav-Tune · Web player</title>
     <meta name="description" content="Listen with Weav-Tune in your browser. Your music library, lyrics and community audio add-ons." />
     <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
-    <!-- Kyonira is bundled in src/styles/tokens.css; DM Sans stays as the fallback
-         for the few glyphs Kyonira lacks (web/docs/apple-music-dom.md, "Font"). -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&display=swap"
-    />
+    <!-- Plus Jakarta Sans is bundled (see src/main.tsx); no font requests leave the app. -->
   </head>
   <body>
     <div id="root"></div>

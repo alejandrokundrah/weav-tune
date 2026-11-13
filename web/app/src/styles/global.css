@@ -203,7 +203,7 @@
 
 /*
  * A type token from tokens.css (`type-body`), or a one-off `weight size/leading`
- * in the app's Kyonira stack (`type-[700_19px/24px]`). Either way the `font`
+ * in the app's Plus Jakarta Sans stack (`type-[700_19px/24px]`). Either way the `font`
  * shorthand, as the tokens are written.
  */
 @utility type-* {
