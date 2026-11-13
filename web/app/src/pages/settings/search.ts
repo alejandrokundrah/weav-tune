@@ -22,7 +22,6 @@ export const ENTRIES: SettingEntry[] = [
   { section: 'appearance', title: 'Theme', detail: 'System, light or dark.', words: 'dark light mode night' },
   { section: 'appearance', title: 'Pure black', detail: 'True black surfaces in dark mode.', words: 'amoled oled' },
   { section: 'appearance', title: 'Liquid Glass', detail: 'The player and floating buttons bend what’s behind them, like a lens.', words: 'blur lens frosted transparency' },
-  { section: 'appearance', title: 'Replica Liquid Glass shell', detail: 'Glass for the sidebar, panels and page chrome.', words: 'blur sidebar frosted transparency' },
   { section: 'appearance', title: 'Colors from artwork', detail: 'Let the playing song color Weav-Tune.', words: 'dynamic album art colour' },
   { section: 'appearance', title: 'Accent color', detail: 'Pick the color used for buttons and highlights.', words: 'colour swatch highlight' },
   { section: 'appearance', title: 'Background', detail: 'Mesh, gradient or echo glow behind the Now Playing screen.', words: 'now playing mesh gradient echo glow' },

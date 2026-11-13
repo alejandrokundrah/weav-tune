@@ -12,8 +12,7 @@ it('saves appearance changes independently and round-trips across reloads', () =
   expect(saved).toMatchObject({ mode: 'dark', playerStyle: 'polaroid', motion: false, replicaGlass: false });
   expect(saved.accent).toBe(DEFAULT_APPEARANCE.accent);
 });
-it('defaults the replica shell on for old saved appearances and honors an explicit choice', () => {
-  expect(appearanceOf({}).replicaGlass).toBe(true);
-  expect(appearanceOf({ replicaGlass: 'invalid' }).replicaGlass).toBe(true);
-  expect(appearanceOf({ replicaGlass: false }).replicaGlass).toBe(false);
+it('keeps the glass shell off, even for old saved appearances that turned it on', () => {
+  expect(appearanceOf({}).replicaGlass).toBe(false);
+  expect(appearanceOf({ replicaGlass: true }).replicaGlass).toBe(false);
 });

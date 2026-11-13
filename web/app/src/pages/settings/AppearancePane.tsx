@@ -39,7 +39,7 @@ function Preview({ a }: { a: Appearance }) {
   const systemDark = useSystemDark();
   const scheme: Scheme = a.mode === 'system' ? (systemDark ? 'dark' : 'light') : a.mode;
   const s = scene(scheme, a.pureBlack);
-  const glass = (a.liquidGlass && liquidGlassSupported()) || a.replicaGlass;
+  const glass = a.liquidGlass && liquidGlassSupported();
   const [c1, c2, c3] = covers(a) as [string, string, string];
   const style = { '--s-bg': s.bg, '--s-panel': s.panel, '--s-ink': s.ink, '--s-soft': s.soft, '--s-accent': a.accent, '--c1': c1, '--c2': c2, '--c3': c3 } as CSSProperties;
   return (
@@ -150,12 +150,6 @@ export function AppearancePane() {
           detail={liquidGlassSupported() ? 'The player and floating buttons bend what’s behind them, like a lens.' : 'Needs Chrome or Edge. This browser keeps frosted glass.'}
           checked={a.liquidGlass && liquidGlassSupported()}
           onChange={(liquidGlass) => a.update({ liquidGlass })}
-        />
-        <Toggle
-          label="Replica Liquid Glass shell"
-          detail="Applies the extracted Group 45 glass to the sidebar, panels and page chrome. The original Apple Music player pill is unchanged."
-          checked={a.replicaGlass}
-          onChange={(replicaGlass) => a.update({ replicaGlass })}
         />
       </section>
 

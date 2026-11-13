@@ -21,7 +21,7 @@ export interface Appearance {
 }
 export const DEFAULT_APPEARANCE: Appearance = {
   mode: 'system', accent: '#25a0d4', pureBlack: true, artworkColors: true,
-  playerBackground: 'mesh', playerStyle: 'classic', motion: true, liquidGlass: true, replicaGlass: true,
+  playerBackground: 'mesh', playerStyle: 'classic', motion: true, liquidGlass: true, replicaGlass: false,
 };
 export function appearanceOf(value: unknown): Appearance {
   const v = (value && typeof value === 'object' ? value : {}) as Partial<Appearance>;
@@ -35,7 +35,8 @@ export function appearanceOf(value: unknown): Appearance {
     playerStyle: PLAYER_STYLES.includes(v.playerStyle!) ? v.playerStyle! : 'classic',
     motion: typeof v.motion === 'boolean' ? v.motion : true,
     liquidGlass: typeof v.liquidGlass === 'boolean' ? v.liquidGlass : true,
-    replicaGlass: typeof v.replicaGlass === 'boolean' ? v.replicaGlass : true,
+    // The glass shell is retired: only the player and floating buttons use Liquid Glass.
+    replicaGlass: false,
   };
 }
 const KEY = 'weav:appearance';
