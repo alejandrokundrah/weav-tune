@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { defaults, verifyConfig } from './protocol';
 
 const ORIGIN = 'https://addon-opentune.rethinknow.in';
-const KEY = 'opentune:remote-config';
+const KEY = 'weavtune:remote-config';
 export const useRemoteConfig = create(() => ({ config: defaults() }));
 export const currentConfig = () => { const c = useRemoteConfig.getState().config; return c.expiresAt > Date.now() ? c : defaults(); };
 let pinned = '', minimumRevision = 0, lastAttempt = 0, running: Promise<void> | null = null;

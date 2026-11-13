@@ -1,4 +1,4 @@
-import type { YtAccount, YtAuthState, YtChannel } from '@opentune/shared/bridge';
+import type { YtAccount, YtAuthState, YtChannel } from '@weavtune/shared/bridge';
 import { installExtensionFetchRule } from './rules';
 
 /**
@@ -333,7 +333,7 @@ async function readAccounts(): Promise<{ list: StoredAccount[]; webIndex: string
   if (!list.length) {
     const why = results[Number(webIndex ?? 0)]?.why ?? results[0]?.why ?? 'no signed-in Google account found';
     problem = web.loggedIn === false ? COOKIES_NOT_SENT : why;
-    console.warn(`OpenTune: no YouTube account found: ${why}`);
+    console.warn(`Weav-Tune: no YouTube account found: ${why}`);
   }
   return { list, webIndex };
 }

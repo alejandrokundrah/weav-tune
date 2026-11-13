@@ -7,7 +7,7 @@ ROOTS = [
 ]
 out=pathlib.Path('build/addon-probes');out.mkdir(parents=True,exist_ok=True)
 def get(url, limit=1048576):
-    req=urllib.request.Request(url,headers={'User-Agent':'OpenTune-Addon-Compatibility/1.0','Accept':'application/json'})
+    req=urllib.request.Request(url,headers={'User-Agent':'Weav-Tune-Addon-Compatibility/1.0','Accept':'application/json'})
     with urllib.request.urlopen(req,timeout=18) as response:
         data=response.read(limit+1)
         if len(data)>limit:raise ValueError('oversized response')
@@ -36,7 +36,7 @@ for name,base in ROOTS:
                 report['stream']=safe(stream)
                 url=stream.get('url')
                 if url and urllib.parse.urlparse(url).scheme=='https' and not stream.get('encrypted',False):
-                    req=urllib.request.Request(url,headers={'Range':'bytes=0-65535','User-Agent':'OpenTune-Addon-Compatibility/1.0'})
+                    req=urllib.request.Request(url,headers={'Range':'bytes=0-65535','User-Agent':'Weav-Tune-Addon-Compatibility/1.0'})
                     with urllib.request.urlopen(req,timeout=18) as response:
                         prefix=response.read(65536)
                         report['media']={'status':response.status,'contentType':response.headers.get('Content-Type'),'bytesRead':len(prefix),'flac':prefix.startswith(b'fLaC'),'mp4':b'ftyp' in prefix[:32],'dash':b'<MPD' in prefix[:2048]}

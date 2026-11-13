@@ -1,6 +1,7 @@
 // The sidebar's icons, taken from Apple Music's web player so the navigation
-// reads the same (web/docs/apple-music-dom.md, Sidebar). All are drawn in a
-// 24×24 box and fill with currentColor; Apple renders them at 28px.
+// reads the same (web/docs/apple-music-dom.md, Sidebar). The Apple glyphs are
+// drawn in a 24×24 box and fill with currentColor; the user-supplied Home
+// glyph is stroked with currentColor instead. Apple renders them at 28px.
 
 import type { SVGProps } from 'react';
 
@@ -18,6 +19,19 @@ function make(paths: { d: string; fillOpacity?: number; transform?: string }[]) 
   };
 }
 
+/** The user's outline icons share the same 24×24 box, but stroke rather than fill. */
+function strokeMake(paths: string[], strokeWidth = 2) {
+  return function NavIcon({ size = 28, ...props }: NavIconProps) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+        {paths.map((d, i) => (
+          <path key={i} d={d} />
+        ))}
+      </svg>
+    );
+  };
+}
+
 export const SearchIcon = make([
   {
     fillOpacity: 0.95,
@@ -25,10 +39,8 @@ export const SearchIcon = make([
   },
 ]);
 
-export const HomeIcon = make([
-  {
-    d: 'M5.93 20.16a1.94 1.94 0 0 1-1.43-.502c-.334-.335-.502-.794-.502-1.393v-7.142c0-.362.062-.688.177-.953.123-.264.326-.529.6-.75l6.145-5.157c.176-.141.344-.247.52-.318q.263-.105.564-.105c.194 0 .388.035.565.105s.352.177.52.318l6.146 5.158c.273.23.467.476.59.75.124.264.177.59.177.96v7.134c0 .59-.159 1.058-.503 1.393q-.503.503-1.428.503zm12.14-1.172q.334 0 .547-.212a.69.69 0 0 0 .22-.511v-7.142c0-.177-.026-.344-.087-.459a1 1 0 0 0-.265-.353l-6.154-5.149a.8.8 0 0 0-.177-.115.4.4 0 0 0-.15-.035.4.4 0 0 0-.158.035l-.177.115-6.145 5.15a1 1 0 0 0-.274.352 1.1 1.1 0 0 0-.088.468v7.133c0 .203.08.379.23.511a.74.74 0 0 0 .546.212zm-8.323-4.7c0-.176.062-.326.177-.432a.6.6 0 0 1 .423-.159h3.315c.176 0 .326.053.432.16s.159.255.159.431v4.973H9.756v-4.973Z',
-  },
+export const HomeIcon = strokeMake([
+  'M21 19v-6.733a4 4 0 0 0-1.245-2.9L13.378 3.31a2 2 0 0 0-2.755 0L4.245 9.367A4 4 0 0 0 3 12.267V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2',
 ]);
 
 export const NewIcon = make([

@@ -4,8 +4,8 @@
 # by hand for a release that's already out: Actions > Desktop release > Run workflow, with its tag.
 #
 # Each file is named for the release and the system it's for, e.g.
-#   OpenTune-v1.0.4-windows-x64-setup.exe   OpenTune-v1.0.4-macos-arm64.dmg
-#   OpenTune-v1.0.4-linux-x86_64.AppImage   OpenTune-v1.0.4-linux-amd64.deb
+#   WeavTune-v1.0.4-windows-x64-setup.exe   WeavTune-v1.0.4-macos-arm64.dmg
+#   WeavTune-v1.0.4-linux-x86_64.AppImage   WeavTune-v1.0.4-linux-amd64.deb
 # Running again for the same tag replaces them.
 name: Desktop release
 
@@ -111,7 +111,7 @@ jobs:
         shell: bash
         run: |
           app=desktop/build/compose/binaries/main/app
-          if [ -d "$app/OpenTune.app" ]; then "$app/OpenTune.app/Contents/MacOS/OpenTune" --self-check; else "$app/OpenTune/bin/OpenTune" --self-check; fi
+          if [ -d "$app/WeavTune.app" ]; then "$app/WeavTune.app/Contents/MacOS/WeavTune" --self-check; else "$app/WeavTune/bin/WeavTune" --self-check; fi
       - name: Name the files for the release
         shell: bash
         run: |
@@ -120,17 +120,17 @@ jobs:
           bin=desktop/build/compose/binaries/main
           case "$RUNNER_OS" in
             Linux)
-              cp "$bin"/deb/*.deb "$out/OpenTune-$TAG-linux-amd64.deb"
-              cp "$bin"/rpm/*.rpm "$out/OpenTune-$TAG-linux-x86_64.rpm"
-              desktop/packaging/appimage.sh "$bin/app/OpenTune" "$out/OpenTune-$TAG-linux-x86_64.AppImage"
+              cp "$bin"/deb/*.deb "$out/WeavTune-$TAG-linux-amd64.deb"
+              cp "$bin"/rpm/*.rpm "$out/WeavTune-$TAG-linux-x86_64.rpm"
+              desktop/packaging/appimage.sh "$bin/app/WeavTune" "$out/WeavTune-$TAG-linux-x86_64.AppImage"
               ;;
             Windows)
-              cp "$bin"/msi/*.msi "$out/OpenTune-$TAG-windows-x64.msi"
-              cp "$bin"/exe/*.exe "$out/OpenTune-$TAG-windows-x64-setup.exe"
-              pwsh -NoProfile -Command "Compress-Archive -Path '$bin/app/OpenTune' -DestinationPath '$out/OpenTune-$TAG-windows-x64-portable.zip'"
+              cp "$bin"/msi/*.msi "$out/WeavTune-$TAG-windows-x64.msi"
+              cp "$bin"/exe/*.exe "$out/WeavTune-$TAG-windows-x64-setup.exe"
+              pwsh -NoProfile -Command "Compress-Archive -Path '$bin/app/WeavTune' -DestinationPath '$out/WeavTune-$TAG-windows-x64-portable.zip'"
               ;;
             macOS)
-              cp "$bin"/dmg/*.dmg "$out/OpenTune-$TAG-macos-$(uname -m | sed 's/x86_64/x64/').dmg"
+              cp "$bin"/dmg/*.dmg "$out/WeavTune-$TAG-macos-$(uname -m | sed 's/x86_64/x64/').dmg"
               ;;
           esac
           ls -la "$out"

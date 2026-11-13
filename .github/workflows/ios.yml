@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Core tests
-        working-directory: ios/OpenTuneCore
+        working-directory: ios/WeavTuneCore
         run: |
           swift --version
           swift test
@@ -57,8 +57,8 @@ jobs:
         run: |
           xcodebuild -version
           xcodebuild \
-            -project OpenTune.xcodeproj \
-            -scheme OpenTune \
+            -project WeavTune.xcodeproj \
+            -scheme WeavTune \
             -configuration Release \
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
@@ -70,22 +70,22 @@ jobs:
           grep -E "error:|BUILD (SUCCEEDED|FAILED)" build.log || true
           # A failed build still leaves a partial .app behind, so the result is what counts.
           if [ "$status" -ne 0 ] || ! grep -q "BUILD SUCCEEDED" build.log; then tail -n 80 build.log; exit 1; fi
-          test -x build/Build/Products/Release-iphoneos/OpenTune.app/OpenTune
+          test -x build/Build/Products/Release-iphoneos/WeavTune.app/WeavTune
 
       - name: Package .ipa
         id: ipa
         working-directory: ios
         run: |
-          file="OpenTune-iOS-v${{ steps.version.outputs.name }}-unsigned.ipa"
+          file="WeavTune-iOS-v${{ steps.version.outputs.name }}-unsigned.ipa"
           mkdir -p Payload
-          cp -R build/Build/Products/Release-iphoneos/OpenTune.app Payload/
+          cp -R build/Build/Products/Release-iphoneos/WeavTune.app Payload/
           zip -qry "$file" Payload
           ls -la "$file"
           echo "file=ios/$file" >> "$GITHUB_OUTPUT"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: OpenTune-iOS-unsigned
+          name: WeavTune-iOS-unsigned
           path: ${{ steps.ipa.outputs.file }}
 
       - name: Publish for sideloading
@@ -93,12 +93,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp "${{ steps.ipa.outputs.file }}" OpenTune-iOS.ipa
-          title="OpenTune for iPhone v${{ steps.version.outputs.name }}"
-          notes="Unsigned build for SideStore, AltStore or Sideloadly, built from ${GITHUB_SHA::7}. In SideStore or AltStore, add the source https://justshivv.github.io/Opentune/ios/source.json to install OpenTune and get its updates on the phone."
+          cp "${{ steps.ipa.outputs.file }}" WeavTune-iOS.ipa
+          title="Weav-Tune for iPhone v${{ steps.version.outputs.name }}"
+          notes="Unsigned build for SideStore, AltStore or Sideloadly, built from ${GITHUB_SHA::7}. In SideStore or AltStore, add the source https://alejandrokundrah.github.io/weav-tune/ios/source.json to install Weav-Tune and get its updates on the phone."
           if gh release view ios > /dev/null 2>&1; then
             gh release edit ios --title "$title" --notes "$notes" --prerelease
           else
             gh release create ios --target "$GITHUB_SHA" --prerelease --title "$title" --notes "$notes"
           fi
-          gh release upload ios OpenTune-iOS.ipa --clobber
+          gh release upload ios WeavTune-iOS.ipa --clobber

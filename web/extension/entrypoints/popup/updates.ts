@@ -50,7 +50,7 @@ export function mountUpdates(parent: HTMLElement): void {
       }
       if (!newer) { status.textContent = `You're up to date (v${release.version}).`; return; }
       const file = firefox ? release.files?.firefox : release.files?.chrome;
-      if (!file || !/^opentune-extension-[^/\\]+\.zip$/.test(file)) throw new Error('The update download is invalid.');
+      if (!file || !/^weav-tune-extension-[^/\\]+\.zip$/.test(file)) throw new Error('The update download is invalid.');
       status.textContent = `v${release.version} is available. Browser-store installs update automatically. For a ZIP install, download, replace the unpacked files, then reload it in the extension manager.`;
       download.href = new URL(encodeURIComponent(file), endpoint).href;
       download.textContent = `Download v${release.version}`;

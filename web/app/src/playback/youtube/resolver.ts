@@ -114,8 +114,8 @@ export function excludeClient(videoId: string, client: PlayerClientName, why: st
   entries.set(client, Date.now() + EXCLUDE_MS);
 }
 
-/** Debug override (Debug page): localStorage "opentune:debug:clients" = "YTMUSIC,WEB". */
-export const DEBUG_CLIENTS_KEY = 'opentune:debug:clients';
+/** Debug override (Debug page): localStorage "weavtune:debug:clients" = "YTMUSIC,WEB". */
+export const DEBUG_CLIENTS_KEY = 'weavtune:debug:clients';
 
 function clientOrder(): readonly PlayerClientName[] {
   const forced = localStorage.getItem(DEBUG_CLIENTS_KEY)

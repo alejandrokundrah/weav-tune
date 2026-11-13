@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import type { DetectedExtension, DiscordPresenceOptions, DiscordState } from '@opentune/shared/bridge';
+import type { DetectedExtension, DiscordPresenceOptions, DiscordState } from '@weavtune/shared/bridge';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { queryClient } from '@/lib/queryClient';
@@ -100,6 +100,6 @@ export const useDiscordOptions = create<DiscordOptionsStore>()(
       set: (change) => set((s) => ({ options: { ...s.options, ...change } })),
       reset: () => set({ options: DEFAULT_DISCORD_OPTIONS }),
     }),
-    { name: 'opentune:discord', version: 1 },
+    { name: 'weavtune:discord', version: 1 },
   ),
 );

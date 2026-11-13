@@ -20,7 +20,7 @@ interface LyricsSettings {
   reset: () => void;
 }
 
-const KEY = 'opentune:lyrics';
+const KEY = 'weavtune:lyrics';
 type Saved = Pick<LyricsSettings, 'order' | 'disabled' | 'preferSyllables' | 'paxsenixKey'>;
 
 const DEFAULTS: Saved = {

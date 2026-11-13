@@ -1,5 +1,5 @@
-import { publicHttps } from '@opentune/shared/addons';
-import type { HttpRequest, HttpResponse } from '@opentune/shared/bridge';
+import { publicHttps } from '@weavtune/shared/addons';
+import type { HttpRequest, HttpResponse } from '@weavtune/shared/bridge';
 /** One page that asks for all of these add-on hosts at once. */
 export async function requestAddonPermission(url: string, urls: string[] = []): Promise<void> {
   const origins = [...new Set([url, ...urls].map(u => publicHttps(u).origin))].slice(0, 40);

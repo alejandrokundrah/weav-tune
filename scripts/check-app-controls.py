@@ -12,7 +12,7 @@ from playwright.sync_api import sync_playwright, expect
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'website-reports'
 OUT.mkdir(exist_ok=True)
-with tempfile.TemporaryDirectory(prefix='opentune-controls-') as directory:
+with tempfile.TemporaryDirectory(prefix='weavtune-controls-') as directory:
     with socket.socket() as reservation:
         reservation.bind(('127.0.0.1', 0))
         port = reservation.getsockname()[1]
@@ -78,7 +78,7 @@ with tempfile.TemporaryDirectory(prefix='opentune-controls-') as directory:
                 expect(page.locator('#sources .source').last.get_by_label('Available to listeners')).not_to_be_checked()
                 assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
                 assert page.evaluate('localStorage.length === 0 && sessionStorage.length === 1')
-                assert page.evaluate("sessionStorage.getItem('opentune.control.session') !== null")
+                assert page.evaluate("sessionStorage.getItem('weavtune.control.session') !== null")
                 page.reload()
                 expect(page.locator('#editor')).to_be_visible()
                 expect(page.locator('#login')).not_to_be_visible()

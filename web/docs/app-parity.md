@@ -1,4 +1,4 @@
-# OpenTune web and Android
+# Weav-Tune web and Android
 
 The web player extends the existing web application, using the current Android app as the design reference. It keeps account integration, search, albums, playlists, library, queue editing, lyrics, Listen Together and browser extension playback.
 
@@ -20,4 +20,4 @@ YouTube Music playback and account integration require the companion browser ext
 
 ## Validation
 
-Run `pnpm test`, `pnpm typecheck`, and `pnpm --filter @opentune/app build` from `web/`. Check appearance persistence, the phone dock, source dragging with mouse/touch/keyboard, the quality label at narrow widths, and light/dark contrast in a real browser before release.
+Run `pnpm test`, `pnpm typecheck`, and `pnpm --filter @weavtune/app build` from `web/`. Check appearance persistence, the phone dock, source dragging with mouse/touch/keyboard, the quality label at narrow widths, and light/dark contrast in a real browser before release.

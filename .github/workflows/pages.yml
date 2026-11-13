@@ -51,11 +51,11 @@ jobs:
       - name: Browser player and companion extensions
         working-directory: web
         env:
-          # OpenTune's own Discord application (a repository variable); see web/extension/lib/discord.ts.
+          # Weav-Tune's own Discord application (a repository variable); see web/extension/lib/discord.ts.
           DISCORD_APP_ID: ${{ vars.DISCORD_APP_ID || secrets.DISCORD_APP_ID }}
         run: |
           pnpm install --frozen-lockfile
-          pnpm --filter @opentune/extension icons
+          pnpm --filter @weavtune/extension icons
           pnpm build:site
           mkdir -p ../site/player
           cp -R app/dist/. ../site/player/
@@ -84,26 +84,26 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p site/ios
-          cp ios/OpenTune/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png site/ios/icon.png
+          cp ios/WeavTune/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png site/ios/icon.png
           if ! gh api "repos/${{ github.repository }}/releases/tags/ios" > ios-release.json 2>/dev/null; then
             echo "No iOS build published yet"; rm -f ios-release.json; exit 0
           fi
-          base="https://justshivv.github.io/Opentune"
+          base="https://alejandrokundrah.github.io/weav-tune"
           jq --arg base "$base" '
-            (.assets | map(select(.name == "OpenTune-iOS.ipa")) | first) as $ipa
+            (.assets | map(select(.name == "WeavTune-iOS.ipa")) | first) as $ipa
             | if $ipa == null then empty else
             {
-              name: "OpenTune",
-              identifier: "io.github.justshivv.opentune",
+              name: "Weav-Tune",
+              identifier: "io.github.alejandrokundrah.weavtune",
               subtitle: "A free music player",
               sourceURL: ($base + "/ios/source.json"),
               website: ($base + "/"),
               iconURL: ($base + "/ios/icon.png"),
               tintColor: "FF8A65",
               apps: [{
-                name: "OpenTune",
-                bundleIdentifier: "com.opentune.ios",
-                developerName: "justshivv",
+                name: "Weav-Tune",
+                bundleIdentifier: "com.weavtune.ios",
+                developerName: "alejandrokundrah",
                 subtitle: "Every song. No ads. No account.",
                 localizedDescription: "A free, open-source music player for the YouTube Music catalogue, with synced lyrics, radio once the queue runs out, background play, lock-screen controls and AirPlay. An early version of the Android app.",
                 iconURL: ($base + "/ios/icon.png"),

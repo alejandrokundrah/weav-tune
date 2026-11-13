@@ -10,8 +10,8 @@ import { RoomSession, type RoomPlayer, type RoomTrack, type RoomView } from './s
  * over the same relays, so a browser and phones can be in one room.
  */
 
-const NAME_KEY = 'opentune:together-name';
-const ASK_KEY = 'opentune:together-ask';
+const NAME_KEY = 'weavtune:together-name';
+const ASK_KEY = 'weavtune:together-ask';
 const read = (key: string) => { try { return localStorage.getItem(key); } catch { return null; } };
 const write = (key: string, value: string) => { try { localStorage.setItem(key, value); } catch { /* This session only. */ } };
 

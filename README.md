@@ -161,8 +161,8 @@ pnpm typecheck
 pnpm test
 
 # Build for production
-pnpm --filter @opentune/app build
-pnpm --filter @opentune/extension build
+pnpm --filter @weavtune/app build
+pnpm --filter @weavtune/extension build
 ```
 
 ### 2. Android App
@@ -187,7 +187,7 @@ cd ios
 xcodegen generate
 
 # Open in Xcode
-open OpenTune.xcodeproj
+open WeavTune.xcodeproj
 ```
 
 ---
@@ -201,7 +201,7 @@ weav-tune/
 │   ├── extension/        # WXT browser extension (Chrome, Edge, Firefox)
 │   └── shared/           # Shared types, RPC bridge, and protocol schemas
 ├── app/                  # Native Android app (Kotlin, Jetpack Compose, Media3)
-├── ios/                  # Native iOS app (SwiftUI, OpenTuneCore)
+├── ios/                  # Native iOS app (SwiftUI, WeavTuneCore)
 ├── desktop/              # Desktop JavaFX resources and integration
 ├── docs/                 # Documentation, specifications, and screenshots
 └── services/             # Lossless audio add-on microservices

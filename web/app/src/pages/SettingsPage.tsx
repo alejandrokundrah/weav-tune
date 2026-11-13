@@ -1,10 +1,11 @@
-import { ArrowUpRight, AudioLines, ChevronRight, Info, Mic2, Palette, Play, Plug, Smartphone, Tv, Users, Wrench, type LucideIcon } from 'lucide-react';
+import { ArrowUpRight, AudioLines, ChevronRight, Info, Palette, Play, Plug, Smartphone, Tv, Users, Wrench } from 'lucide-react';
 import { lazy, Suspense, useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react';
 import { MdOutlineExtension } from 'react-icons/md';
 import { SiApplemusic, SiDiscord, SiGithub, SiSpotify, SiYoutubemusic } from 'react-icons/si';
 import { PageHeader } from '@/components/PageHeader';
 import { PrefetchLink } from '@/components/PrefetchLink';
 import { LogoMark } from '@/components/icons/LogoMark';
+import { LyricsIcon } from '@/components/icons/Transport';
 import { config } from '@/config';
 import { useRemoteConfig } from '@/config/remote';
 import { useAddons } from '@/addons/client';
@@ -58,10 +59,11 @@ function ExternalRow({ href, icon, title, value }: { href: string; icon: ReactNo
 }
 
 /** The page's sections, in order: the side list and the chips are built from this. */
-const SECTIONS: { id: string; name: string; icon: LucideIcon; color: string }[] = [
+type SectionIcon = ComponentType<{ size?: number; strokeWidth?: number | string }>;
+const SECTIONS: { id: string; name: string; icon: SectionIcon; color: string }[] = [
   { id: 'audio', name: 'Audio', icon: AudioLines, color: '#25a0d4' },
   { id: 'playback', name: 'Playback', icon: Play, color: '#2fa84f' },
-  { id: 'lyrics', name: 'Lyrics', icon: Mic2, color: '#d6337a' },
+  { id: 'lyrics', name: 'Lyrics', icon: LyricsIcon, color: '#d6337a' },
   { id: 'appearance', name: 'Appearance', icon: Palette, color: '#8e5bd8' },
   { id: 'accounts', name: 'Accounts', icon: Plug, color: '#3478f6' },
   { id: 'together', name: 'Listen Together', icon: Users, color: '#f08a24' },
@@ -181,7 +183,7 @@ function ExtensionCard() {
 
 /**
  * Settings (SettingsSheet on the phone): sources and playback first, then
- * how it looks, the accounts it uses, Listen Together, and where OpenTune
+ * how it looks, the accounts it uses, Listen Together, and where Weav-Tune
  * lives. One page, grouped rows, a list of the sections beside it.
  */
 export default function SettingsPage() {

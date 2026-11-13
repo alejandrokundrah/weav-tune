@@ -8,7 +8,7 @@ plugins {
 }
 
 /*
- * OpenTune for Windows, macOS and Linux. It compiles the parts of :core
+ * Weav-Tune for Windows, macOS and Linux. It compiles the parts of :core
  * that are plain Kotlin as they are: the YouTube Music client and parser,
  * the song models, the HTTP client, settings, lyrics and Subsonic.
  * The few Android classes those touch (Context, SharedPreferences, Log)
@@ -25,49 +25,49 @@ val appVersionCode = Regex("""versionCode = (\d+)""").find(appBuild)!!.groupValu
 
 val coreSources = rootProject.file("core/src/main/java")
 val sharedFromCore = listOf(
-    "com/opentune/data/model/**",
-    "com/opentune/data/innertube/Innertube.kt",
-    "com/opentune/data/innertube/InnertubeParser.kt",
-    "com/opentune/data/innertube/PlayerClient.kt",
-    "com/opentune/data/podcasts/PodcastParser.kt",
-    "com/opentune/data/podcasts/PodcastModels.kt",
-    "com/opentune/data/Http.kt",
-    "com/opentune/data/DebugLog.kt",
-    "com/opentune/data/AppLog.kt",
-    "com/opentune/data/TrackIds.kt",
-    "com/opentune/data/settings/AppSettings.kt",
-    "com/opentune/data/history/ListeningHistoryTarget.kt",
+    "com/weavtune/data/model/**",
+    "com/weavtune/data/innertube/Innertube.kt",
+    "com/weavtune/data/innertube/InnertubeParser.kt",
+    "com/weavtune/data/innertube/PlayerClient.kt",
+    "com/weavtune/data/podcasts/PodcastParser.kt",
+    "com/weavtune/data/podcasts/PodcastModels.kt",
+    "com/weavtune/data/Http.kt",
+    "com/weavtune/data/DebugLog.kt",
+    "com/weavtune/data/AppLog.kt",
+    "com/weavtune/data/TrackIds.kt",
+    "com/weavtune/data/settings/AppSettings.kt",
+    "com/weavtune/data/history/ListeningHistoryTarget.kt",
     // The phone's listening stats, daily mixes and speed dial, fed from the desktop's own plays.
-    "com/opentune/data/history/History.kt",
-    "com/opentune/data/history/Wrapped.kt",
-    "com/opentune/data/history/DailyMixes.kt",
-    "com/opentune/data/history/SpeedDial.kt",
-    "com/opentune/data/history/ListenedCollections.kt",
-    "com/opentune/data/library/Hidden.kt",
-    "com/opentune/data/SavedFile.kt",
+    "com/weavtune/data/history/History.kt",
+    "com/weavtune/data/history/Wrapped.kt",
+    "com/weavtune/data/history/DailyMixes.kt",
+    "com/weavtune/data/history/SpeedDial.kt",
+    "com/weavtune/data/history/ListenedCollections.kt",
+    "com/weavtune/data/library/Hidden.kt",
+    "com/weavtune/data/SavedFile.kt",
     // Artist pages: Apple Music's header photo and the artist's signature.
-    "com/opentune/data/covers/AppleArtistArt.kt",
-    "com/opentune/data/covers/ArtistSignatures.kt",
+    "com/weavtune/data/covers/AppleArtistArt.kt",
+    "com/weavtune/data/covers/ArtistSignatures.kt",
     // Lyrics from every source the phone asks, without the romanizer (Android's ICU).
-    "com/opentune/data/lyrics/Lyrics.kt",
-    "com/opentune/data/lyrics/LyricsRepository.kt",
-    "com/opentune/data/lyrics/LyricsQuality.kt",
-    "com/opentune/data/lyrics/SongParts.kt",
-    "com/opentune/data/lyrics/BetterLyrics.kt",
-    "com/opentune/data/lyrics/KuGou.kt",
-    "com/opentune/data/lyrics/LyricsPlus.kt",
-    "com/opentune/data/lyrics/LrcRed.kt",
-    "com/opentune/data/lyrics/Paxsenix.kt",
-    "com/opentune/data/metadata/Deezer.kt",
-    "com/opentune/data/metadata/AppleWebToken.kt",
-    "com/opentune/data/lyrics/NetEase.kt",
-    "com/opentune/data/lyrics/SimpMusic.kt",
-    "com/opentune/data/lyrics/YouTubeCaptions.kt",
-    "com/opentune/data/subsonic/Subsonic.kt",
+    "com/weavtune/data/lyrics/Lyrics.kt",
+    "com/weavtune/data/lyrics/LyricsRepository.kt",
+    "com/weavtune/data/lyrics/LyricsQuality.kt",
+    "com/weavtune/data/lyrics/SongParts.kt",
+    "com/weavtune/data/lyrics/BetterLyrics.kt",
+    "com/weavtune/data/lyrics/KuGou.kt",
+    "com/weavtune/data/lyrics/LyricsPlus.kt",
+    "com/weavtune/data/lyrics/LrcRed.kt",
+    "com/weavtune/data/lyrics/Paxsenix.kt",
+    "com/weavtune/data/metadata/Deezer.kt",
+    "com/weavtune/data/metadata/AppleWebToken.kt",
+    "com/weavtune/data/lyrics/NetEase.kt",
+    "com/weavtune/data/lyrics/SimpMusic.kt",
+    "com/weavtune/data/lyrics/YouTubeCaptions.kt",
+    "com/weavtune/data/subsonic/Subsonic.kt",
     // The add-on wire protocol, as the phone reads it.
-    "com/opentune/data/addons/AddonModels.kt",
+    "com/weavtune/data/addons/AddonModels.kt",
     // The owner's signed app configuration from the VPS, which carries the published add-ons.
-    "com/opentune/data/config/RemoteConfig.kt",
+    "com/weavtune/data/config/RemoteConfig.kt",
     // NewPipe's patched helper, see that file.
     "org/schabi/newpipe/extractor/utils/Utils.java",
 )
@@ -81,14 +81,14 @@ val sharedFromCore = listOf(
  */
 val appSources = rootProject.file("app/src/main/java")
 val sharedFromApp = listOf(
-    "com/opentune/ui/BottomChrome.kt",
-    "com/opentune/ui/SideChrome.kt",
-    "com/opentune/ui/PageMotion.kt",
-    "com/opentune/ui/WindowLayout.kt",
-    "com/opentune/ui/player/PlayerButtons.kt",
-    "com/opentune/ui/player/PlayerIcons.kt",
-    "com/opentune/ui/components/FocusRing.kt",
-    "com/opentune/ui/components/Motion.kt",
+    "com/weavtune/ui/BottomChrome.kt",
+    "com/weavtune/ui/SideChrome.kt",
+    "com/weavtune/ui/PageMotion.kt",
+    "com/weavtune/ui/WindowLayout.kt",
+    "com/weavtune/ui/player/PlayerButtons.kt",
+    "com/weavtune/ui/player/PlayerIcons.kt",
+    "com/weavtune/ui/components/FocusRing.kt",
+    "com/weavtune/ui/components/Motion.kt",
 )
 
 /** core's BuildConfig, for the shared files that read it, with this build's version. */
@@ -96,13 +96,13 @@ val generateBuildConfig = tasks.register("generateBuildConfig") {
     val out = layout.buildDirectory.dir("generated/buildconfig")
     outputs.dir(out)
     inputs.property("version", appVersionName)
-    // OpenTune's Last.fm application, as the phone builds take it (core/build.gradle.kts); empty
+    // Weav-Tune's Last.fm application, as the phone builds take it (core/build.gradle.kts); empty
     // in a local build, where Settings asks for the listener's own key instead.
     val lastFmKey = providers.environmentVariable("LASTFM_API_KEY").orElse("").map { it.trim() }
     val lastFmSecret = providers.environmentVariable("LASTFM_API_SECRET").orElse("").map { it.trim() }
     inputs.property("lastFmKey", lastFmKey)
     inputs.property("lastFmSecret", lastFmSecret)
-    // OpenTune's own Discord application (discord.com/developers, named "OpenTune"): Discord titles
+    // Weav-Tune's own Discord application (discord.com/developers, named "Weav-Tune"): Discord titles
     // the card with the application's name. Empty in a local build, where Settings takes one.
     val discordAppId = providers.environmentVariable("DISCORD_APP_ID").orElse("").map { it.trim() }
     inputs.property("discordAppId", discordAppId)
@@ -111,11 +111,11 @@ val generateBuildConfig = tasks.register("generateBuildConfig") {
         listOf(lastFmKey.get(), lastFmSecret.get()).forEach {
             require(it.isEmpty() || it.matches(Regex("[a-fA-F0-9]{32}"))) { "Last.fm credentials must be 32 hex characters" }
         }
-        val file = out.get().file("com/opentune/core/BuildConfig.kt").asFile
+        val file = out.get().file("com/weavtune/core/BuildConfig.kt").asFile
         file.parentFile.mkdirs()
         file.writeText(
             """
-            |package com.opentune.core
+            |package com.weavtune.core
             |
             |object BuildConfig {
             |    const val DEBUG = false
@@ -137,7 +137,7 @@ sourceSets {
             srcDir(appSources)
             srcDir(generateBuildConfig)
             srcDir("src/shim/kotlin")
-            include("com/opentune/desktop/**", "com/opentune/core/**", "shim/**")
+            include("com/weavtune/desktop/**", "com/weavtune/core/**", "shim/**")
             include(sharedFromCore.filter { it.endsWith(".kt") || it.endsWith("**") })
             include(sharedFromApp)
         }
@@ -253,40 +253,40 @@ dependencies {
 }
 
 tasks.test {
-    // The live check runs only when asked: -Dopentune.live=true
-    systemProperty("opentune.live", System.getProperty("opentune.live") ?: "false")
-    System.getProperty("opentune.video")?.let { systemProperty("opentune.video", it) }
-    // Pictures of the window, drawn offscreen: -Dopentune.shots=/some/folder
-    System.getProperty("opentune.shots")?.let { systemProperty("opentune.shots", it) }
+    // The live check runs only when asked: -Dweavtune.live=true
+    systemProperty("weavtune.live", System.getProperty("weavtune.live") ?: "false")
+    System.getProperty("weavtune.video")?.let { systemProperty("weavtune.video", it) }
+    // Pictures of the window, drawn offscreen: -Dweavtune.shots=/some/folder
+    System.getProperty("weavtune.shots")?.let { systemProperty("weavtune.shots", it) }
     testLogging { showStandardStreams = true }
 }
 
 compose.desktop {
     application {
-        mainClass = "com.opentune.desktop.MainKt"
+        mainClass = "com.weavtune.desktop.MainKt"
         nativeDistributions {
             // What each system's own installer tools make; the AppImage and the portable zip are wrapped
             // around createDistributable's app image by CI (see packaging/appimage.sh).
             targetFormats(TargetFormat.Msi, TargetFormat.Exe, TargetFormat.Dmg, TargetFormat.Deb, TargetFormat.Rpm)
-            packageName = "OpenTune"
+            packageName = "Weav-Tune"
             // Installers need MAJOR.MINOR.BUILD with MAJOR above 0; the app's own version shows inside.
             packageVersion = "1.0.$appVersionCode"
             description = "A music player for YouTube Music"
-            vendor = "OpenTune"
+            vendor = "Weav-Tune"
             // What jlink's scan suggests, plus scripting for Rhino, java.sql for the library and EC ciphers for HTTPS.
             modules("java.instrument", "java.management", "java.net.http", "java.scripting", "java.sql", "jdk.crypto.ec", "jdk.dynalink", "jdk.httpserver", "jdk.jfr", "jdk.unsupported")
             macOS {
                 iconFile.set(project.file("packaging/icons/AppIcon.icns"))
-                bundleID = "com.opentune.desktop"
+                bundleID = "com.weavtune.desktop"
             }
             windows {
                 iconFile.set(project.file("packaging/icons/AppIcon.ico"))
-                menuGroup = "OpenTune"
+                menuGroup = "Weav-Tune"
                 upgradeUuid = "6c1f6c2e-5a3b-4d34-9a51-0e9c1d8f2a71"
             }
             linux {
                 iconFile.set(project.file("packaging/icons/AppIcon.png"))
-                debMaintainer = "78946189+justshivv@users.noreply.github.com"
+                debMaintainer = "alejandrokundrah@users.noreply.github.com"
                 rpmLicenseType = "GPL-3.0"
             }
         }

@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * The part of Android's Context the shared code reads on the desktop: its
  * folders, its preferences and no system services. Everything lives under
- * one folder, ~/.opentune unless [root] is set.
+ * one folder, ~/.weavtune unless [root] is set.
  */
 public class Context {
     public static final int MODE_PRIVATE = 0;

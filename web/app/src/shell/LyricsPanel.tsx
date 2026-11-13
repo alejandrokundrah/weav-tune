@@ -32,8 +32,8 @@ type AmLyricsElement = HTMLElement & {
  */
 const HIDE_FOOTER = '.lyrics-footer { visibility: hidden !important; pointer-events: none !important; }';
 
-/** The phone's lyric typeface (@font-face in styles/global.css), then the app's. */
-const LYRIC_FONT = "'DM Sans', 'DM Sans', system-ui, sans-serif";
+/** The app's Kyonira stack (@font-face in styles/tokens.css), with DM Sans as fallback. */
+const LYRIC_FONT = "'Kyonira', 'DM Sans', system-ui, sans-serif";
 
 let lyricFont: Promise<void> | null = null;
 let lyricFontLoaded = false;
@@ -82,8 +82,8 @@ const FAR_LINES =
  * side panel keeps the library's own sizes.
  */
 const FULL_SIZE =
-  ':host([data-full]) .lyrics-container { --lyplus-font-size-base: var(--opentune-lyric-size, 34px);' +
-  ' --am-lyrics-line-height: 1.2; --am-lyrics-line-spacing: calc(var(--opentune-lyric-size, 34px) * 0.7);' +
+  ':host([data-full]) .lyrics-container { --lyplus-font-size-base: var(--weavtune-lyric-size, 34px);' +
+  ' --am-lyrics-line-height: 1.2; --am-lyrics-line-spacing: calc(var(--weavtune-lyric-size, 34px) * 0.7);' +
   ' --lyrics-scroll-padding-top: 30%; --am-lyrics-inline-padding: 0px; }';
 
 /**
@@ -347,7 +347,7 @@ function CanvasBackdrop({ url }: { url: string }) {
 const panel = 'group/panel relative isolate flex min-h-0 flex-1 flex-col overflow-hidden';
 // The full-screen player's column (report §7): lines 26px, then 30px from 980px, 36px from 1320px and 42px from 1680px.
 const fullSizes =
-  '[--opentune-lyric-size:26px] min-[980px]:[--opentune-lyric-size:30px] min-[1320px]:[--opentune-lyric-size:36px] min-[1680px]:[--opentune-lyric-size:42px]';
+  '[--weavtune-lyric-size:26px] min-[980px]:[--weavtune-lyric-size:30px] min-[1320px]:[--weavtune-lyric-size:36px] min-[1680px]:[--weavtune-lyric-size:42px]';
 
 /**
  * The lyrics, with their provider picker and empty states: the side panel

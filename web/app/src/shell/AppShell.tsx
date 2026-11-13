@@ -206,6 +206,15 @@ export function AppShell() {
       {/* The side panel slides in from beyond the right edge; never let it scroll the page. */}
       <div className="relative min-h-0 overflow-hidden">
         <Appearance />
+        {/* Refraction source for the replica glass sheen; the Apple Music player does not use it. */}
+        <svg className="ot-replica-defs" width="0" height="0" aria-hidden="true" focusable="false">
+          <defs>
+            <filter id="otReplicaRefract" x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
+              <feTurbulence type="fractalNoise" baseFrequency="0.010 0.018" numOctaves="2" seed="7" result="noise" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+          </defs>
+        </svg>
         {/* Ambient Liquid Glass Backdrop Canvas */}
         <div className="ot-liquid-canvas pointer-events-none absolute inset-0 -z-0 overflow-hidden" aria-hidden="true">
           <div className="ot-liquid-orb ot-orb-1" />

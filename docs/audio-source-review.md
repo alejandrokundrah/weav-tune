@@ -4,9 +4,9 @@
 
 Reviewed 2026-10-09 against the repositories' then-current default branches. This is a source-capability review, not a listening test or a claim that every backend works in every country. READMEs and repository trees were checked for all 30 clients; the relevant provider implementations were examined for the strongest alternative-source candidates.
 
-## Result for OpenTune
+## Result for Weav-Tune
 
-The best additional format found was genuine lossless FLAC, including Qobuz hi-res. OpenTune now tries matching Qobuz catalog results and the Spotui/SpotiFLAC Tidal → Amazon → Qobuz routes when **Lossless streaming** is enabled. A returned URL is accepted only after reading its FLAC STREAMINFO and checking precision and duration. A FLAC container cannot prove that the upstream master was never transcoded, and greater sample rates do not guarantee an audible improvement.
+The best additional format found was genuine lossless FLAC, including Qobuz hi-res. Weav-Tune now tries matching Qobuz catalog results and the Spotui/SpotiFLAC Tidal → Amazon → Qobuz routes when **Lossless streaming** is enabled. A returned URL is accepted only after reading its FLAC STREAMINFO and checking precision and duration. A FLAC container cannot prove that the upstream master was never transcoded, and greater sample rates do not guarantee an audible improvement.
 
 An independent **JioSaavn quality upgrade** option adds 320 kbps lossy audio. It requires an explicit catalog quality flag, a known CDN URL pattern, an MP4 header, and a plausible file-size-derived bitrate. It respects the selected streaming ceiling and the existing codec-aware quality score; it does not replace a pinned YouTube Premium upgrade. Bitrate is a selection heuristic, not proof of perceptual superiority across codecs or masters.
 
@@ -22,13 +22,13 @@ Higher-quality sources settings contain a shared unmetered-only default, backgro
 - Odesli's unauthenticated mapping endpoint returned HTTP 401 with `PUBLIC_API_ACCESS_DEPRECATED`. The Spotui-style mapping chain therefore cannot currently be relied upon without an upstream change. The Qobuz catalog route works independently of Odesli, and failed mappings have a cooldown.
 - The checked public Qobuz routes were unavailable: Kennyy timed out, TrypT returned HTTP 503, and Squid did not resolve from the test environment. Jumo's advertised search path returned a frontend HTML document. Only the matching Kennyy/TrypT protocol is included as defaults; a user-operated compatible HTTPS relay can be configured. Live FLAC playback remains unverified.
 - SpotiFLAC verification requires the user's interactive challenge and a non-expired session. No credentials from another client are supplied. Session preferences are excluded from Android backup.
-- Verification follow-up: the provider's live `/v2/challenge` page includes `action=session` and per-challenge `cData`, which the copied inline widget omitted. OpenTune now loads that provider-hosted page for the bootstrap challenge ID and reads its top-level `zarzGrant` result, then exchanges it once for a validated session. No CAPTCHA is solved automatically. Bootstrap and page loading were checked live; interactive session issuance still requires device confirmation.
+- Verification follow-up: the provider's live `/v2/challenge` page includes `action=session` and per-challenge `cData`, which the copied inline widget omitted. Weav-Tune now loads that provider-hosted page for the bootstrap challenge ID and reads its top-level `zarzGrant` result, then exchanges it once for a validated session. No CAPTCHA is solved automatically. Bootstrap and page loading were checked live; interactive session issuance still requires device confirmation.
 
 ## Client inventory
 
 “No additional source” below means no demonstrated better source identified in this review; it is not an exhaustive claim about all branches, plugins or future releases.
 
-| Client | Source/quality evidence | OpenTune decision |
+| Client | Source/quality evidence | Weav-Tune decision |
 | --- | --- | --- |
 | [ArchiveTune](https://github.com/rukamori/ArchiveTune) | YouTube Music client; original link redirects to rukamori. | No additional source selected. |
 | [AuraMusic](https://github.com/TeamAuraMusic/AuraMusic) | YouTube Music; other named providers in the README supply lyrics. | No additional source selected. |
@@ -36,19 +36,19 @@ Higher-quality sources settings contain a shared unmetered-only default, backgro
 | [BloomeeTunes](https://github.com/HemantKArya/BloomeeTunes) | Local playback and Rust-backed `.bex` streaming plugins. | Quality depends on the installed plugin; no universal higher-quality endpoint identified. |
 | [Echo Music](https://github.com/EchoMusicApp/Echo-Music) | YouTube Music streaming. | No additional source selected. |
 | [Gyawun Music](https://github.com/sheikhhaziq/gyawun_music) | YouTube Music streaming. | No additional source selected. |
-| [Just-Listen](https://github.com/RLD-JL/Just-Listen) | Audius public API; README describes 320 kbps streams and source points to `api.audius.co`. | A distinct artist-uploaded catalog, not demonstrated as a better replacement for OpenTune's recordings or added 320 kbps route. No automatic substitution. |
+| [Just-Listen](https://github.com/RLD-JL/Just-Listen) | Audius public API; README describes 320 kbps streams and source points to `api.audius.co`. | A distinct artist-uploaded catalog, not demonstrated as a better replacement for Weav-Tune's recordings or added 320 kbps route. No automatic substitution. |
 | [Kreate](https://github.com/knighthat/Kreate) | YouTube-based client. | No additional source selected. |
 | [lyraMusic](https://github.com/lyraMusicApp/lyraMusic) | YouTube Music engine; Apple Music/Spotify/etc. in its multi-provider description concern lyrics. | No additional source selected. |
 | [M3-Play](https://github.com/JAY01-CYBER/M3-Play) | Inspected playback service uses YouTube. | No additional source selected. |
 | [Meld](https://github.com/FrancescoGrazioso/Meld) | Qobuz FLAC/hi-res provider with community catalog and download APIs. | Added compatible catalog lookup and relay support, adapted under GPLv3. |
-| [Metrolist](https://github.com/MetrolistGroup/Metrolist) | YouTube Music/InnerTubeX; original link redirects. | Existing OpenTune YouTube extraction/quality upgrades remain. |
+| [Metrolist](https://github.com/MetrolistGroup/Metrolist) | YouTube Music/InnerTubeX; original link redirects. | Existing Weav-Tune YouTube extraction/quality upgrades remain. |
 | [Music-You](https://github.com/DanielSevillano/music-you) | YouTube Music streaming. | No additional source selected. |
 | [Musify](https://github.com/gokadzev/Musify) | Current README describes plugins and external sources. | No independently verified higher-quality endpoint to bundle. |
 | [Muzo](https://github.com/Shashwat-CODING/Muzo) | Frozen public snapshot: YouTube extraction, JioSaavn metadata. Current development is described as closed source. | No current playback-quality claim inferred from unavailable code. |
 | [Muzza](https://github.com/Maloy-Android/Muzza) | YouTube Music client. | No additional source selected. |
 | [Namida](https://github.com/namidaco/namida) | Local music/video and YouTube streaming. | Local format support does not establish a new lossless streaming source. |
 | [NomaTune](https://github.com/Shahdullah/NomaTune) | Its hi-res resolver explores Bandcamp/SoundCloud through NewPipe, including lossy fallbacks/estimated bitrates. | A resolver name is not proof of lossless audio; no general replacement imported. |
-| [N-Zik](https://github.com/N-Zik-Group/N-Zik) | YouTube Premium formats with user's account, plus Invidious access to YouTube. | OpenTune already has authenticated YouTube quality upgrades. |
+| [N-Zik](https://github.com/N-Zik-Group/N-Zik) | YouTube Premium formats with user's account, plus Invidious access to YouTube. | Weav-Tune already has authenticated YouTube quality upgrades. |
 | [RiPlay](https://github.com/fast4x/RiPlay) | Current README describes the YouTube iframe player for online content. | No additional source selected. |
 | [SimpMusic](https://github.com/maxrave-dev/SimpMusic) | YouTube Opus/AAC up to 256 kbps with Premium. | Existing authenticated quality path retained. |
 | [SoundPod](https://github.com/arunnechully/SoundPod) | YouTube Music streaming. | No additional source selected. |

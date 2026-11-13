@@ -21,18 +21,18 @@ def prepare(commit, output):
             raise ValueError(f'{name} must contain 1–{maximum} characters')
     output.mkdir(parents=True, exist_ok=True)
     shutil.copytree(metadata, output / 'fastlane/metadata/android', dirs_exist_ok=True)
-    template = (ROOT / 'distribution/fdroid/com.opentune.yml.in').read_text()
+    template = (ROOT / 'distribution/fdroid/com.weavtune.yml.in').read_text()
     for key, value in {'VERSION': version, 'VERSION_CODE': str(code), 'COMMIT': commit}.items():
         template = template.replace('@' + key + '@', value)
     (output / 'fdroid').mkdir(exist_ok=True)
-    (output / 'fdroid/com.opentune.yml').write_text(template)
+    (output / 'fdroid/com.weavtune.yml').write_text(template)
     (output / 'release.json').write_text(json.dumps({
-        'name': 'OpenTune', 'packageName': 'com.opentune', 'versionName': version,
+        'name': 'Weav-Tune', 'packageName': 'com.weavtune', 'versionName': version,
         'versionCode': code, 'sourceCommit': commit,
-        'website': 'https://justshivv.github.io/Opentune/',
-        'privacyPolicy': 'https://justshivv.github.io/Opentune/privacy/',
-        'sourceCode': 'https://github.com/justshivv/Opentune',
-        'releasePage': 'https://github.com/justshivv/Opentune/releases/latest',
+        'website': 'https://alejandrokundrah.github.io/weav-tune/',
+        'privacyPolicy': 'https://alejandrokundrah.github.io/weav-tune/privacy/',
+        'sourceCode': 'https://github.com/alejandrokundrah/weav-tune',
+        'releasePage': 'https://github.com/alejandrokundrah/weav-tune/releases/latest',
         'fdroidStatus': 'Submission draft; source build and scanner review required',
     }, indent=2) + '\n')
     shutil.copy(ROOT / 'docs/publishing.md', output / 'PUBLISHING.md')

@@ -1,4 +1,4 @@
-import type { HttpRequest, HttpResponse } from '@opentune/shared/bridge';
+import type { HttpRequest, HttpResponse } from '@weavtune/shared/bridge';
 
 import { LYRIC_ORIGINS, patternOf } from './lyricHosts';
 

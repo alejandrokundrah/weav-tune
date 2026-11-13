@@ -26,11 +26,11 @@ The client is integrated with the shared Android playback/download engine and ph
 
 `AddonProtocolTest`, `AddonStoreTest`, and `AddonResolverTest` cover URL handling, quality negotiation, cache/cooldown behavior, persistence, priority/fallback, strict matching and provider restrictions. `scripts/probe-audio-addons.py` performs optional live compatibility checks of the three public example services and redacts URLs. Endpoint success does not establish availability for all recordings or verify playback on a physical device.
 
-Protocol reference: [BitChord](https://github.com/kushagrasinghx/BitChord), GPL-3.0. OpenTune's HTTP adapter is implemented here using that documented contract; the browser preview adapts the GPL-3.0 BitChord web player; Android does not run downloaded addon code.
+Protocol reference: [BitChord](https://github.com/kushagrasinghx/BitChord), GPL-3.0. Weav-Tune's HTTP adapter is implemented here using that documented contract; the browser preview adapts the GPL-3.0 BitChord web player; Android does not run downloaded addon code.
 
 ## Phone-to-TV sign-in
 
-Settings → Account → Sign in with your phone displays a two-minute QR code. Scan it with your signed-in Android phone, open OpenTune, and explicitly approve the target. Both devices must be on the same local network. The session is AES-256-GCM encrypted with a fresh key carried in the QR, sent directly to the TV, accepted once and acknowledged with an authenticated response. The website receives no session. Guest network isolation can block pairing. This is Android phone/TV session pairing, not Google device-code OAuth or a desktop/Wear login implementation.
+Settings → Account → Sign in with your phone displays a two-minute QR code. Scan it with your signed-in Android phone, open Weav-Tune, and explicitly approve the target. Both devices must be on the same local network. The session is AES-256-GCM encrypted with a fresh key carried in the QR, sent directly to the TV, accepted once and acknowledged with an authenticated response. The website receives no session. Guest network isolation can block pairing. This is Android phone/TV session pairing, not Google device-code OAuth or a desktop/Wear login implementation.
 
 ## Decoder validation for the preview
 
@@ -38,7 +38,7 @@ A live probe of **Old Skool — Prem Dhillon** on 21 October 2026 returned BluBi
 FLAC inside HLS. FFmpeg identified 16-bit, 44.1 kHz, stereo FLAC. Monochrome and
 Lossless Bridge returned direct FLAC at the same measured resolution. That
 confirms the served formats, not audible playback on every Android device.
-OpenTune now prefers platform software FLAC decoders and excludes Samsung's
+Weav-Tune now prefers platform software FLAC decoders and excludes Samsung's
 known timestamp-bugged vendor FLAC decoders, following BitChord's workaround.
 Actual file precision is read from STREAMINFO, including MP4 initialization
 blocks; a float output buffer does not earn a Hi-Res label.
@@ -50,4 +50,4 @@ expired upstream URL can still require fallback; uninterrupted playback cannot
 be guaranteed by a third-party addon. Cached metadata expiry alone no longer
 invalidates an actively pinned stream.
 
-The Sources screen has grab handles for drag reordering, plus Move up/down actions. Source order survives restarts. Settings → About → OpenTune on Web & TV explains the browser preview and local TV QR pairing. The community invitation appears at most once every 30 days, after five days of use, with a permanent opt-out.
+The Sources screen has grab handles for drag reordering, plus Move up/down actions. Source order survives restarts. Settings → About → Weav-Tune on Web & TV explains the browser preview and local TV QR pairing. The community invitation appears at most once every 30 days, after five days of use, with a permanent opt-out.

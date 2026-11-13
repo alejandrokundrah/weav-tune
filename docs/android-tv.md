@@ -1,7 +1,7 @@
-# OpenTune on Android TV and Google TV
+# Weav-Tune on Android TV and Google TV
 
 The Android APK also runs on Android TV and Google TV. Install the signed APK from
-OpenTune's GitHub release or preview artifact, then open OpenTune from the TV's apps
+Weav-Tune's GitHub release or preview artifact, then open Weav-Tune from the TV's apps
 row. Google Play availability additionally requires a TV store submission and review;
 the launcher declaration does not publish the app to Google Play.
 

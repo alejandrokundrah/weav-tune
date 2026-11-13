@@ -25,23 +25,23 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - name: Prepare official signed preview
         env:
-          KEYSTORE_BASE64: ${{ secrets.OPENTUNE_KEYSTORE_BASE64 }}
+          KEYSTORE_BASE64: ${{ secrets.WEAVTUNE_KEYSTORE_BASE64 }}
         run: |
           test -n "$KEYSTORE_BASE64" || { echo 'Official release signing key is required.'; exit 1; }
           printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/verification.keystore"
-          echo "OPENTUNE_KEYSTORE=$RUNNER_TEMP/verification.keystore" >> "$GITHUB_ENV"
+          echo "WEAVTUNE_KEYSTORE=$RUNNER_TEMP/verification.keystore" >> "$GITHUB_ENV"
           sed -i 's/versionName = "\([^"]*\)"/versionName = "\1-verification-preview.2"/' app/build.gradle.kts
       - name: Test public-source isolation
-        run: ./gradlew --no-daemon :core:testDebugUnitTest --tests 'com.opentune.data.addons.*'
+        run: ./gradlew --no-daemon :core:testDebugUnitTest --tests 'com.weavtune.data.addons.*'
       - name: Build Android and TV client
         env:
-          OPENTUNE_KEYSTORE_PASSWORD: ${{ secrets.OPENTUNE_KEYSTORE_PASSWORD }}
-          OPENTUNE_KEY_ALIAS: ${{ secrets.OPENTUNE_KEY_ALIAS }}
-          OPENTUNE_KEY_PASSWORD: ${{ secrets.OPENTUNE_KEY_PASSWORD }}
+          WEAVTUNE_KEYSTORE_PASSWORD: ${{ secrets.WEAVTUNE_KEYSTORE_PASSWORD }}
+          WEAVTUNE_KEY_ALIAS: ${{ secrets.WEAVTUNE_KEY_ALIAS }}
+          WEAVTUNE_KEY_PASSWORD: ${{ secrets.WEAVTUNE_KEY_PASSWORD }}
         run: ./gradlew --no-daemon :app:assembleRelease
       - uses: actions/upload-artifact@v4
         with:
-          name: OpenTune-verified-source-signed
+          name: Weav-Tune-verified-source-signed
           path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error
           retention-days: 14
@@ -63,10 +63,10 @@ jobs:
         working-directory: web
       - run: pnpm typecheck && pnpm test
         working-directory: web
-      - run: pnpm --filter @opentune/extension icons && pnpm build:site
+      - run: pnpm --filter @weavtune/extension icons && pnpm build:site
         working-directory: web
       - uses: actions/upload-artifact@v4
         with:
-          name: OpenTune-verified-source-web
+          name: Weav-Tune-verified-source-web
           path: web/app/dist
           if-no-files-found: error

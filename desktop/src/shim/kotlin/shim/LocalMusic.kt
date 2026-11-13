@@ -1,4 +1,4 @@
-package com.opentune.data.local
+package com.weavtune.data.local
 
 /** The phone's music files are read through MediaStore; on the desktop there are none, only the id prefix. */
 object LocalMusic {
