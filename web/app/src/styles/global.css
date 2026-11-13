@@ -12,6 +12,7 @@
 @import 'tailwindcss/utilities.css' layer(utilities);
 @import './tokens.css' layer(base);
 @import './weavtune.css';
+@import './sidebar.css';
 @import './home.css';
 @import './motion.css';
 

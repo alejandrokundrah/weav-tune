@@ -1,0 +1,117 @@
+/* ==========================================================================
+   Sidebar, after the brand design (shell/Sidebar.tsx)
+
+   Every row is a rounded tile and a name. The tiles are grey and the page you are on turns its tile
+   to the accent colour; its row catches a little light and carries a bar of the accent against the
+   sidebar's right edge. Section names are small capitals with room between the letters. The fold to a
+   rail (weavtune.css) keeps working: the tiles stay where the icons were.
+   ========================================================================== */
+
+.ot-side {
+  --ws-tile: 30px;
+}
+
+/* ---- Rows ---------------------------------------------------------------- */
+
+.ot-side .ot-nav-item {
+  position: relative;
+  height: 48px;
+  margin: 0 -12px 2px -8px;
+  padding: 0 12px 0 8px;
+  gap: 16px;
+  border: 0;
+  border-radius: 14px 0 0 14px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--systemSecondary);
+  font: 500 15px / 20px var(--font-family);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.ot-side .ot-nav-item:hover {
+  background: rgb(255 255 255 / 0.05);
+  border: 0;
+  box-shadow: none;
+  color: var(--systemPrimary);
+}
+:root[data-appearance='light'] .ot-side .ot-nav-item:hover { background: rgb(0 0 0 / 0.05); }
+.ot-side .ot-nav-item[aria-current='page'] {
+  background: linear-gradient(90deg, rgb(255 255 255 / 0.11), rgb(255 255 255 / 0.015));
+  border: 0;
+  box-shadow: none;
+  color: var(--systemPrimary);
+  font-weight: 600;
+}
+:root[data-appearance='light'] .ot-side .ot-nav-item[aria-current='page'] { background: linear-gradient(90deg, rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.01)); }
+/* The accent bar against the sidebar's edge. */
+.ot-side .ot-nav-item[aria-current='page']::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 4px 0 0 4px;
+  background: var(--keyColor);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--keyColor) 70%, transparent);
+}
+.ot-side .ot-nav-item svg { scale: none; }
+.ot-side .ot-nav-item:hover svg { scale: none; }
+
+/* ---- Tiles --------------------------------------------------------------- */
+
+.ws-tile {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: var(--ws-tile);
+  height: var(--ws-tile);
+  border-radius: 9px;
+  background: var(--systemTertiary);
+  color: #fff;
+  box-shadow: inset 0.5px 0.5px 0 rgb(255 255 255 / 0.3);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, scale 0.3s var(--ot-ease-settle);
+}
+.ot-nav-item:hover .ws-tile { scale: 1.06; }
+.ot-nav-item[aria-current='page'] .ws-tile {
+  background: linear-gradient(160deg, color-mix(in srgb, var(--keyColor) 78%, #fff), var(--keyColorBG));
+  box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.5), 0 6px 16px -4px color-mix(in srgb, var(--keyColor) 65%, transparent);
+}
+
+/* ---- Section names -------------------------------------------------------- */
+
+.ot-side .ot-side-header {
+  margin-top: 26px;
+  padding: 0 4px;
+  font: 600 12px / 24px var(--font-family);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--systemTertiary);
+}
+
+/* ---- Sources --------------------------------------------------------------- */
+
+.ws-sources { display: flex; flex-direction: column; gap: 2px; padding-bottom: 6px; }
+.ws-source {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 42px;
+  padding: 0 8px;
+  border-radius: 14px;
+  font: 700 15px / 20px var(--font-family);
+  letter-spacing: -0.01em;
+  color: var(--systemPrimary);
+  transition: background-color 0.2s ease;
+}
+.ws-source svg { flex: none; margin-inline: 3px; }
+.ws-source:hover, .ws-source[aria-current='page'] { background: rgb(255 255 255 / 0.07); }
+:root[data-appearance='light'] .ws-source:hover, :root[data-appearance='light'] .ws-source[aria-current='page'] { background: rgb(0 0 0 / 0.06); }
+
+@media (min-width: 484px) {
+  .ot-side-sources { overflow: hidden; max-height: 100px; transition: max-height 0.38s var(--ot-ease-settle), opacity 0.22s ease 0.1s; }
+  /* Folded to the rail, the sources fold away; the Spotify row above keeps its tile. */
+  .ot-side[data-folded='true'] .ot-side-sources { max-height: 0; opacity: 0; padding: 0; }
+  /* In the rail the accent bar would sit on the page's edge; the tile alone says where you are. */
+  .ot-side[data-folded='true'] .ot-nav-item { margin-right: 0; border-radius: 14px; }
+  .ot-side[data-folded='true'] .ot-nav-item[aria-current='page']::after { display: none; }
+}

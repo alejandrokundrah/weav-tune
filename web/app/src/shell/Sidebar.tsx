@@ -1,9 +1,10 @@
 import { ArrowUpRight, ListMusic, PanelLeftClose, PanelLeftOpen, Settings } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { MdOutlineExtension } from 'react-icons/md';
-import { SiSpotify } from 'react-icons/si';
+import { SiSpotify, SiYoutubemusic } from 'react-icons/si';
 import { PrefetchLink, PrefetchNavLink } from '@/components/PrefetchLink';
 import { LogoMark } from '@/components/icons/LogoMark';
+import { Wordmark } from '@/components/icons/Wordmark';
 import {
   AlbumsIcon,
   AllPlaylistsIcon,
@@ -55,8 +56,10 @@ const LIBRARY: NavItem[] = (Object.keys(LIBRARY_ICONS) as (keyof typeof LIBRARY_
 // A sidebar row; NavLink sets aria-current on the page's own row.
 const item =
   'ot-nav-item group flex h-9 items-center gap-2 mb-0.5 p-1 rounded-nav type-body-reduced text-primary hover:bg-quinary aria-[current=page]:bg-nav-selected';
-// Apple's glyphs, drawn at 24px (their 24-unit box), which the user preferred to Apple's own 28px.
-const icon = 'inline-grid size-6 flex-none place-items-center text-primary group-aria-[current=page]:text-key';
+// Each row's glyph sits in a rounded tile (sidebar.css .ws-tile): grey, and the accent colour on the page you are on.
+function Tile({ children }: { children: ReactNode }) {
+  return <span className="ws-tile">{children}</span>;
+}
 const navLabel = 'ot-side-label min-w-0 truncate';
 // "Library", "Playlists" (report §1: 12px/15px 600, secondary, padding 4px 8px).
 const sectionHeader = 'ot-side-header mt-4 px-2 py-1 type-callout-emphasized text-secondary';
@@ -72,7 +75,9 @@ function NavList({ items, onNavigate }: { items: NavItem[]; onNavigate: () => vo
       {items.map(({ to, label, Icon }) => (
         <li key={to}>
           <PrefetchNavLink to={to} className={item} onClick={onNavigate} title={tip(label)}>
-            <Icon size={24} className={icon} />
+            <Tile>
+              <Icon size={18} />
+            </Tile>
             <span className={navLabel}>{label}</span>
           </PrefetchNavLink>
         </li>
@@ -92,7 +97,9 @@ function LibraryNav({ onNavigate }: { onNavigate: () => void }) {
       <ul className={list}>
         <li>
           <PrefetchNavLink to="/library/playlists" className={item} onClick={onNavigate} title={tip(LIBRARY_SECTIONS.playlists.title)}>
-            <AllPlaylistsIcon size={24} className={icon} />
+            <Tile>
+              <AllPlaylistsIcon size={18} />
+            </Tile>
             <span className={navLabel}>{LIBRARY_SECTIONS.playlists.title}</span>
           </PrefetchNavLink>
         </li>
@@ -100,9 +107,9 @@ function LibraryNav({ onNavigate }: { onNavigate: () => void }) {
           // Each playlist's glyph is the same one, so the folded rail leaves them out.
           <li key={playlist.id} className="ot-side-extra">
             <PrefetchNavLink to={hrefFor(playlist) ?? '/library/playlists'} className={item} onClick={onNavigate}>
-              <span className={icon}>
-                <ListMusic size={17} strokeWidth={1.8} />
-              </span>
+              <Tile>
+                <ListMusic size={16} strokeWidth={2} />
+              </Tile>
               <span className={navLabel}>{playlist.title}</span>
             </PrefetchNavLink>
           </li>
@@ -122,24 +129,40 @@ function SpotifyNav({ onNavigate }: { onNavigate: () => void }) {
         <li>
           <PrefetchNavLink to="/spotify" end className={item} onClick={onNavigate} title={tip('All Spotify Playlists')}>
             {/* Spotify's own mark, so it reads apart from All Playlists above it, folded or not. */}
-            <span className={icon}>
-              <SiSpotify size={20} />
-            </span>
+            <Tile>
+              <SiSpotify size={16} />
+            </Tile>
             <span className={navLabel}>All Spotify Playlists</span>
           </PrefetchNavLink>
         </li>
         {playlists.data?.map((playlist) => (
           <li key={playlist.id} className="ot-side-extra">
             <PrefetchNavLink to={`/spotify/playlist/${encodeURIComponent(playlist.id)}`} className={item} onClick={onNavigate}>
-              <span className={icon}>
-                <ListMusic size={17} strokeWidth={1.8} />
-              </span>
+              <Tile>
+                <ListMusic size={16} strokeWidth={2} />
+              </Tile>
               <span className={navLabel}>{playlist.name}</span>
             </PrefetchNavLink>
           </li>
         ))}
       </ul>
     </>
+  );
+}
+
+/** Where the music comes from: YouTube Music plays it, Spotify brings the playlists. */
+function Sources({ onNavigate }: { onNavigate: () => void }) {
+  return (
+    <div className="ws-sources ot-side-sources" aria-label="Sources">
+      <PrefetchNavLink to="/spotify" end className="ws-source" onClick={onNavigate}>
+        <SiSpotify size={24} className="text-[#1ed760]" />
+        <span>Spotify</span>
+      </PrefetchNavLink>
+      <a className="ws-source" href="https://music.youtube.com" target="_blank" rel="noreferrer">
+        <SiYoutubemusic size={24} className="text-[#ff0033]" />
+        <span>YouTube Music</span>
+      </a>
+    </div>
   );
 }
 
@@ -168,11 +191,11 @@ export function Sidebar() {
         data-folded={folded}
         aria-label="Main"
       >
-        <div className="ot-side-top mt-2 flex h-18 items-center justify-between pr-3 pl-7">
-          <PrefetchLink to="/home" className="ot-side-wordmark inline-flex items-center gap-2 rounded-[6px]" aria-label="Weav-Tune, Home" onClick={close}>
-            {/* White on dark, as Apple's own wordmark; it follows the label colour so it stays visible in light. */}
-            <LogoMark size={22} className="text-primary" />
-            <span className="type-[700_19px/24px] tracking-[-0.01em]">Weav-Tune</span>
+        <div className="ot-side-top mt-3 flex h-22 items-center justify-between pr-3 pl-7">
+          <PrefetchLink to="/home" className="ot-side-wordmark inline-flex items-center gap-4 rounded-[6px]" aria-label="Weav-Tune, Home" onClick={close}>
+            {/* The mark in its own colours, then the handwritten wordmark in the label colour (white on dark). */}
+            <LogoMark size={40} />
+            <Wordmark height={46} className="text-primary" />
           </PrefetchLink>
           {/* Folds the sidebar to a rail of icons and back. Phones have the drawer instead. */}
           <button
@@ -191,11 +214,12 @@ export function Sidebar() {
           {spotifySignedIn && <SpotifyNav onNavigate={close} />}
         </div>
         <div className="ot-side-bottom flex flex-col gap-2 pt-3 pr-3 pb-5 pl-5">
+          <Sources onNavigate={close} />
           <PrefetchNavLink to="/extension" className={`${item} relative`} onClick={close} title={tip('Weav-Tune Extension')}>
             {/* Chrome's own toolbar glyph for extensions (Material "extension"). */}
-            <span className={icon}>
-              <MdOutlineExtension size={18} />
-            </span>
+            <Tile>
+              <MdOutlineExtension size={17} />
+            </Tile>
             <span className={navLabel}>Weav-Tune Extension</span>
             {update.state === 'available' && (
               <span className="ot-side-badge ml-auto rounded-[10px] bg-key px-[7px] py-0.5 type-subhead-emphasized text-white" title={`Version ${update.latest.version} is available`}>
