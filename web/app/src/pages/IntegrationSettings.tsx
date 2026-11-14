@@ -14,11 +14,13 @@ import {
 } from '@/extension/useDiscord';
 import {
   openSpotifySignIn,
+  useImportSpotifyFromBrowser,
   useRefreshSpotifyAuth,
   useSetSpotifyConnected,
   useSpotifyAuth,
   type SpotifyAuthStatus,
 } from '@/extension/useSpotifyAuth';
+import { isDesktop } from '@/lib/desktop';
 import { settingsUi } from './settingsStyles';
 
 /** Allowed, or an Allow button that opens the extension's permission page. */
@@ -77,10 +79,15 @@ export function SpotifyIntegration() {
   const auth = useSpotifyAuth();
   const connect = useSetSpotifyConnected();
   const retry = useRefreshSpotifyAuth();
+  const importSession = useImportSpotifyFromBrowser();
   if (auth.state !== 'ready') return <span className={settingsUi.value}>{spotifyText(auth)}</span>;
   const { browserSignedIn, connected, signedIn } = auth.auth;
+  // On desktop, a sign-in window is Spotify's real page but Google blocks the YouTube one the
+  // same way, so both pull the session Chrome, Firefox or Edge already has instead.
   const action = !browserSignedIn
-    ? { label: 'Sign In', run: openSpotifySignIn }
+    ? isDesktop()
+      ? { label: 'Import from browser', run: () => importSession.mutate() }
+      : { label: 'Sign In', run: openSpotifySignIn }
     : !connected
       ? { label: 'Connect', run: () => connect.mutate(true) }
       : !signedIn
@@ -88,9 +95,11 @@ export function SpotifyIntegration() {
         : { label: 'Disconnect', run: () => connect.mutate(false) };
   return (
     <span className={settingsUi.value}>
-      <span title={auth.auth.problem ?? undefined}>{spotifyText(auth)}</span>
-      <button className={settingsUi.inlineButton} onClick={action.run} disabled={connect.isPending || retry.isPending}>
-        {action.label}
+      <span title={importSession.isError ? importSession.error.message : auth.auth.problem ?? undefined}>
+        {importSession.isError ? 'Couldn’t find a signed-in session' : spotifyText(auth)}
+      </span>
+      <button className={settingsUi.inlineButton} onClick={action.run} disabled={connect.isPending || retry.isPending || importSession.isPending}>
+        {importSession.isPending ? 'Importing…' : action.label}
       </button>
     </span>
   );
