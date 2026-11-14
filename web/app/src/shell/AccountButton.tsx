@@ -1,7 +1,7 @@
 import { ArrowUpRight, ChevronsUpDown, LogIn, RotateCw } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { Menu, MenuHeader, MenuItem, MenuSeparator } from '@/components/Menu';
-import { openYtSignIn, useRefreshYtAuth, useSelectChannel, useSetConnected, useYtAuth } from '@/extension/useYtAuth';
+import { useImportYtFromBrowser, useRefreshYtAuth, useSelectChannel, useSetConnected, useYtAuth } from '@/extension/useYtAuth';
 import { isDesktop } from '@/lib/desktop';
 
 const SIGN_IN_URL = 'https://accounts.google.com/ServiceLogin?service=youtube&continue=https://music.youtube.com/';
@@ -36,6 +36,7 @@ export function AccountButton({ compact = false }: { compact?: boolean }) {
   const select = useSelectChannel();
   const connect = useSetConnected();
   const refresh = useRefreshYtAuth();
+  const importYt = useImportYtFromBrowser();
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const close = useCallback(() => setAnchor(null), []);
 
@@ -43,21 +44,24 @@ export function AccountButton({ compact = false }: { compact?: boolean }) {
   const { auth } = status;
 
   if (!auth.browserSignedIn) {
+    // On desktop, Google refuses to sign in inside the app's own window, so this pulls the
+    // session the person's real browser already has instead of opening that window.
+    if (isDesktop()) {
+      const label = importYt.isPending ? 'Importing…' : 'Import from browser';
+      return (
+        <button
+          className={compact ? roundPill : pill}
+          onClick={() => importYt.mutate()}
+          disabled={importYt.isPending}
+          aria-label={compact ? label : undefined}
+          title={compact ? (importYt.isError ? importYt.error.message : label) : importYt.isError ? importYt.error.message : undefined}
+        >
+          {compact ? <LogIn size={17} strokeWidth={2.2} /> : label}
+        </button>
+      );
+    }
     return (
-      <a
-        className={compact ? roundPill : pill}
-        href={SIGN_IN_URL}
-        target="_blank"
-        rel="noreferrer"
-        aria-label={compact ? 'Sign In' : undefined}
-        title={compact ? 'Sign In' : undefined}
-        onClick={(event) => {
-          // The desktop app signs in in a window of its own, not a browser tab.
-          if (!isDesktop()) return;
-          event.preventDefault();
-          openYtSignIn();
-        }}
-      >
+      <a className={compact ? roundPill : pill} href={SIGN_IN_URL} target="_blank" rel="noreferrer" aria-label={compact ? 'Sign In' : undefined} title={compact ? 'Sign In' : undefined}>
         {compact ? <LogIn size={17} strokeWidth={2.2} /> : 'Sign In'}
       </a>
     );
@@ -132,7 +136,8 @@ export function AccountButton({ compact = false }: { compact?: boolean }) {
           <MenuItem
             onSelect={() => {
               close();
-              if (isDesktop()) openYtSignIn();
+              // Multiple signed-in Google accounts come from the browser's own multi-login; a fresh import picks up any added since.
+              if (isDesktop()) importYt.mutate();
               else window.open(SIGN_IN_URL.replace('ServiceLogin', 'AddSession'), '_blank', 'noreferrer');
             }}
             trailing={<ArrowUpRight size={13} />}

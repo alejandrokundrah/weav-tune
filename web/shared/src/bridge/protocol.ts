@@ -193,6 +193,8 @@ export interface BridgeMethods {
   'yt.setConnected': { params: { connected: boolean }; result: YtAuthState };
   /** The desktop app only: opens its own Google sign-in window (a browser extension leaves this to the browser). */
   'yt.signIn': { params: Record<string, never>; result: Record<string, never> };
+  /** The desktop app only: pulls an already-signed-in session from an installed browser, instead of signing in again. */
+  'yt.importFromBrowser': { params: Record<string, never>; result: YtAuthState };
   /** [urls]: every host to ask for on the one page; an older extension only reads [url]. */
   'addon.requestPermission': { params: { url: string; urls?: string[] }; result: Record<string, never> };
   'addon.fetch': { params: HttpRequest; result: HttpResponse };
@@ -207,6 +209,7 @@ export interface BridgeMethods {
   'spotify.setConnected': { params: { connected: boolean }; result: SpotifyAuthState };
   /** Opens Spotify's sign-in in a tab; the state event follows once `sp_dc` arrives. */
   'spotify.signIn': { params: Record<string, never>; result: Record<string, never> };
+  'spotify.importFromBrowser': { params: Record<string, never>; result: SpotifyAuthState };
   /** The library's playlists, 50 at a time; Liked Songs leads the first page. */
   'spotify.playlists': { params: { offset: number }; result: SpotifyPage<SpotifyPlaylist> };
   /** A playlist's (or Liked Songs') tracks, 100 at a time. */

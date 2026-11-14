@@ -145,3 +145,15 @@ export function useSetConnected() {
 export function openYtSignIn(): void {
   void detected()?.bridge.call('yt.signIn', {});
 }
+
+/** Desktop only: pulls an already-signed-in session from an installed browser. */
+export function useImportYtFromBrowser() {
+  return useMutation({
+    mutationFn: async () => {
+      const extension = detected();
+      if (!extension) throw new Error('Not available');
+      return extension.bridge.call('yt.importFromBrowser', {});
+    },
+    onSuccess: adopt,
+  });
+}

@@ -88,3 +88,15 @@ export function useRefreshSpotifyAuth() {
 export function openSpotifySignIn(): void {
   void detected()?.bridge.call('spotify.signIn', {});
 }
+
+/** Desktop only: pulls an already-signed-in session from an installed browser. */
+export function useImportSpotifyFromBrowser() {
+  return useMutation({
+    mutationFn: async () => {
+      const extension = detected();
+      if (!extension) throw new Error('Not available');
+      return extension.bridge.call('spotify.importFromBrowser', {});
+    },
+    onSuccess: adopt,
+  });
+}

@@ -59,12 +59,15 @@ export interface YtService {
   authState(refresh: boolean): Promise<YtAuthState>;
   selectChannel(channelId: string): Promise<YtAuthState>;
   setConnected(connected: boolean): Promise<YtAuthState>;
+  /** Pulls the session from an installed browser instead of opening a sign-in window. */
+  importFromBrowser(): Promise<YtAuthState>;
 }
 
 /** Spotify's session, as web/extension/lib/spotify.ts keeps it. */
 export interface SpotifyService {
   authState(refresh: boolean): Promise<SpotifyAuthState>;
   setConnected(connected: boolean): Promise<SpotifyAuthState>;
+  importFromBrowser(): Promise<SpotifyAuthState>;
   playlists(offset: number): Promise<unknown>;
   tracks(playlistId: string, offset: number): Promise<unknown>;
   playlistInfo(playlistId: string): Promise<unknown>;
@@ -181,6 +184,8 @@ export function createHost(options: HostOptions) {
         case 'yt.signIn':
           options.signIn('youtube');
           return okResponse<'yt.signIn'>(request.id, {});
+        case 'yt.importFromBrowser':
+          return okResponse<'yt.importFromBrowser'>(request.id, await options.yt.importFromBrowser());
         case 'spotify.authState':
           return okResponse<'spotify.authState'>(request.id, await options.spotify.authState((request as BridgeRequest<'spotify.authState'>).params.refresh === true));
         case 'spotify.setConnected': {
@@ -191,6 +196,8 @@ export function createHost(options: HostOptions) {
         case 'spotify.signIn':
           options.signIn('spotify');
           return okResponse<'spotify.signIn'>(request.id, {});
+        case 'spotify.importFromBrowser':
+          return okResponse<'spotify.importFromBrowser'>(request.id, await options.spotify.importFromBrowser());
         case 'spotify.playlists':
           return okResponse<'spotify.playlists'>(request.id, (await options.spotify.playlists((request as BridgeRequest<'spotify.playlists'>).params.offset ?? 0)) as never);
         case 'spotify.tracks': {

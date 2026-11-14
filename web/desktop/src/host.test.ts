@@ -21,6 +21,7 @@ function host(fetch: Fetch = async () => new Response('{"ok":true}', { headers: 
     authState: async () => SIGNED_OUT,
     selectChannel: async () => ({ ...SIGNED_OUT, signedIn: true }),
     setConnected: async (connected) => ({ ...SIGNED_OUT, connected }),
+    importFromBrowser: async () => ({ ...SIGNED_OUT, signedIn: true }),
   };
   const spotify: SpotifyService = {
     authState: async () => ({ browserSignedIn: false, connected: true, signedIn: false, user: null, problem: null }),
@@ -30,6 +31,7 @@ function host(fetch: Fetch = async () => new Response('{"ok":true}', { headers: 
     playlistInfo: async () => ({}),
     searchTracks: async () => [],
     canvas: async () => 'https://canvaz.scdn.co/x.mp4',
+    importFromBrowser: async () => ({ browserSignedIn: true, connected: true, signedIn: true, user: null, problem: null }),
   };
   const handle = createHost({
     yt,
@@ -71,6 +73,12 @@ describe('desktop bridge host', () => {
     expect(h.events).toMatchObject([{ event: 'yt.authState' }, { event: 'spotify.authState' }]);
   });
 
+  it('imports a session from a browser, instead of opening a window', async () => {
+    const h = host();
+    expect(await h.handle(request('yt.importFromBrowser', {}))).toMatchObject({ ok: true, result: { signedIn: true } });
+    expect(await h.handle(request('spotify.importFromBrowser', {}))).toMatchObject({ ok: true, result: { signedIn: true } });
+  });
+
   it('opens the right sign-in window', async () => {
     const h = host();
     expect(await h.handle(request('yt.signIn', {}))).toMatchObject({ ok: true });
@@ -88,7 +96,7 @@ describe('desktop bridge host', () => {
     const h = host();
     const failing = createHost({
       version: '1', fetch: async () => new Response(''), grants: { has: () => false, add: () => {} }, signIn: () => {}, broadcast: () => {},
-      yt: { fetch: async () => { throw Object.assign(new Error('Not signed in'), { code: 'unauthenticated' }); }, authState: async () => SIGNED_OUT, selectChannel: async () => SIGNED_OUT, setConnected: async () => SIGNED_OUT },
+      yt: { fetch: async () => { throw Object.assign(new Error('Not signed in'), { code: 'unauthenticated' }); }, authState: async () => SIGNED_OUT, selectChannel: async () => SIGNED_OUT, setConnected: async () => SIGNED_OUT, importFromBrowser: async () => SIGNED_OUT },
       spotify: undefined as never,
     });
     expect(await failing(request('yt.fetch', { url: 'https://music.youtube.com/youtubei/v1/browse', auth: true }))).toMatchObject({ ok: false, error: { code: 'unauthenticated' } });

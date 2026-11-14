@@ -4,6 +4,7 @@ import { extname, join, normalize, sep } from 'node:path';
 import type { BridgeEvent, BridgeRequest } from '@weavtune/shared/bridge';
 import * as spotify from '../../extension/lib/spotify';
 import { activeIdentityReset, ytService } from './yt';
+import { importSessionCookies } from './cookieImport';
 import { installBrowserShim, onCookieChanged, sessionRules } from './browserShim';
 import { createHost } from './host';
 import { openSignIn } from './signIn';
@@ -85,6 +86,33 @@ function restoredBounds(): WindowState {
   if (saved.x === undefined || saved.y === undefined) return saved;
   const visible = screen.getAllDisplays().some(({ workArea: a }) => saved.x! < a.x + a.width && saved.x! + saved.width > a.x && saved.y! < a.y + a.height && saved.y! + saved.height > a.y);
   return visible ? saved : { width: saved.width, height: saved.height };
+}
+
+// ---- Cookie import: an already-signed-in browser instead of a sign-in window -----------------------
+
+class ImportError extends Error {
+  readonly code = 'unauthenticated';
+}
+
+/**
+ * Pulls a session for [service] from whichever installed browser has one (cookieImport/), puts it
+ * in this app's own cookie jar, and re-reads the account. [invalidate] clears whatever cache the
+ * extension's own session code (ytAuth.ts / spotify.ts) keeps, the same way a cookie change would.
+ */
+async function importBrowserSession<T>(
+  service: 'youtube' | 'spotify',
+  url: string,
+  domain: string,
+  readAuthState: (refresh: boolean) => Promise<T>,
+  invalidate: (cookie: { name: string; domain: string }) => unknown,
+): Promise<T> {
+  const result = importSessionCookies(service);
+  if (!result.ok || !result.cookies?.length) throw new ImportError(result.reason ?? `No signed-in ${service} session was found`);
+  for (const { name, value } of result.cookies) {
+    await session.defaultSession.cookies.set({ url, domain, name, value, secure: true, httpOnly: true });
+    invalidate({ name, domain });
+  }
+  return readAuthState(true);
 }
 
 // ---- Network: what the extension's header rules did ------------------------------------------------
@@ -190,7 +218,10 @@ void app.whenReady().then(() => {
       },
     },
     fetch: (url, init) => net.fetch(url, { ...init, credentials: 'omit', bypassCustomProtocolHandlers: true } as RequestInit),
-    yt: ytService,
+    yt: {
+      ...ytService,
+      importFromBrowser: () => importBrowserSession('youtube', 'https://music.youtube.com/', '.youtube.com', ytService.authState, activeIdentityReset),
+    },
     spotify: {
       authState: async (refresh) => {
         if (refresh) spotify.invalidateSession();
@@ -202,6 +233,8 @@ void app.whenReady().then(() => {
       playlistInfo: spotify.playlistInfo,
       searchTracks: spotify.searchTracks,
       canvas: spotify.canvas,
+      importFromBrowser: () =>
+        importBrowserSession('spotify', 'https://open.spotify.com/', '.spotify.com', spotify.authState, (cookie) => (spotify.isSessionCookie(cookie as never) ? (spotify.invalidateSession(), true) : false)),
     },
     signIn: (service) => openSignIn(service, main),
     broadcast,
